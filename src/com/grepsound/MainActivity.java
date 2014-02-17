@@ -12,10 +12,12 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 public class MainActivity extends Activity {
 
     private static String TAG = "GrepSound";
+    private static String CLIENT_ID = "b45b1aa10f1ac2941910a7f0d10f8e28";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,11 +37,18 @@ public class MainActivity extends Activity {
         public void run() {
             super.run();
             try {
-                StringBuffer page = getSoundCloudHtml();
+                String url = "https://soundcloud.com/mgmrecords/red-hot-chili-peppers?in=dealerdemusique/sets/playlist-un-dimanche-au-49";
 
-                String songID = getSongID(page);
+                StringBuffer page = getHtml(url);
+                Document doc = Jsoup.parse(page.toString());
+                String songID = getSongID(doc);
+                String songTitle = getTitle(doc);
 
+                String songURL = "https://api.sndcdn.com/i1/tracks/" + songID + "/streams?client_id=" + CLIENT_ID;
 
+                StringBuffer songPage = getHtml(songURL);
+
+                goGetSomeCookies(songPage.toString(), songTitle);
 
                 Log.i("TEST", "Thread stop now...");
             } catch (IOException e) {
@@ -47,15 +56,85 @@ public class MainActivity extends Activity {
             }
         }
 
-        private String getSongID(StringBuffer page) {
+        private void goGetSomeCookies(String songPage, String title) throws IOException {
 
-            Document doc = Jsoup.parse(page.toString());
+            String[] coucou = songPage.split("\"");
+
+            for(String i : coucou){
+                Log.d(TAG, "splitted:"+ i);
+            }
+            String goodURL = coucou[3].replace("\\u0026", "&");
+
+            URL obj = new URL(goodURL);
+            HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+            conn.setReadTimeout(5000);
+            conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+            conn.addRequestProperty("User-Agent", "Mozilla");
+            conn.addRequestProperty("Referer", "google.com");
+
+            System.out.println("Request URL ... " + goodURL);
+
+            boolean redirect = false;
+
+            // normally, 3xx is redirect
+            int status = conn.getResponseCode();
+            if (status != HttpURLConnection.HTTP_OK) {
+                if (status == HttpURLConnection.HTTP_MOVED_TEMP
+                        || status == HttpURLConnection.HTTP_MOVED_PERM
+                        || status == HttpURLConnection.HTTP_SEE_OTHER)
+                    redirect = true;
+            }
+
+            System.out.println("Response Code ... " + status);
+
+            if (redirect) {
+
+                // get redirect url from "location" header field
+                String newUrl = conn.getHeaderField("Location");
+
+                // get the cookie if need, for login
+                String cookies = conn.getHeaderField("Set-Cookie");
+
+                // open the new connnection again
+                conn = (HttpURLConnection) new URL(newUrl).openConnection();
+                conn.setRequestProperty("Cookie", cookies);
+                conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+                conn.addRequestProperty("User-Agent", "Mozilla");
+                conn.addRequestProperty("Referer", "google.com");
+
+                System.out.println("Redirect to URL : " + newUrl);
+
+            }
+
+            File mTrackDownloadFile = new File(getExternalCacheDir(), title);
+            mTrackDownloadFile.createNewFile();
+            final FileOutputStream fileOutputStream = new FileOutputStream(mTrackDownloadFile);
+            final byte buffer[] = new byte[16 * 1024];
+
+            final InputStream inputStream = conn.getInputStream();
+
+            int len1 = 0;
+            while ((len1 = inputStream.read(buffer)) > 0) {
+                fileOutputStream.write(buffer, 0, len1);
+            }
+            fileOutputStream.flush();
+            fileOutputStream.close();
+
+        }
+
+        private String getTitle(Document doc) {
+            Elements titles = doc.select("em[itemprop=name]");
+            return titles.get(0).text();
+        }
+
+        private String getSongID(Document doc) {
+
             Elements ids = doc.select("div[data-sc-track]");
 
-            for(Element el : ids){
+            for (Element el : ids) {
 
                 Log.i(TAG, el.attr("class"));
-                if(el.attr("class").contains("small"))
+                if (el.attr("class").contains("small"))
                     Log.i(TAG, "This one contains small");
                 else {
                     Log.i(TAG, "OK for this one");
@@ -63,12 +142,11 @@ public class MainActivity extends Activity {
                     return el.attr("data-sc-track");
                 }
             }
-            return null;s
+            return null;
         }
 
-        private StringBuffer getSoundCloudHtml() throws IOException {
+        private StringBuffer getHtml(String url) throws IOException {
 
-            String url = "https://soundcloud.com/themajorminor/ciara-body-party-tastytreat";
 
             URL obj = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
@@ -169,6 +247,9 @@ public class MainActivity extends Activity {
 //    genre=$(echo "$page" | tr ">" "\n" | grep -A1 '<span class="genre search-deprecation-notification" data="/tags/' | tr ' ' "\n" | grep '</span' | cut -d "<" -f 1 | recode html..u8)
 //
 //    DL
+//    -#: display progress bar
+//    -o: write output in a file instead of stdout
+//
 //    curl -# -L --user-agent 'Mozilla/5.0' -o "`echo -e "$filename"`" "$songurl";
 //
 //    function downsong() { #Done!
