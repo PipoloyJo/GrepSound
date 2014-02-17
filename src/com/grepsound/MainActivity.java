@@ -3,6 +3,10 @@ package com.grepsound;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -10,9 +14,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends Activity {
-    /**
-     * Called when the activity is first created.
-     */
+
+    private static String TAG = "GrepSound";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,10 +37,33 @@ public class MainActivity extends Activity {
             try {
                 StringBuffer page = getSoundCloudHtml();
 
+                String songID = getSongID(page);
 
+
+
+                Log.i("TEST", "Thread stop now...");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        private String getSongID(StringBuffer page) {
+
+            Document doc = Jsoup.parse(page.toString());
+            Elements ids = doc.select("div[data-sc-track]");
+
+            for(Element el : ids){
+
+                Log.i(TAG, el.attr("class"));
+                if(el.attr("class").contains("small"))
+                    Log.i(TAG, "This one contains small");
+                else {
+                    Log.i(TAG, "OK for this one");
+                    Log.i(TAG, "Song id is : " + el.attr("data-sc-track"));
+                    return el.attr("data-sc-track");
+                }
+            }
+            return null;s
         }
 
         private StringBuffer getSoundCloudHtml() throws IOException {
@@ -121,7 +148,7 @@ public class MainActivity extends Activity {
 //    uniq : filters identical lines
 //
 //    id=$(echo "$page" | grep -v "small" | grep -oE "data-sc-track=.[0-9]*" | grep -oE "[0-9]*" | sort | uniq)
-//
+//      STATUS: DONE
 //
 //    STEP 3
 //    title=$(echo -e "$page" | grep -A1 "<em itemprop=\"name\">" | tail -n1 | sed 's/\\u0026/\&/g' | recode html..u8)
