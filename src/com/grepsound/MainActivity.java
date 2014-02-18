@@ -3,6 +3,9 @@ package com.grepsound;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,36 +13,51 @@ import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 public class MainActivity extends Activity {
 
     private static String TAG = "GrepSound";
     private static String CLIENT_ID = "b45b1aa10f1ac2941910a7f0d10f8e28";
 
+    private Button goGetIt;
+    private EditText urlTextfield;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        URLThread t = new URLThread();
-        t.start();
+        goGetIt = (Button) findViewById(R.id.button);
+        urlTextfield = (EditText) findViewById(R.id.editText);
 
+
+        goGetIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (urlTextfield.getText().length() > 0) {
+                    URLThread t = new URLThread(urlTextfield.getText().toString());
+                    t.start();
+                }
+            }
+        });
     }
 
 
     private class URLThread extends Thread {
 
+        private String songToRetrieve;
+
+        public URLThread(String input) {
+            songToRetrieve = input;
+        }
 
         @Override
         public void run() {
             super.run();
             try {
-                String url = "https://soundcloud.com/mgmrecords/red-hot-chili-peppers?in=dealerdemusique/sets/playlist-un-dimanche-au-49";
 
-                StringBuffer page = getHtml(url);
+                StringBuffer page = getHtml(songToRetrieve);
                 Document doc = Jsoup.parse(page.toString());
                 String songID = getSongID(doc);
                 String songTitle = getTitle(doc);
@@ -60,8 +78,8 @@ public class MainActivity extends Activity {
 
             String[] coucou = songPage.split("\"");
 
-            for(String i : coucou){
-                Log.d(TAG, "splitted:"+ i);
+            for (String i : coucou) {
+                Log.d(TAG, "splitted:" + i);
             }
             String goodURL = coucou[3].replace("\\u0026", "&");
 
