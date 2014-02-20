@@ -8,11 +8,13 @@ public class MainActivity extends Activity {
     private static String TAG = "GrepSound";
 
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity);
-        getFragmentManager().beginTransaction().replace(R.id.main_frame, new GrepSoundHome()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.main_frame, new GrepSoundURLSearch()).commit();
     }
 
 

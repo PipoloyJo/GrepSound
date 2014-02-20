@@ -18,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".GrepSoundHome"/>
+        <activity android:name=".GrepSoundURLSearch"/>
         <activity android:name=".GrepSoundLoader"/>
+        <service android:name=".SoundService"/>
     </application>
 </manifest>

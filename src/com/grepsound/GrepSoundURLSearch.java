@@ -2,7 +2,6 @@ package com.grepsound;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
 import android.content.Loader;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +14,9 @@ import android.widget.EditText;
 /**
  * Created by lisional on 2/18/2014.
  */
-public class GrepSoundHome extends Fragment implements LoaderManager.LoaderCallbacks<Bundle>{
+public class GrepSoundURLSearch extends Fragment implements LoaderManager.LoaderCallbacks<Bundle>{
 
-    private static final String TAG = GrepSoundHome.class.getSimpleName();
+    private static final String TAG = GrepSoundURLSearch.class.getSimpleName();
     private Button goGetIt;
     private EditText urlTextfield;
 
@@ -42,7 +41,7 @@ public class GrepSoundHome extends Fragment implements LoaderManager.LoaderCallb
 
                     Bundle args = new Bundle();
                     args.putString("url", urlTextfield.getText().toString());
-                    getLoaderManager().restartLoader(1, args, GrepSoundHome.this);
+                    getLoaderManager().restartLoader(1, args, GrepSoundURLSearch.this);
                 }
             }
         });
