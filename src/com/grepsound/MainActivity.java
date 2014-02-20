@@ -1,13 +1,20 @@
 package com.grepsound;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Messenger;
 
 public class MainActivity extends Activity {
 
     private static String TAG = "GrepSound";
 
-
+    Messenger mService = null;
+    boolean mBound;
 
 
     @Override
@@ -16,6 +23,34 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity);
         getFragmentManager().beginTransaction().replace(R.id.main_frame, new GrepSoundURLSearch()).commit();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        bindService(new Intent(this, GrepSoundService.class), mCoverServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mCoverServiceConnection);
+            mBound = false;
+        }
+    }
+
+    private ServiceConnection mCoverServiceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mService = new Messenger(service);
+            mBound = true;
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            mService = null;
+            mBound = false;
+        }
+    };
 
 
 //
