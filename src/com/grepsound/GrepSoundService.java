@@ -100,7 +100,7 @@ public class GrepSoundService extends Service {
             getAccountNames();
 
             try {
-                String token = GoogleAuthUtil.getToken(getBaseContext(), "alexandre.lision@gmail.com", Scopes.PLUS_ME);
+                String token = GoogleAuthUtil.getToken(getBaseContext(), "alexandre.lision@gmail.com", "oauth2:" + Scopes.PLUS_LOGIN);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (GoogleAuthException e) {
@@ -118,7 +118,7 @@ public class GrepSoundService extends Service {
         private String[] getAccountNames() {
             mAccountManager = AccountManager.get(GrepSoundService.this);
             Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-
+            Log.i(TAG, "accounts:"+accounts.length);
             String[] names = new String[accounts.length];
             Log.i(TAG, "getAccountNames:"+names.length);
             for (int i = 0; i < names.length; i++) {

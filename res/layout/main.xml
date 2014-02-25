@@ -25,4 +25,24 @@
             android:text="Go get it!"
             android:id="@+id/button" android:layout_below="@+id/editText" android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"/>
+
+    <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_below="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign out!"
+            android:id="@+id/sign_out_button" android:layout_below="@+id/sign_in_button" android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Revoke!"
+            android:id="@+id/revoke_access_button" android:layout_below="@+id/sign_out_button" android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"/>
 </RelativeLayout>

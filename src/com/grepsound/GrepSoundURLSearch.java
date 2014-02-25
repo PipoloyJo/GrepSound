@@ -46,6 +46,8 @@ public class GrepSoundURLSearch extends Fragment implements LoaderManager.Loader
             }
         });
 
+        //rootView.findViewById(R.id.sign_in_button).setOnClickListener(this);
+
         return rootView;
     }
 
