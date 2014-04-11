@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:weightSum="2"
+        android:orientation="vertical">
+
+    <fragment
+            android:id="@+id/classic_frag"
+            android:layout_width="match_parent"
+              android:layout_height="0dp"
+              android:layout_weight="1"
+              android:name="com.grepsound.fragments.ClassicSignInFrag"/>
+
+    <fragment
+            android:id="@+id/google_frag"
+            android:layout_width="match_parent"
+              android:layout_height="0dp"
+              android:layout_weight="1"
+              android:name="com.grepsound.fragments.GoogleSignInFragment"/>
+
+
+</LinearLayout>

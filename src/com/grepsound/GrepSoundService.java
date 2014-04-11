@@ -1,6 +1,5 @@
 package com.grepsound;
 
-import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Service;
 import android.content.Intent;
@@ -9,9 +8,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.common.Scopes;
 import com.soundcloud.api.ApiWrapper;
 import com.soundcloud.api.Request;
 import com.soundcloud.api.Token;
@@ -97,35 +93,12 @@ public class GrepSoundService extends Service {
         public void registerMe() {
             ApiWrapper wrapper = new ApiWrapper(CLIENT_ID, CLIENT_SECRET, null, null);
 
-            getAccountNames();
-
-            try {
-                String token = GoogleAuthUtil.getToken(getBaseContext(), "alexandre.lision@gmail.com", "oauth2:" + Scopes.PLUS_LOGIN);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (GoogleAuthException e) {
-                e.printStackTrace();
-            }
-
             try {
                 Token tok = wrapper.login("", "", Token.SCOPE_NON_EXPIRING);
                 HttpResponse resp = wrapper.get(Request.to("/me"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        private String[] getAccountNames() {
-            mAccountManager = AccountManager.get(GrepSoundService.this);
-            Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-            Log.i(TAG, "accounts:"+accounts.length);
-            String[] names = new String[accounts.length];
-            Log.i(TAG, "getAccountNames:"+names.length);
-            for (int i = 0; i < names.length; i++) {
-                names[i] = accounts[i].name;
-                Log.i(TAG, accounts[i].name);
-            }
-            return names;
         }
     }
 }

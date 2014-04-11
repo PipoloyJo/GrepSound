@@ -1,13 +1,13 @@
-package com.grepsound;
+package com.grepsound.activities;
 
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
+import com.grepsound.R;
+import com.grepsound.fragments.SignInFragment;
 
 public class MainActivity extends Activity {
 
@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        bindService(new Intent(this, GrepSoundService.class), mCoverServiceConnection, Context.BIND_AUTO_CREATE);
+        //bindService(new Intent(this, GrepSoundService.class), mCoverServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.grepsound;
+package com.grepsound.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -16,23 +16,20 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
-import com.google.android.gms.plus.PlusClient.OnAccessRevokedListener;
+import com.grepsound.R;
 
 import java.io.IOException;
 
-public class SignInFragment extends Fragment implements
-        ConnectionCallbacks, OnConnectionFailedListener, View.OnClickListener,
-        OnAccessRevokedListener {
+/**
+ * Created by lisional on 2014-04-11.
+ */
+public class GoogleSignInFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, View.OnClickListener,
+        PlusClient.OnAccessRevokedListener {
 
-    private static final String TAG = "SignInTestActivity";
-
-    // A magic number we will use to know that our sign-in error
-    // resolution activity has completed.
-    private static final int OUR_REQUEST_CODE = 49404;
+    private static final String TAG = GoogleSignInFragment.class.getSimpleName();
 
     // The core Google+ client.
     private PlusClient mPlusClient;
@@ -45,22 +42,23 @@ public class SignInFragment extends Fragment implements
     // responsive for the user.
     private ConnectionResult mConnectionResult;
 
+    // A magic number we will use to know that our sign-in error
+    // resolution activity has completed.
+    private static final int OUR_REQUEST_CODE = 49404;
+
     // A progress dialog to display when the user is connecting in
     // case there is a delay in any of the dialogs being ready.
     private ProgressDialog mConnectionProgressDialog;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.main, null);
-
+        View rootView = inflater.inflate(R.layout.frag_google_sign_in, null);
         // We pass through this for all three arguments, specifying the:
         // 1. Context
         // 2. Object to call onConnected and onDisconnected on
         // 3. Object to call onConnectionFailed on
-        mPlusClient = new PlusClient.Builder(getActivity(), this, this).build();;
+        mPlusClient = new PlusClient.Builder(getActivity(), this, this).build();
 
 
         // We use mResolveOnFail as a flag to say whether we should trigger
@@ -149,6 +147,8 @@ public class SignInFragment extends Fragment implements
                     // application.
                     String token = GoogleAuthUtil.getToken(context,
                             mPlusClient.getAccountName(), scope);
+
+                    Log.i(TAG, token);
                 } catch (UserRecoverableAuthException e) {
                     // This error is recoverable, so we could fix this
                     // by displaying the intent to the user.
@@ -171,7 +171,7 @@ public class SignInFragment extends Fragment implements
     }
 
     public void onActivityResult(int requestCode, int responseCode,
-                                    Intent intent) {
+                                 Intent intent) {
         Log.v(TAG, "ActivityResult: " + requestCode);
         if (requestCode == OUR_REQUEST_CODE && responseCode == Activity.RESULT_OK) {
             // If we have a successful result, we will want to be able to
@@ -289,3 +289,4 @@ public class SignInFragment extends Fragment implements
         }
     }
 }
+
