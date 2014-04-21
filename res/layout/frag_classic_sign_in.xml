@@ -18,17 +18,30 @@
                 android:text="Classic login"/>
 
         <EditText
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Username"
-                android:id="@+id/username"
+                android:id="@+id/username_input"
+                android:maxWidth="@dimen/max_edittext_width"
+                android:minWidth="@dimen/max_edittext_width"
+                android:layout_gravity="center"
                 android:layout_centerHorizontal="true"/>
 
         <com.grepsound.views.PasswordEditText
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/password"/>
+                android:maxWidth="@dimen/max_edittext_width"
+                android:minWidth="@dimen/max_edittext_width"
+                android:layout_gravity="center"
+                android:id="@+id/password_input"/>
 
     </LinearLayout>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:id="@+id/login_button"
+            android:layout_below="@+id/classic"
+            android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="categories">
+        <item name="1">Profile</item>
+        <item name="2">Explore</item>
+    </string-array>
+
+</resources>
