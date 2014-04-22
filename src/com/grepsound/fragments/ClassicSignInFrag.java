@@ -1,7 +1,9 @@
 package com.grepsound.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,9 +85,20 @@ public class ClassicSignInFrag extends Fragment implements RequestListener{
     @Override
     public void onRequestSuccess(Object o) {
         Log.e(TAG, "Success");
-        if(o instanceof Token)
+        if(o instanceof Token) {
+            SharedPreferences.Editor editor = getActivity().getSharedPreferences("sc-token",
+                                                                Context.MODE_PRIVATE).edit();
+
+            Log.i(TAG, "token_access:"+((Token) o).access);
+            Log.i(TAG, "token_scopes:"+((Token) o).access);
+            Log.i(TAG, "token_refresh:"+((Token) o).access);
+            editor.putString("token_access", ((Token) o).access);
+            editor.putString("token_scopes", ((Token) o).scope);
+            editor.putString("token_refresh", ((Token) o).refresh);
+            editor.commit();
+
             spiceManager.execute(new MeProfileRequest((Token) o), this);
-        else if(o instanceof Profile){
+        } else if(o instanceof Profile){
             Intent intent = new Intent();
             intent.setClass(getActivity(), MainActivity.class);
             startActivity(intent);

@@ -16,7 +16,7 @@ public class MenuFragment extends Fragment implements OnItemClickListener {
 
     private MenuAdapter mAdapter;
     View rootView;
-    // private static final String TAG = MenuFragment.class.getSimpleName();
+    private static final String TAG = MenuFragment.class.getSimpleName();
 
     private Callbacks mCallbacks = sDummyCallbacks;
     private ListView sections;

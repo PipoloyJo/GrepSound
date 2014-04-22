@@ -1,27 +1,17 @@
 package com.grepsound.activities;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Messenger;
 import com.grepsound.R;
-import com.grepsound.fragments.SignInFragment;
 
 public class LoginActivity extends Activity {
 
     private static String TAG = "GrepSound";
 
-
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity);
-        getFragmentManager().beginTransaction().replace(R.id.main_frame, new SignInFragment()).commit();
+        setContentView(R.layout.signin_frag);
     }
 
 

@@ -1,6 +1,9 @@
 package com.grepsound.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -9,34 +12,50 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import com.grepsound.R;
+import com.grepsound.fragments.LikesFragment;
 import com.grepsound.fragments.MenuFragment;
 import com.grepsound.fragments.MyProfileFragment;
+import com.grepsound.requests.LikesRequest;
+import com.grepsound.requests.LoginRequest;
+import com.grepsound.services.SpiceUpService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.soundcloud.api.Token;
 
 /**
  * Created by lisional on 2014-04-21.
  */
-public class MainActivity extends Activity implements MenuFragment.Callbacks{
+public class MainActivity extends Activity implements MenuFragment.Callbacks, LikesFragment.Callbacks{
     private MenuFragment fMenu;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    Token mToken;
+
+    private SpiceManager spiceManager = new SpiceManager(SpiceUpService.class);
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences prefs = getSharedPreferences("sc-token", Context.MODE_PRIVATE);
+
+        // Restore token
+        mToken = new Token(prefs.getString("token_access", null), prefs.getString("token_scopes", null), prefs.getString("token_refresh", null));
 
         fMenu = new MenuFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_frame, new MyProfileFragment())
                                                 .replace(R.id.left_drawer, fMenu)
                                                 .commit();
 
+        setUpNavigationDrawer();
+
+    }
+
+    private void setUpNavigationDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        getActionBar().setHomeButtonEnabled(true);
-
 
         mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
                 mDrawerLayout, /* DrawerLayout object */
@@ -54,11 +73,26 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks{
             }
 
         };
+
+
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        spiceManager.start(this);
+
+    }
+
+    @Override
+    public void onStop() {
+        spiceManager.shouldStop();
+        super.onStop();
     }
 
     @Override
@@ -88,5 +122,11 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks{
     @Override
     public void onSectionSelected(int id) {
 
+    }
+
+    @Override
+    public void getLikes(RequestListener cb) {
+        LikesRequest request = new LikesRequest(mToken);
+        spiceManager.execute(request, cb);
     }
 }
