@@ -7,9 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import com.grepsound.R;
+import com.grepsound.adapters.TrackAdapter;
+import com.grepsound.model.Track;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.ArrayList;
 
 /**
  * Created by lisional on 2014-04-21.
@@ -19,6 +24,7 @@ public class LikesFragment extends Fragment implements RequestListener {
     private Callbacks mCallbacks = sDummyCallbacks;
 
     private static final String TAG = LikesFragment.class.getSimpleName();
+    private TrackAdapter mAdapter;
 
     public interface Callbacks {
         public void getLikes(RequestListener cb);
@@ -45,6 +51,12 @@ public class LikesFragment extends Fragment implements RequestListener {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAdapter = new TrackAdapter(getActivity(), true);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
 
@@ -58,7 +70,9 @@ public class LikesFragment extends Fragment implements RequestListener {
 
         View rootView = inflater.inflate(R.layout.frag_likes, null);
 
+        GridView mGrid = (GridView) rootView.findViewById(R.id.likes_grid);
 
+        mGrid.setAdapter(mAdapter);
 
         return rootView;
     }
@@ -69,7 +83,9 @@ public class LikesFragment extends Fragment implements RequestListener {
     }
 
     @Override
-    public void onRequestSuccess(Object o) {
+    public void onRequestSuccess(Object tr) {
         Log.e(TAG, "Success");
+        mAdapter.addAll((ArrayList<Track>) tr);
+        mAdapter.notifyDataSetChanged();
     }
 }

@@ -90,8 +90,8 @@ public class ClassicSignInFrag extends Fragment implements RequestListener{
                                                                 Context.MODE_PRIVATE).edit();
 
             Log.i(TAG, "token_access:"+((Token) o).access);
-            Log.i(TAG, "token_scopes:"+((Token) o).access);
-            Log.i(TAG, "token_refresh:"+((Token) o).access);
+            Log.i(TAG, "token_scopes:"+((Token) o).scope);
+            Log.i(TAG, "token_refresh:"+((Token) o).refresh);
             editor.putString("token_access", ((Token) o).access);
             editor.putString("token_scopes", ((Token) o).scope);
             editor.putString("token_refresh", ((Token) o).refresh);
