@@ -15,8 +15,11 @@ import com.grepsound.R;
 import com.grepsound.fragments.LikesFragment;
 import com.grepsound.fragments.MenuFragment;
 import com.grepsound.fragments.MyProfileFragment;
+import com.grepsound.fragments.PlaylistsFragment;
+import com.grepsound.requests.DownloadTrackRequest;
 import com.grepsound.requests.LikesRequest;
 import com.grepsound.requests.LoginRequest;
+import com.grepsound.requests.PlaylistsRequest;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -25,7 +28,7 @@ import com.soundcloud.api.Token;
 /**
  * Created by lisional on 2014-04-21.
  */
-public class MainActivity extends Activity implements MenuFragment.Callbacks, LikesFragment.Callbacks{
+public class MainActivity extends Activity implements MenuFragment.Callbacks, LikesFragment.Callbacks, PlaylistsFragment.Callbacks{
     private MenuFragment fMenu;
 
     private DrawerLayout mDrawerLayout;
@@ -129,4 +132,18 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks, Li
         LikesRequest request = new LikesRequest(mToken);
         spiceManager.execute(request, cb);
     }
+
+    @Override
+    public void getSong(RequestListener cb, String url) {
+        DownloadTrackRequest request = new DownloadTrackRequest(this, url);
+        spiceManager.execute(request, cb);
+    }
+
+    @Override
+    public void getPlaylists(RequestListener cb) {
+        PlaylistsRequest request = new PlaylistsRequest(mToken);
+        spiceManager.execute(request, cb);
+    }
+
+
 }

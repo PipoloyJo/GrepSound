@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import com.grepsound.R;
 import com.grepsound.adapters.TrackAdapter;
@@ -25,14 +26,27 @@ public class LikesFragment extends Fragment implements RequestListener {
 
     private static final String TAG = LikesFragment.class.getSimpleName();
     private TrackAdapter mAdapter;
+    private AdapterView.OnItemClickListener mClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            mCallbacks.getSong(LikesFragment.this, mAdapter.getItem(position).getUrl().toString());
+        }
+    };
 
     public interface Callbacks {
         public void getLikes(RequestListener cb);
+
+        void getSong(RequestListener cb, String url);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
         public void getLikes(RequestListener cb) {
+        }
+
+        @Override
+        public void getSong(RequestListener cb, String url) {
+
         }
     };
 
@@ -71,6 +85,7 @@ public class LikesFragment extends Fragment implements RequestListener {
         View rootView = inflater.inflate(R.layout.frag_likes, null);
 
         GridView mGrid = (GridView) rootView.findViewById(R.id.likes_grid);
+        mGrid.setOnItemClickListener(mClickListener);
 
         mGrid.setAdapter(mAdapter);
 

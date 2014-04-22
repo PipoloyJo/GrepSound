@@ -1,7 +1,6 @@
 package com.grepsound.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,12 +76,6 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 
 	}
 
-	class HeaderViewHolder {
-		TextView text;
-	}
-
-
-
 	@Override
 	public int getCount() {
 		return tracks.size();
@@ -138,7 +131,4 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 		mSectionIndices = getSectionIndices();
 		mSectionLetters = getSectionLetters();
 	}
-
-
-
 }

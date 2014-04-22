@@ -57,9 +57,14 @@ public class Track {
 
     private HashMap<String, String> info;
 
+    public Object getUrl() {
+        return info.get(fields.PERMALINK_URL);
+    }
+
     private interface fields {
         String TITLE = "title";
         String DURATION = "duration";
+        String PERMALINK_URL = "permalink_url";
     }
 
     public Track(JSONObject obj) throws JSONException {

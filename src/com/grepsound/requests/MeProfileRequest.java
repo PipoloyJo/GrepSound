@@ -1,6 +1,7 @@
 package com.grepsound.requests;
 
 import com.grepsound.model.Profile;
+import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.request.SpiceRequest;
 import com.soundcloud.api.ApiWrapper;
 import com.soundcloud.api.Http;
@@ -15,11 +16,7 @@ import org.apache.http.HttpStatus;
  */
 public class MeProfileRequest extends SpiceRequest<Profile> {
 
-    private static String CLIENT_ID = "398a7f28d61b10d5ee14fcb8bff95d68";
-    private static String CLIENT_SECRET = "a072bc979fa0a87ef880a529337e7f66";
     Token token;
-
-
 
     public MeProfileRequest(Token tok) {
         super(Profile.class);
@@ -28,7 +25,7 @@ public class MeProfileRequest extends SpiceRequest<Profile> {
 
     @Override
     public Profile loadDataFromNetwork() throws Exception {
-        ApiWrapper wrapper = new ApiWrapper(CLIENT_ID, CLIENT_SECRET, null, token) ;
+        ApiWrapper wrapper = new ApiWrapper(SpiceUpService.CLIENT_ID, SpiceUpService.CLIENT_SECRET, null, token) ;
 
         HttpResponse resp = wrapper.get(Request.to("/me"));
         //if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {

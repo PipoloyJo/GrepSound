@@ -19,6 +19,7 @@ public class MyProfileFragment extends Fragment {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
+
     @Override
     public void onCreate(Bundle savedBundle) {
         super.onCreate(savedBundle);
