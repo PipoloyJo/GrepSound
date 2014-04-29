@@ -22,6 +22,7 @@ import com.grepsound.requests.LoginRequest;
 import com.grepsound.requests.PlaylistsRequest;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.request.CachedSpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.soundcloud.api.Token;
 

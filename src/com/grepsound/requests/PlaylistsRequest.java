@@ -3,6 +3,7 @@ package com.grepsound.requests;
 import android.util.Log;
 import com.grepsound.model.Playlist;
 import com.grepsound.services.SpiceUpService;
+import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.request.SpiceRequest;
 import com.soundcloud.api.ApiWrapper;
 import com.soundcloud.api.Http;
@@ -13,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.UUID;
 
 /**
  * Created by lisional on 2014-04-22.

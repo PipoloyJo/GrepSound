@@ -4,6 +4,8 @@ import android.util.Log;
 import com.grepsound.model.Profile;
 import com.grepsound.model.Track;
 import com.grepsound.services.SpiceUpService;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.request.CachedSpiceRequest;
 import com.octo.android.robospice.request.SpiceRequest;
 import com.soundcloud.api.ApiWrapper;
 import com.soundcloud.api.Http;
@@ -21,12 +23,12 @@ import java.util.Iterator;
 /**
  * Created by lisional on 2014-04-21.
  */
-public class LikesRequest extends SpiceRequest<ArrayList<Track>> {
+public class LikesRequest extends CachedSpiceRequest<ArrayList<Track>> {
 
     Token token;
 
     public LikesRequest(Token tok) {
-        super(null);
+        super(null, true, DurationInMillis.ONE_MINUTE);
         token = tok;
     }
 
@@ -44,10 +46,6 @@ public class LikesRequest extends SpiceRequest<ArrayList<Track>> {
             Log.i("Track", " : " + result.get(i).toString());
             tracks.add(new Track((JSONObject) result.get(i)));
         }
-        //if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-          //  System.out.println("\n" + Http.formatJSON(Http.getString(resp)));
-        //}
-        //ArrayList<Track> tracks = new Profile(resp);
 
         return tracks;
     }
