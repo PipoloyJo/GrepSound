@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import com.grepsound.R;
 import com.grepsound.adapters.TrackAdapter;
-import com.grepsound.model.Track;
+import com.grepsound.model.Tracks;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -100,7 +100,7 @@ public class LikesFragment extends Fragment implements RequestListener {
     @Override
     public void onRequestSuccess(Object tr) {
         Log.e(TAG, "Success");
-        mAdapter.addAll((ArrayList<Track>) tr);
+        mAdapter.addAll((Tracks) tr);
         mAdapter.notifyDataSetChanged();
     }
 }

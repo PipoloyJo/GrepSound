@@ -4,11 +4,9 @@ import com.grepsound.model.Profile;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.request.SpiceRequest;
 import com.soundcloud.api.ApiWrapper;
-import com.soundcloud.api.Http;
 import com.soundcloud.api.Request;
 import com.soundcloud.api.Token;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 
 
 /**

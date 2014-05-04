@@ -2,15 +2,9 @@ package com.grepsound.requests;
 
 import android.os.Bundle;
 import com.grepsound.services.SpiceUpService;
-import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.SpiceRequest;
-import com.octo.android.robospice.request.listener.RequestListener;
 import com.soundcloud.api.ApiWrapper;
-import com.soundcloud.api.Request;
 import com.soundcloud.api.Token;
-import org.apache.http.HttpResponse;
-
-import java.io.IOException;
 
 /**
  * Created by lisional on 2014-04-18.

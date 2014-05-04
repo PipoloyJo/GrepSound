@@ -5,29 +5,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import com.grepsound.R;
-import com.grepsound.model.Track;
+import com.grepsound.image.ImageLoader;
+import com.grepsound.model.Tracks;
 
 import java.util.ArrayList;
 
 public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 
 	Context mContext;
-	ArrayList<Track> tracks;
+	Tracks tracks;
 
 	private boolean isHeadersActivated;
 	private int[] mSectionIndices;
 	private Character[] mSectionLetters;
 	private LayoutInflater mInflater;
+    private ImageLoader mImageLoader;
 	private final static String TAG = TrackAdapter.class.getSimpleName();
 
 	public TrackAdapter(Context c, boolean headers) {
 		mContext = c;
 		mInflater = LayoutInflater.from(c);
-		tracks = new ArrayList<Track>();
+		tracks = new Tracks();
 		isHeadersActivated = headers;
+        mImageLoader = new ImageLoader(c);
 		mSectionIndices = getSectionIndices();
 		mSectionLetters = getSectionLetters();
 	}
@@ -70,11 +74,25 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 
 		TextView name = (TextView) convertView.findViewById(R.id.track_name);
 		TextView duration = (TextView) convertView.findViewById(R.id.track_duration);
+        ImageView cover = (ImageView) convertView.findViewById(R.id.track_cover);
 		name.setText(tracks.get(position).getTitle());
 		duration.setText(tracks.get(position).getDuration());
+        mImageLoader.DisplayImage(tracks.getImageUrlOf(position), cover);
 		return convertView;
 
 	}
+
+    /**
+     *
+     * ViewHolder
+     * @return
+     */
+
+    private class TrackViewHolder {
+        ImageView photo;
+        TextView name;
+        TextView duration;
+    }
 
 	@Override
 	public int getCount() {
@@ -112,7 +130,7 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 	}
 
 	@Override
-	public Track getItem(int position) {
+	public Tracks.Track getItem(int position) {
 		return tracks.get(position);
 	}
 
@@ -125,8 +143,9 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 		tracks.clear();
 	}
 
-	public void addAll(ArrayList<Track> tr) {
-		tracks = new ArrayList<Track>(tr);
+	public void addAll(Tracks tr) {
+        tracks.clear();
+		tracks = tr;
 
 		mSectionIndices = getSectionIndices();
 		mSectionLetters = getSectionLetters();

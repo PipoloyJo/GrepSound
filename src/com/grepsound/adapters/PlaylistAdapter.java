@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import com.grepsound.R;
-import com.grepsound.model.Playlist;
+import com.grepsound.model.PlayLists;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class PlaylistAdapter extends BaseAdapter implements SectionIndexer {
 
     Context mContext;
-    ArrayList<Playlist> mPlaylists;
+    PlayLists mPlaylists;
 
     private boolean isHeadersActivated;
     private int[] mSectionIndices;
@@ -29,7 +29,7 @@ public class PlaylistAdapter extends BaseAdapter implements SectionIndexer {
     public PlaylistAdapter(Context c, boolean headers) {
         mContext = c;
         mInflater = LayoutInflater.from(c);
-        mPlaylists = new ArrayList<Playlist>();
+        mPlaylists = new PlayLists();
         isHeadersActivated = headers;
         mSectionIndices = getSectionIndices();
         mSectionLetters = getSectionLetters();
@@ -115,7 +115,7 @@ public class PlaylistAdapter extends BaseAdapter implements SectionIndexer {
     }
 
     @Override
-    public Playlist getItem(int position) {
+    public PlayLists.Playlist getItem(int position) {
         return mPlaylists.get(position);
     }
 
@@ -128,8 +128,9 @@ public class PlaylistAdapter extends BaseAdapter implements SectionIndexer {
         mPlaylists.clear();
     }
 
-    public void addAll(ArrayList<Playlist> tr) {
-        mPlaylists = new ArrayList<Playlist>(tr);
+    public void addAll(PlayLists tr) {
+        mPlaylists.clear();
+        mPlaylists.addAll(tr);
 
         mSectionIndices = getSectionIndices();
         mSectionLetters = getSectionLetters();

@@ -11,9 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import com.grepsound.R;
 import com.grepsound.adapters.PlaylistAdapter;
-import com.grepsound.adapters.TrackAdapter;
-import com.grepsound.model.Playlist;
-import com.grepsound.model.Track;
+import com.grepsound.model.PlayLists;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -97,7 +95,7 @@ public class PlaylistsFragment extends Fragment implements RequestListener {
     @Override
     public void onRequestSuccess(Object tr) {
         Log.e(TAG, "Success");
-        mAdapter.addAll((ArrayList<Playlist>) tr);
+        mAdapter.addAll((PlayLists) tr);
         mAdapter.notifyDataSetChanged();
     }
 }

@@ -1,7 +1,6 @@
 package com.grepsound.activities;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -18,11 +17,9 @@ import com.grepsound.fragments.MyProfileFragment;
 import com.grepsound.fragments.PlaylistsFragment;
 import com.grepsound.requests.DownloadTrackRequest;
 import com.grepsound.requests.LikesRequest;
-import com.grepsound.requests.LoginRequest;
 import com.grepsound.requests.PlaylistsRequest;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.request.CachedSpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.soundcloud.api.Token;
 

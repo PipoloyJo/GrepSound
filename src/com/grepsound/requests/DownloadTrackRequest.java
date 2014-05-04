@@ -3,7 +3,6 @@ package com.grepsound.requests;
 import android.content.Context;
 import android.util.Log;
 import com.octo.android.robospice.request.SpiceRequest;
-import com.soundcloud.api.Token;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
