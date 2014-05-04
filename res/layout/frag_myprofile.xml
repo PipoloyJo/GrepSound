@@ -4,11 +4,17 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
+    <ImageView android:id="@+id/user_cover"
+               android:layout_width="100dp"
+               android:layout_alignParentTop="true"
+               android:scaleType="centerCrop"
+               android:layout_height="70dp"/>
+
     <com.grepsound.views.PagerSlidingTabStrip
             android:id="@+id/pts_main"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/user_cover"
             app:indicatorColor="@color/white"
             app:shouldExpand="true"
             app:underlineColor="@color/white" />

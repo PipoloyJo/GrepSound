@@ -26,9 +26,8 @@ public class Profile {
         String CITY = "city";
     }
 
-    public Profile(HttpResponse response) throws JSONException, IOException {
+    public Profile(JSONObject result) throws JSONException, IOException {
 
-        JSONObject result = Http.getJSON(response);
         info = new HashMap<String, String>();
 
         Iterator ite = result.keys();
@@ -38,5 +37,9 @@ public class Profile {
             Log.i("Profile", key + " : " + result.get(key).toString());
             info.put(key, result.get(key).toString());
         }
+    }
+
+    public String getAvatarUrl(){
+        return info.get(fields.AVATAR_URL);
     }
 }

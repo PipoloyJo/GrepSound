@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.ImageView;
 import com.grepsound.R;
 
@@ -56,9 +57,9 @@ public class ImageLoader {
         File f=fileCache.getFile(url);
 
         //from SD cache
-        Bitmap b = decodeFile(f);
-        if(b!=null)
-            return b;
+        //Bitmap b = decodeFile(f);
+        //if(b!=null)
+          //  return b;
 
         //from web
         try {
@@ -87,10 +88,15 @@ public class ImageLoader {
         try {
             //decode image size
             BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(new FileInputStream(f),null,o);
+            Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(f),null,o);
 
-            //Find the correct scale value. It should be the power of 2.
+
+            Log.i("IMAGELOADER", "WIDTH:"+bmp.getWidth());
+            Log.i("IMAGELOADER", "HEIGHT:"+bmp.getHeight());
+            //o.inJustDecodeBounds = true;
+            return BitmapFactory.decodeStream(new FileInputStream(f),null,o);
+
+            /*Find the correct scale value. It should be the power of 2.
             final int REQUIRED_SIZE=70;
             int width_tmp=o.outWidth, height_tmp=o.outHeight;
             int scale=1;
@@ -105,7 +111,7 @@ public class ImageLoader {
             //decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize=scale;
-            return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+            return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);*/
         } catch (FileNotFoundException e) {}
         return null;
     }

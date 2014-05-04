@@ -1,29 +1,63 @@
 package com.grepsound.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import com.grepsound.R;
 import com.grepsound.adapters.SectionsPagerAdapter;
+import com.grepsound.image.ImageLoader;
+import com.grepsound.model.Profile;
 import com.grepsound.views.PagerSlidingTabStrip;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
  * Created by lisional on 2014-04-21.
  */
-public class MyProfileFragment extends Fragment {
+public class MyProfileFragment extends Fragment implements RequestListener {
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private ImageView mUserCover;
+    private ImageLoader mImgLoader;
+    private Callbacks mCallbacks;
 
+    public interface Callbacks {
+        public void getProfile(RequestListener cb);
+    }
+
+    private static Callbacks sDummyCallbacks = new Callbacks() {
+        @Override
+        public void getProfile(RequestListener cb) {
+        }
+
+    };
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
+
+        mCallbacks.getProfile(this);
+    }
 
     @Override
     public void onCreate(Bundle savedBundle) {
         super.onCreate(savedBundle);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getActivity(), getFragmentManager());
+        mImgLoader = new ImageLoader(getActivity());
     }
 
 
@@ -38,27 +72,25 @@ public class MyProfileFragment extends Fragment {
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(1);
-        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         final PagerSlidingTabStrip strip = PagerSlidingTabStrip.class.cast(rootView.findViewById(R.id.pts_main));
 
         strip.setViewPager(mViewPager);
 
+        mUserCover = (ImageView) rootView.findViewById(R.id.user_cover);
+
+
         return rootView;
     }
 
-    public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-        private static final float MIN_ALPHA = .6f;
+    @Override
+    public void onRequestFailure(SpiceException e) {
 
-        public ZoomOutPageTransformer() {
-            super();
-        }
-
-        @Override
-        public void transformPage(View page, float position) {
-            final float normalizedposition = Math.abs(Math.abs(position) - 1);
-            page.setAlpha(MIN_ALPHA + (1.f - MIN_ALPHA) * normalizedposition);
-        }
     }
 
+    @Override
+    public void onRequestSuccess(Object o) {
+
+        mImgLoader.DisplayImage(((Profile)o).getAvatarUrl(), mUserCover);
+    }
 
 }

@@ -4,9 +4,11 @@ import com.grepsound.model.Profile;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.request.SpiceRequest;
 import com.soundcloud.api.ApiWrapper;
+import com.soundcloud.api.Http;
 import com.soundcloud.api.Request;
 import com.soundcloud.api.Token;
 import org.apache.http.HttpResponse;
+import org.json.JSONObject;
 
 
 /**
@@ -26,10 +28,8 @@ public class MeProfileRequest extends SpiceRequest<Profile> {
         ApiWrapper wrapper = new ApiWrapper(SpiceUpService.CLIENT_ID, SpiceUpService.CLIENT_SECRET, null, token) ;
 
         HttpResponse resp = wrapper.get(Request.to("/me"));
-        //if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            //System.out.println("\n" + Http.formatJSON(Http.getString(resp)));
-        //}
-        Profile profile = new Profile(resp);
+        JSONObject result = Http.getJSON(resp);
+        Profile profile = new Profile(result);
 
         return profile;
     }

@@ -17,6 +17,7 @@ import com.grepsound.fragments.MyProfileFragment;
 import com.grepsound.fragments.PlaylistsFragment;
 import com.grepsound.requests.DownloadTrackRequest;
 import com.grepsound.requests.LikesRequest;
+import com.grepsound.requests.MeProfileRequest;
 import com.grepsound.requests.PlaylistsRequest;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
@@ -26,7 +27,10 @@ import com.soundcloud.api.Token;
 /**
  * Created by lisional on 2014-04-21.
  */
-public class MainActivity extends Activity implements MenuFragment.Callbacks, LikesFragment.Callbacks, PlaylistsFragment.Callbacks{
+public class MainActivity extends Activity implements   MenuFragment.Callbacks,
+                                                        LikesFragment.Callbacks,
+                                                        PlaylistsFragment.Callbacks,
+                                                        MyProfileFragment.Callbacks {
     private MenuFragment fMenu;
 
     private DrawerLayout mDrawerLayout;
@@ -144,4 +148,9 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks, Li
     }
 
 
+    @Override
+    public void getProfile(RequestListener cb) {
+        MeProfileRequest req = new MeProfileRequest(mToken);
+        spiceManager.execute(req, cb);
+    }
 }
