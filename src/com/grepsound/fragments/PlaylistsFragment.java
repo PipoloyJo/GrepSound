@@ -34,13 +34,13 @@ public class PlaylistsFragment extends Fragment implements RequestListener {
     };
 
     public interface Callbacks {
-        public void getPlaylists(RequestListener cb);
+        public void getPlaylists(RequestListener<PlayLists> cb);
 
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void getPlaylists(RequestListener cb) {
+        public void getPlaylists(RequestListener<PlayLists> cb) {
         }
 
     };

@@ -1,5 +1,6 @@
 package com.grepsound.requests;
 
+import com.grepsound.activities.Api;
 import com.grepsound.model.Tracks;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -17,25 +18,15 @@ import org.json.JSONArray;
  */
 public class LikesRequest extends SpiceRequest<Tracks> {
 
-    Token token;
 
-    public LikesRequest(Token tok) {
-        super(Tracks.class);
-        token = tok;
+    public LikesRequest(Class<Tracks> clazz) {
+        super(clazz);
     }
 
     @Override
     public Tracks loadDataFromNetwork() throws Exception {
-        ApiWrapper wrapper = new ApiWrapper(SpiceUpService.CLIENT_ID, SpiceUpService.CLIENT_SECRET, null, token) ;
-
-        HttpResponse resp = wrapper.get(Request.to("/me/favorites"));
-
+        HttpResponse resp = Api.wrapper.get(Request.to("/me/favorites"));
         JSONArray result = new JSONArray(Http.getString(resp));
-
-        Tracks tracks = new Tracks(result);
-
-
-
-        return tracks;
+        return new Tracks(result);
     }
 }

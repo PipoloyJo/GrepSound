@@ -31,12 +31,12 @@ public class MyProfileFragment extends Fragment implements RequestListener {
     private Callbacks mCallbacks;
 
     public interface Callbacks {
-        public void getProfile(RequestListener cb);
+        public void getProfile(RequestListener<Profile> cb);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void getProfile(RequestListener cb) {
+        public void getProfile(RequestListener<Profile> cb) {
         }
 
     };

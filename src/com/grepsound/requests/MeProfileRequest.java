@@ -1,5 +1,6 @@
 package com.grepsound.requests;
 
+import com.grepsound.activities.Api;
 import com.grepsound.model.Profile;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.request.SpiceRequest;
@@ -16,21 +17,15 @@ import org.json.JSONObject;
  */
 public class MeProfileRequest extends SpiceRequest<Profile> {
 
-    Token token;
 
-    public MeProfileRequest(Token tok) {
-        super(Profile.class);
-        token = tok;
+    public MeProfileRequest(Class<Profile> clazz) {
+        super(clazz);
     }
 
     @Override
     public Profile loadDataFromNetwork() throws Exception {
-        ApiWrapper wrapper = new ApiWrapper(SpiceUpService.CLIENT_ID, SpiceUpService.CLIENT_SECRET, null, token) ;
-
-        HttpResponse resp = wrapper.get(Request.to("/me"));
+        HttpResponse resp = Api.wrapper.get(Request.to("/me"));
         JSONObject result = Http.getJSON(resp);
-        Profile profile = new Profile(result);
-
-        return profile;
+        return new Profile(result);
     }
 }

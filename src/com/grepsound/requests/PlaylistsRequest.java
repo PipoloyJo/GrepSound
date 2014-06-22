@@ -1,6 +1,7 @@
 package com.grepsound.requests;
 
 import android.util.Log;
+import com.grepsound.activities.Api;
 import com.grepsound.model.PlayLists;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.request.SpiceRequest;
@@ -19,25 +20,14 @@ import java.util.ArrayList;
  */
 public class PlaylistsRequest extends SpiceRequest<PlayLists> {
 
-
-    Token token;
-
-    public PlaylistsRequest(Token tok) {
-        super(PlayLists.class);
-        token = tok;
+    public PlaylistsRequest(Class<PlayLists> clazz) {
+        super(clazz);
     }
 
     @Override
     public PlayLists loadDataFromNetwork() throws Exception {
-
-        ApiWrapper wrapper = new ApiWrapper(SpiceUpService.CLIENT_ID, SpiceUpService.CLIENT_SECRET, null, token) ;
-
-        HttpResponse resp = wrapper.get(Request.to("/me/playlists"));
-
+        HttpResponse resp = Api.wrapper.get(Request.to("/me/playlists"));
         JSONArray result = new JSONArray(Http.getString(resp));
-
-        PlayLists playlists = new PlayLists(result);
-
-        return playlists;
+        return new PlayLists(result);
     }
 }

@@ -15,6 +15,9 @@ import com.grepsound.fragments.LikesFragment;
 import com.grepsound.fragments.MenuFragment;
 import com.grepsound.fragments.MyProfileFragment;
 import com.grepsound.fragments.PlaylistsFragment;
+import com.grepsound.model.PlayLists;
+import com.grepsound.model.Profile;
+import com.grepsound.model.Tracks;
 import com.grepsound.requests.DownloadTrackRequest;
 import com.grepsound.requests.LikesRequest;
 import com.grepsound.requests.MeProfileRequest;
@@ -36,8 +39,6 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    Token mToken;
-
     private SpiceManager spiceManager = new SpiceManager(SpiceUpService.class);
 
     public void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,6 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         setContentView(R.layout.activity_main);
 
         SharedPreferences prefs = getSharedPreferences("sc-token", Context.MODE_PRIVATE);
-
-        // Restore token
-        mToken = new Token(prefs.getString("token_access", null), prefs.getString("token_scopes", null), prefs.getString("token_refresh", null));
 
         fMenu = new MenuFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_frame, new MyProfileFragment())
@@ -131,7 +129,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void getLikes(RequestListener cb) {
-        LikesRequest request = new LikesRequest(mToken);
+        LikesRequest request = new LikesRequest(Tracks.class);
         spiceManager.execute(request, cb);
     }
 
@@ -142,15 +140,15 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     }
 
     @Override
-    public void getPlaylists(RequestListener cb) {
-        PlaylistsRequest request = new PlaylistsRequest(mToken);
+    public void getPlaylists(RequestListener<PlayLists> cb) {
+        PlaylistsRequest request = new PlaylistsRequest(PlayLists.class);
         spiceManager.execute(request, cb);
     }
 
 
     @Override
-    public void getProfile(RequestListener cb) {
-        MeProfileRequest req = new MeProfileRequest(mToken);
+    public void getProfile(RequestListener<Profile> cb) {
+        MeProfileRequest req = new MeProfileRequest(Profile.class);
         spiceManager.execute(req, cb);
     }
 }
