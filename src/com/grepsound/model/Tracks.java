@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 public class Tracks extends ArrayList<Tracks.Track> {
 
-    public Tracks(){
+    public Tracks() {
 
     }
 
@@ -103,7 +103,16 @@ public class Tracks extends ArrayList<Tracks.Track> {
         }
 
         public String getDuration() {
-            return info.get(fields.DURATION);
+            String dur = info.get(fields.DURATION);
+            int milliSeconds = Integer.parseInt(dur);
+
+            int seconds = milliSeconds / 1000;
+            int minutes = seconds / 60;
+            seconds %= 60;
+            int hours = minutes / 60;
+            minutes %= 60;
+
+            return minutes+"."+seconds;
         }
 
 

@@ -2,27 +2,57 @@
                 xmlns:app="http://schemas.android.com/apk/res/com.grepsound"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
-    <ImageView android:id="@+id/user_cover"
-               android:layout_width="100dp"
-               android:layout_alignParentTop="true"
-               android:scaleType="centerCrop"
-               android:layout_height="70dp"/>
+    <RelativeLayout android:id="@+id/user_infos"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical">
+
+        <ImageView android:id="@+id/user_cover"
+                   android:layout_width="match_parent"
+                   android:layout_alignParentTop="true"
+                   android:scaleType="centerCrop"
+                   android:layout_height="match_parent"/>
+
+        <TextView android:id="@+id/user_name"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentTop="true"
+                  android:layout_alignParentLeft="true"
+                  android:background="@color/transparent_black"/>
+
+        <TextView android:id="@+id/user_followers_count"
+                  android:layout_width="wrap_content"
+                  android:layout_below="@+id/user_name"
+                  android:layout_alignParentLeft="true"
+                  android:background="@color/transparent_black"
+                  android:layout_height="wrap_content"/>
+
+        <TextView android:id="@+id/user_city"
+                  android:layout_width="wrap_content"
+                  android:background="@color/transparent_black"
+                  android:gravity="center"
+                  android:layout_alignParentRight="true"
+                  android:layout_centerVertical="true"
+                  android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 
     <com.grepsound.views.PagerSlidingTabStrip
             android:id="@+id/pts_main"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:layout_below="@+id/user_cover"
-            app:indicatorColor="@color/white"
+            app:indicatorColor="@color/holo_orange_light"
             app:shouldExpand="true"
-            app:underlineColor="@color/white" />
+            app:underlineColor="@color/holo_orange_light_transparent"/>
 
     <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/pts_main" />
+            android:layout_below="@+id/pts_main"/>
 
 </RelativeLayout>

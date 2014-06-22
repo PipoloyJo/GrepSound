@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import com.grepsound.R;
+import com.grepsound.activities.Api;
 import com.grepsound.activities.MainActivity;
 import com.grepsound.model.Profile;
 import com.grepsound.requests.LoginRequest;
@@ -20,6 +21,7 @@ import com.grepsound.views.PasswordEditText;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.soundcloud.api.ApiWrapper;
 import com.soundcloud.api.Token;
 
 /**
@@ -52,10 +54,6 @@ public class ClassicSignInFrag extends Fragment implements RequestListener{
                 spiceManager.execute(request, ClassicSignInFrag.this);
             }
         });
-
-
-
-
         return rootView;
     }
 
@@ -92,12 +90,15 @@ public class ClassicSignInFrag extends Fragment implements RequestListener{
             editor.putString("token_refresh", ((Token) o).refresh);
             editor.commit();
 
-            spiceManager.execute(new MeProfileRequest((Token) o), this);
-        } else if(o instanceof Profile){
+            // Restore token
+            Token token = new Token(((Token) o).access, ((Token) o).scope, ((Token) o).refresh);
+
+            // create the API wrapper with the token
+            Api.wrapper = new ApiWrapper(null, null, null, token);
+
             Intent intent = new Intent();
             intent.setClass(getActivity(), MainActivity.class);
             startActivity(intent);
         }
-
     }
 }

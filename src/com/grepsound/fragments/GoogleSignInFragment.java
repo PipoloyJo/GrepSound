@@ -26,8 +26,10 @@ import java.io.IOException;
 /**
  * Created by lisional on 2014-04-11.
  */
-public class GoogleSignInFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, View.OnClickListener,
-        PlusClient.OnAccessRevokedListener {
+public class GoogleSignInFragment extends Fragment implements   GooglePlayServicesClient.ConnectionCallbacks,
+                                                                GooglePlayServicesClient.OnConnectionFailedListener,
+                                                                View.OnClickListener,
+                                                                PlusClient.OnAccessRevokedListener {
 
     private static final String TAG = GoogleSignInFragment.class.getSimpleName();
 

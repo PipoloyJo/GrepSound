@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.grepsound.R;
 import com.grepsound.adapters.SectionsPagerAdapter;
 import com.grepsound.image.ImageLoader;
@@ -25,6 +26,7 @@ public class MyProfileFragment extends Fragment implements RequestListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private ImageView mUserCover;
+    private TextView mName, mCity, mFollowersCount;
     private ImageLoader mImgLoader;
     private Callbacks mCallbacks;
 
@@ -78,6 +80,10 @@ public class MyProfileFragment extends Fragment implements RequestListener {
 
         mUserCover = (ImageView) rootView.findViewById(R.id.user_cover);
 
+        mName = (TextView) rootView.findViewById(R.id.user_name);
+        mFollowersCount = (TextView) rootView.findViewById(R.id.user_followers_count);
+        mCity = (TextView) rootView.findViewById(R.id.user_city);
+
 
         return rootView;
     }
@@ -91,6 +97,9 @@ public class MyProfileFragment extends Fragment implements RequestListener {
     public void onRequestSuccess(Object o) {
 
         mImgLoader.DisplayImage(((Profile)o).getAvatarUrl(), mUserCover);
+        mName.setText(((Profile)o).getUsername());
+        mFollowersCount.setText(((Profile)o).getFollowersCount());
+        mCity.setText(((Profile) o).getCity());
     }
 
 }
