@@ -9,13 +9,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <com.grepsound.views.SlidingUpPanelLayout
-                android:id="@+id/custom_sliding_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical">
-
             <FrameLayout
                     android:id="@+id/main_frame"
                     android:layout_width="match_parent"
@@ -24,12 +17,6 @@
                     android:orientation="vertical" >
             </FrameLayout>
 
-            <FrameLayout
-                    android:id="@+id/player_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-        </com.grepsound.views.SlidingUpPanelLayout>
     </RelativeLayout>
 
     <FrameLayout
