@@ -25,7 +25,6 @@ import com.grepsound.requests.PlaylistsRequest;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.soundcloud.api.Token;
 
 /**
  * Created by lisional on 2014-04-21.
@@ -128,7 +127,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     }
 
     @Override
-    public void getLikes(RequestListener cb) {
+    public void getLikes(RequestListener<Tracks> cb) {
         LikesRequest request = new LikesRequest(Tracks.class);
         spiceManager.execute(request, cb);
     }

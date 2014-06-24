@@ -2,8 +2,9 @@
 <resources>
 
     <string-array name="categories">
-        <item name="1">Profile</item>
-        <item name="2">Explore</item>
+        <item name="1">Stream</item>
+        <item name="2">Following</item>
+        <item name="2">Followers</item>
     </string-array>
 
 </resources>

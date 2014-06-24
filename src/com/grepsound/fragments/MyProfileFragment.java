@@ -20,7 +20,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 /**
  * Created by lisional on 2014-04-21.
  */
-public class MyProfileFragment extends Fragment implements RequestListener {
+public class MyProfileFragment extends Fragment implements RequestListener<Profile> {
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -53,6 +53,14 @@ public class MyProfileFragment extends Fragment implements RequestListener {
         mCallbacks = (Callbacks) activity;
 
         mCallbacks.getProfile(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        // Reset the active callbacks interface to the dummy implementation.
+        mCallbacks = sDummyCallbacks;
     }
 
     @Override
@@ -94,12 +102,12 @@ public class MyProfileFragment extends Fragment implements RequestListener {
     }
 
     @Override
-    public void onRequestSuccess(Object o) {
+    public void onRequestSuccess(Profile profile) {
 
-        mImgLoader.DisplayImage(((Profile)o).getAvatarUrl(), mUserCover);
-        mName.setText(((Profile)o).getUsername());
-        mFollowersCount.setText(((Profile)o).getFollowersCount());
-        mCity.setText(((Profile) o).getCity());
+        mImgLoader.DisplayImage(profile.getAvatarUrl(), mUserCover);
+        mName.setText(profile.getUsername());
+        mFollowersCount.setText(profile.getFollowersCount());
+        mCity.setText(profile.getCity());
     }
 
 }

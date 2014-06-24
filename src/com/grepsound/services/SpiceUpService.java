@@ -6,6 +6,7 @@ import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.binary.InFileBitmapObjectPersister;
 import com.octo.android.robospice.persistence.exception.CacheCreationException;
 import com.octo.android.robospice.persistence.memory.LruCacheBitmapObjectPersister;
+import com.octo.android.robospice.persistence.springandroid.json.jackson.JacksonObjectPersisterFactory;
 
 /**
  * Created by lisional on 2014-04-18.
@@ -18,7 +19,7 @@ public class SpiceUpService extends SpiceService {
     @Override
     public CacheManager createCacheManager(Application application) throws CacheCreationException {
         CacheManager cacheManager = new CacheManager();
-        /*try {
+        try {
             final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
             final int cacheSize = maxMemory / 8;
             JacksonObjectPersisterFactory jacksonObjectPersisterFactory = new JacksonObjectPersisterFactory(application);
@@ -31,7 +32,7 @@ public class SpiceUpService extends SpiceService {
 
         } catch (CacheCreationException e) {
             e.printStackTrace();
-        }*/
+        }
         return cacheManager;
     }
 

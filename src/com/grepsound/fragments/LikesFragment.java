@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by lisional on 2014-04-21.
  */
-public class LikesFragment extends Fragment implements RequestListener {
+public class LikesFragment extends Fragment implements RequestListener<Tracks> {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
@@ -34,14 +34,14 @@ public class LikesFragment extends Fragment implements RequestListener {
     };
 
     public interface Callbacks {
-        public void getLikes(RequestListener cb);
+        public void getLikes(RequestListener<Tracks> cb);
 
         void getSong(RequestListener cb, String url);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void getLikes(RequestListener cb) {
+        public void getLikes(RequestListener<Tracks> cb) {
         }
 
         @Override
@@ -98,9 +98,9 @@ public class LikesFragment extends Fragment implements RequestListener {
     }
 
     @Override
-    public void onRequestSuccess(Object tr) {
+    public void onRequestSuccess(Tracks tr) {
         Log.e(TAG, "Success");
-        mAdapter.addAll((Tracks) tr);
+        mAdapter.addAll(tr);
         mAdapter.notifyDataSetChanged();
     }
 }

@@ -25,7 +25,7 @@ public class LikesRequest extends SpiceRequest<Tracks> {
 
     @Override
     public Tracks loadDataFromNetwork() throws Exception {
-        HttpResponse resp = Api.wrapper.get(Request.to("/me/favorites"));
+        HttpResponse resp = Api.wrapper.get(Request.to("/me/favorites?limit=100"));
         JSONArray result = new JSONArray(Http.getString(resp));
         return new Tracks(result);
     }
