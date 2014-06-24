@@ -31,20 +31,18 @@
 
 package com.grepsound.adapters;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
-import android.app.FragmentManager;
-import android.support.v13.app.FragmentStatePagerAdapter;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Context;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import com.grepsound.R;
 import com.grepsound.fragments.LikesFragment;
 import com.grepsound.fragments.PlaylistsFragment;
-import com.grepsound.fragments.StreamFragment;
-
-import android.content.Context;
-import android.util.Log;
 import com.grepsound.views.PagerSlidingTabStrip;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
 
@@ -56,7 +54,6 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter implements P
         super(fm);
         mContext = c;
         fragments = new ArrayList<Fragment>();
-        fragments.add(new StreamFragment());
         fragments.add(new LikesFragment());
         fragments.add(new PlaylistsFragment());
     }
@@ -77,10 +74,8 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter implements P
 
         switch (position) {
         case 0:
-            return mContext.getString(R.string.title_section0).toUpperCase(Locale.getDefault());
-        case 1:
             return mContext.getString(R.string.title_section1).toUpperCase(Locale.getDefault());
-        case 2:
+        case 1:
             return mContext.getString(R.string.title_section2).toUpperCase(Locale.getDefault());
         default:
             Log.e(TAG, "getPageTitle: unknown tab position " + position);
@@ -93,10 +88,8 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter implements P
     public int getPageIconResId(int position) {
         switch (position) {
         case 0:
-            return R.drawable.ic_launcher;
-        case 1:
             return R.drawable.ic_action_favorite;
-        case 2:
+        case 1:
             return R.drawable.ic_action_reveal;
         default:
             Log.e(TAG, "getPageTitle: unknown tab position " + position);

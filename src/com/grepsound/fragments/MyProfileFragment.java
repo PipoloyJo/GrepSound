@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.grepsound.R;
@@ -26,7 +27,8 @@ public class MyProfileFragment extends Fragment implements RequestListener<Profi
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private ImageView mUserCover;
-    private TextView mName, mCity, mFollowersCount;
+    private TextView mName, mCity;
+    private Button mFollowers, mFollowing;
     private ImageLoader mImgLoader;
     private Callbacks mCallbacks;
 
@@ -89,7 +91,8 @@ public class MyProfileFragment extends Fragment implements RequestListener<Profi
         mUserCover = (ImageView) rootView.findViewById(R.id.user_cover);
 
         mName = (TextView) rootView.findViewById(R.id.user_name);
-        mFollowersCount = (TextView) rootView.findViewById(R.id.user_followers_count);
+        mFollowers = (Button) rootView.findViewById(R.id.followers_button);
+        mFollowing = (Button) rootView.findViewById(R.id.following_button);
         mCity = (TextView) rootView.findViewById(R.id.user_city);
 
 
@@ -106,7 +109,8 @@ public class MyProfileFragment extends Fragment implements RequestListener<Profi
 
         mImgLoader.DisplayImage(profile.getAvatarUrl(), mUserCover);
         mName.setText(profile.getUsername());
-        mFollowersCount.setText(profile.getFollowersCount());
+        mFollowers.setText(profile.getFollowersCount());
+        mFollowing.setText(profile.getFollowingCount());
         mCity.setText(profile.getCity());
     }
 

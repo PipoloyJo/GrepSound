@@ -25,17 +25,13 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:orientation="vertical"
-            android:layout_alignParentRight="true">
+            android:layout_toRightOf="@+id/user_cover"
+            android:layout_toLeftOf="@+id/follow_buttons">
 
             <TextView android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"/>
-
-            <TextView android:id="@+id/user_followers_count"
-                    android:layout_width="wrap_content"
-                    android:textColor="@color/white"
-                    android:layout_height="wrap_content"/>
 
             <TextView android:id="@+id/user_city"
                     android:layout_width="wrap_content"
@@ -44,6 +40,26 @@
                     android:layout_height="wrap_content"/>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/follow_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true">
+
+            <Button
+                android:id="@+id/followers_button"
+                android:layout_width="64dip"
+                android:layout_height="64dip" />
+
+            <Button
+                android:id="@+id/following_button"
+                android:layout_width="64dip"
+                android:layout_height="64dip" />
+
+
+            </LinearLayout>
 
     </RelativeLayout>
 

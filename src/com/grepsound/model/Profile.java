@@ -1,8 +1,6 @@
 package com.grepsound.model;
 
 import android.util.Log;
-import com.soundcloud.api.Http;
-import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,6 +21,10 @@ public class Profile {
 
     public String getFollowersCount() {
         return info.get(fields.FOLLOWERS_COUNT);
+    }
+
+    public String getFollowingCount() {
+        return info.get(fields.FOLLOWINGS_COUNT);
     }
 
     /*
