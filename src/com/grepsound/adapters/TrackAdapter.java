@@ -139,13 +139,11 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 		return 0;
 	}
 
-	public void removeAll() {
-		tracks.clear();
-	}
-
 	public void addAll(Tracks tr) {
+        if(tr == null)
+            return;
         tracks.clear();
-		tracks = tr;
+        tracks = tr;
 
 		mSectionIndices = getSectionIndices();
 		mSectionLetters = getSectionLetters();

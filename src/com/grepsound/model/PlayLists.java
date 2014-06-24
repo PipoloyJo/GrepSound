@@ -1,7 +1,8 @@
 package com.grepsound.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
-import com.soundcloud.api.Http;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,9 +124,10 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
     }
 
 
-    public class Playlist {
+    public class Playlist implements Parcelable{
 
         private HashMap<String, String> info;
+
         private Tracks set;
 
         public CharSequence getTitle() {
@@ -145,8 +147,6 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
             return hours+"."+minutes+"."+seconds;
         }
 
-
-
         public Playlist(JSONObject obj) throws JSONException {
             info = new HashMap<String, String>();
 
@@ -160,6 +160,37 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
                     info.put(key, obj.get(key).toString());
             }
         }
+
+        public Tracks getSet() {
+            return set;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeSerializable(info);
+            dest.writeSerializable(set);
+        }
+
+        public final Parcelable.Creator<Playlist> CREATOR = new Parcelable.Creator<Playlist>() {
+            public Playlist createFromParcel(Parcel in) {
+                return new Playlist(in);
+            }
+
+            public Playlist[] newArray(int size) {
+                return new Playlist[size];
+            }
+        };
+
+        private Playlist(Parcel in) {
+            info = (HashMap<String, String>) in.readSerializable();
+            set = (Tracks) in.readSerializable();
+        }
+
     }
 
 }

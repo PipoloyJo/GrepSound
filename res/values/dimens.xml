@@ -4,7 +4,7 @@
     <dimen name="max_edittext_width" >300dp</dimen>
     <dimen name="slidingmenu_offset">200dp</dimen>
 
-    <dimen name="slide_fragment_horizontal_margin">50dp</dimen>
+    <dimen name="slide_fragment_horizontal_margin">20dp</dimen>
     <dimen name="text_vertical_margin">18dp</dimen>
     <dimen name="text_horizontal_margin">10dp</dimen>
 </resources>

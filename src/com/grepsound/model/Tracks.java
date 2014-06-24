@@ -15,7 +15,6 @@ public class Tracks extends ArrayList<Tracks.Track> {
 
     }
 
-
     public Tracks(JSONArray result) throws JSONException {
         for (int i = 0; i < result.length(); ++i) {
             add(new Track((JSONObject) result.get(i)));
@@ -33,8 +32,7 @@ public class Tracks extends ArrayList<Tracks.Track> {
         String ARTWORK_URL = "artwork_url";
     }
 
-
-    public class Track {
+    public class Track extends HashMap<String, String>{
 
         /**
          * {"genre":"Deep House",
@@ -80,30 +78,27 @@ public class Tracks extends ArrayList<Tracks.Track> {
          * "user_favorite":true}
          */
 
-        private HashMap<String, String> info;
-
         public Object getUrl() {
-            return info.get(fields.PERMALINK_URL);
+            return get(fields.PERMALINK_URL);
         }
 
 
         public Track(JSONObject obj) throws JSONException {
-            info = new HashMap<String, String>();
 
             Iterator ite = obj.keys();
 
             for (int i = 0; i < obj.length(); ++i) {
                 String key = ite.next().toString();
-                info.put(key, obj.get(key).toString());
+                put(key, obj.get(key).toString());
             }
         }
 
         public String getTitle() {
-            return info.get(fields.TITLE);
+            return get(fields.TITLE);
         }
 
         public String getDuration() {
-            String dur = info.get(fields.DURATION);
+            String dur = get(fields.DURATION);
             int milliSeconds = Integer.parseInt(dur);
 
             int seconds = milliSeconds / 1000;
@@ -117,7 +112,7 @@ public class Tracks extends ArrayList<Tracks.Track> {
 
 
         public String getImageUrl() {
-            return info.get(fields.ARTWORK_URL);
+            return get(fields.ARTWORK_URL);
         }
     }
 }

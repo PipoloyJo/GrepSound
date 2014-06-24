@@ -13,7 +13,6 @@ import android.util.Log;
 import android.widget.Toast;
 import com.grepsound.R;
 import com.soundcloud.api.ApiWrapper;
-import com.soundcloud.api.Env;
 import com.soundcloud.api.Token;
 
 import java.io.IOException;
@@ -101,7 +100,7 @@ public class LoginActivity extends Activity {
 
         // and launch our main activity
         startActivity(new Intent(this, MainActivity.class));
-
+        this.finish();
     }
 
     private Account getAccount() {
