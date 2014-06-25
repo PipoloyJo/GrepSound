@@ -3,7 +3,6 @@ package com.grepsound.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +15,10 @@ import com.grepsound.model.PlayLists;
 /**
  * Created by lisional on 2014-06-23.
  */
-public class DetailsPlaylistFragment extends Fragment {
+public class DetailsPlaylistFragment extends SlidingFragment {
 
     View.OnClickListener clickListener;
-    OnDetailsPlaylistFragmentAnimationEndListener mListener;
+    OnSlidingFragmentAnimationEndListener mListener;
     PlayLists.Playlist mDisplayed;
     TrackAdapter mAdapter;
 
@@ -65,17 +64,8 @@ public class DetailsPlaylistFragment extends Fragment {
         return anim;
     }
 
-    public void setOnDetailsPlaylistFragmentAnimationEnd(OnDetailsPlaylistFragmentAnimationEndListener listener)
+    public void setOnSlidingFragmentAnimationEnd(OnSlidingFragmentAnimationEndListener listener)
     {
         mListener = listener;
-    }
-
-    /**
-     * This interface is used to inform the main activity when the entry
-     * animation of the text fragment has completed in order to avoid the
-     * start of a new animation before the current one has completed.
-     */
-    public interface OnDetailsPlaylistFragmentAnimationEndListener {
-        public void onAnimationEnd();
     }
 }

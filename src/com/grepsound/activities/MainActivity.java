@@ -33,7 +33,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
                                                         LikesFragment.Callbacks,
                                                         PlaylistsFragment.Callbacks,
                                                         MyProfileFragment.Callbacks,
-                                                        DetailsPlaylistFragment.OnDetailsPlaylistFragmentAnimationEndListener,
+                                                        SlidingFragment.OnSlidingFragmentAnimationEndListener,
                                                         FragmentManager.OnBackStackChangedListener {
     private static String TAG = MainActivity.class.getSimpleName();
 
@@ -46,7 +46,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     boolean mDidSlideOut = false;
     boolean mIsAnimating = false;
     View mDarkHoverView;
-    DetailsPlaylistFragment mDetailsFragment;
+    SlidingFragment mDetailsFragment;
     Fragment mMainFrag;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -58,16 +58,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         mDarkHoverView = findViewById(R.id.dark_hover_view);
         mDarkHoverView.setAlpha(0);
 
-
-
-
-        mDetailsFragment = new DetailsPlaylistFragment();
-
         getFragmentManager().addOnBackStackChangedListener(this);
-
         mDarkHoverView.setOnClickListener(mClickListener);
-        mDetailsFragment.setOnDetailsPlaylistFragmentAnimationEnd(this);
-
 
         fMenu = new MenuFragment();
         mMainFrag = new MyProfileFragment();
@@ -309,7 +301,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         Bundle b = new Bundle();
         b.putParcelable("DetailsPlaylistFragment", selected);
         mDetailsFragment.setArguments(b);
-        mDetailsFragment.setOnDetailsPlaylistFragmentAnimationEnd(this);
+        mDetailsFragment.setOnSlidingFragmentAnimationEnd(this);
         mDetailsFragment.setClickListener(mClickListener);
         switchFragments();
     }
