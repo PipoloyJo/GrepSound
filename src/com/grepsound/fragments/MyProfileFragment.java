@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.grepsound.R;
 import com.grepsound.adapters.SectionsPagerAdapter;
 import com.grepsound.image.ImageLoader;
-import com.grepsound.model.Profile;
+import com.grepsound.model.User;
 import com.grepsound.views.PagerSlidingTabStrip;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -21,8 +21,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 /**
  * Created by lisional on 2014-04-21.
  */
-public class MyProfileFragment extends Fragment implements RequestListener<Profile> {
-
+public class MyProfileFragment extends Fragment implements RequestListener<User> {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -33,14 +32,14 @@ public class MyProfileFragment extends Fragment implements RequestListener<Profi
     private Callbacks mCallbacks;
 
     public interface Callbacks {
-        public void getProfile(RequestListener<Profile> cb);
+        public void getProfile(RequestListener<User> cb);
         public void displayFollowers();
         public void displayFollowing();
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void getProfile(RequestListener<Profile> cb) {
+        public void getProfile(RequestListener<User> cb) {
         }
 
         @Override
@@ -129,9 +128,9 @@ public class MyProfileFragment extends Fragment implements RequestListener<Profi
     }
 
     @Override
-    public void onRequestSuccess(Profile profile) {
+    public void onRequestSuccess(User profile) {
 
-        mImgLoader.DisplayImage(profile.getAvatarUrl(), mUserCover);
+        mImgLoader.DisplayImage(profile.getLargeAvatarUrl(), mUserCover);
         mName.setText(profile.getUsername());
         mFollowers.setText(profile.getFollowersCount());
         mFollowing.setText(profile.getFollowingCount());

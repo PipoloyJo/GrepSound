@@ -12,6 +12,7 @@
     <GridView
         android:id="@+id/follow_grid"
         android:layout_width="match_parent"
+        android:numColumns="2"
         android:layout_height="match_parent"/>
 
 </com.grepsound.views.FractionalLinearLayout>

@@ -16,8 +16,8 @@ import android.view.View;
 import com.grepsound.R;
 import com.grepsound.fragments.*;
 import com.grepsound.model.PlayLists;
-import com.grepsound.model.Profile;
 import com.grepsound.model.Tracks;
+import com.grepsound.model.User;
 import com.grepsound.model.Users;
 import com.grepsound.requests.*;
 import com.grepsound.services.SpiceUpService;
@@ -303,8 +303,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     }
 
     @Override
-    public void getProfile(RequestListener<Profile> cb) {
-        spiceManager.execute(new MeProfileRequest(Profile.class), cb);
+    public void getProfile(RequestListener<User> cb) {
+        spiceManager.execute(new MeProfileRequest(User.class), cb);
     }
 
     @Override

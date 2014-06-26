@@ -31,7 +31,7 @@ public class FollowRequest extends SpiceRequest<Users> {
                 url = "/me/followers";
                 break;
             case FOLLOWING:
-                url = "/me/following";
+                url = "/me/followings";
                 break;
             default:
                 throw new Exception("state must be FOLLOWERS or FOLLOWING");

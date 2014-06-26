@@ -108,9 +108,13 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
 
     }
 
-    public PlayLists(JSONArray result) throws JSONException {
+    public PlayLists(JSONArray result) {
         for (int i = 0; i < result.length(); ++i) {
-            add(new Playlist((JSONObject) result.get(i)));
+            try {
+                add(new Playlist((JSONObject) result.get(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

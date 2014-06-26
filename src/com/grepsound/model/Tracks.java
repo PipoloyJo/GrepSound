@@ -15,9 +15,13 @@ public class Tracks extends ArrayList<Tracks.Track> {
 
     }
 
-    public Tracks(JSONArray result) throws JSONException {
+    public Tracks(JSONArray result) {
         for (int i = 0; i < result.length(); ++i) {
-            add(new Track((JSONObject) result.get(i)));
+            try {
+                add(new Track((JSONObject) result.get(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.grepsound.R;
 import com.grepsound.image.ImageLoader;
+import com.grepsound.model.User;
 import com.grepsound.model.Users;
 
 /**
@@ -45,9 +46,9 @@ public class GridUserAdapter extends BaseAdapter {
             viewholder = (UserView) v.getTag();
         }
 
-        Users.User toDisplay = mUsers.get(position);
+        User toDisplay = mUsers.get(position);
 
-        mImageLoader.DisplayImage(toDisplay.getImageUrl(), viewholder.cover);
+        mImageLoader.DisplayImage(toDisplay.getLargeAvatarUrl(), viewholder.cover);
 
         viewholder.num_album.setText("Alb ");
         viewholder.num_tracks.setText("Trk ");
@@ -61,7 +62,7 @@ public class GridUserAdapter extends BaseAdapter {
     }
 
         @Override
-        public Users.User getItem(int position) {
+        public User getItem(int position) {
         return mUsers.get(position);
     }
 
@@ -74,7 +75,7 @@ public class GridUserAdapter extends BaseAdapter {
         mUsers.clear();
     }
 
-    public void add(Users.User artist) {
+    public void add(User artist) {
         mUsers.add(artist);
     }
 
