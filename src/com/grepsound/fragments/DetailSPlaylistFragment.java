@@ -17,8 +17,7 @@ import com.grepsound.model.PlayLists;
  */
 public class DetailsPlaylistFragment extends SlidingFragment {
 
-    View.OnClickListener clickListener;
-    OnSlidingFragmentAnimationEndListener mListener;
+
     PlayLists.Playlist mDisplayed;
     TrackAdapter mAdapter;
 
@@ -44,10 +43,6 @@ public class DetailsPlaylistFragment extends SlidingFragment {
         return rootView;
     }
 
-    public void setClickListener(View.OnClickListener clickListener) {
-        this.clickListener = clickListener;
-    }
-
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim)
     {
@@ -64,8 +59,5 @@ public class DetailsPlaylistFragment extends SlidingFragment {
         return anim;
     }
 
-    public void setOnSlidingFragmentAnimationEnd(OnSlidingFragmentAnimationEndListener listener)
-    {
-        mListener = listener;
-    }
+
 }

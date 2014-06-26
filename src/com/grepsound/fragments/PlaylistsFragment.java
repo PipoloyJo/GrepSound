@@ -22,10 +22,6 @@ public class PlaylistsFragment extends Fragment implements RequestListener<PlayL
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
-
-
-
-
     private static final String TAG = LikesFragment.class.getSimpleName();
     private PlaylistAdapter mAdapter;
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
@@ -64,7 +60,6 @@ public class PlaylistsFragment extends Fragment implements RequestListener<PlayL
         }
 
         mCallbacks = (Callbacks) activity;
-
         mCallbacks.getPlaylists(this);
     }
 

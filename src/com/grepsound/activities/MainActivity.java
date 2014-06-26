@@ -18,10 +18,8 @@ import com.grepsound.fragments.*;
 import com.grepsound.model.PlayLists;
 import com.grepsound.model.Profile;
 import com.grepsound.model.Tracks;
-import com.grepsound.requests.DownloadTrackRequest;
-import com.grepsound.requests.LikesRequest;
-import com.grepsound.requests.MeProfileRequest;
-import com.grepsound.requests.PlaylistsRequest;
+import com.grepsound.model.Users;
+import com.grepsound.requests.*;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -33,6 +31,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
                                                         LikesFragment.Callbacks,
                                                         PlaylistsFragment.Callbacks,
                                                         MyProfileFragment.Callbacks,
+                                                        FollowFragment.Callbacks,
                                                         SlidingFragment.OnSlidingFragmentAnimationEndListener,
                                                         FragmentManager.OnBackStackChangedListener {
     private static String TAG = MainActivity.class.getSimpleName();
@@ -279,20 +278,17 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void getLikes(RequestListener<Tracks> cb) {
-        LikesRequest request = new LikesRequest(Tracks.class);
-        spiceManager.execute(request, cb);
+        spiceManager.execute(new LikesRequest(Tracks.class), cb);
     }
 
     @Override
     public void getSong(RequestListener cb, String url) {
-        DownloadTrackRequest request = new DownloadTrackRequest(this, url);
-        spiceManager.execute(request, cb);
+        spiceManager.execute(new DownloadTrackRequest(this, url), cb);
     }
 
     @Override
     public void getPlaylists(RequestListener<PlayLists> cb) {
-        PlaylistsRequest request = new PlaylistsRequest(PlayLists.class);
-        spiceManager.execute(request, cb);
+        spiceManager.execute(new PlaylistsRequest(PlayLists.class), cb);
     }
 
     @Override
@@ -308,7 +304,33 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void getProfile(RequestListener<Profile> cb) {
-        MeProfileRequest req = new MeProfileRequest(Profile.class);
-        spiceManager.execute(req, cb);
+        spiceManager.execute(new MeProfileRequest(Profile.class), cb);
+    }
+
+    @Override
+    public void displayFollowers() {
+        mDetailsFragment = new FollowFragment();
+        Bundle b = new Bundle();
+        b.putSerializable("type", FollowFragment.TYPE.FOLLOWER);
+        mDetailsFragment.setArguments(b);
+        mDetailsFragment.setOnSlidingFragmentAnimationEnd(this);
+        mDetailsFragment.setClickListener(mClickListener);
+        switchFragments();
+    }
+
+    @Override
+    public void displayFollowing() {
+        mDetailsFragment = new FollowFragment();
+        Bundle b = new Bundle();
+        b.putSerializable("type", FollowFragment.TYPE.FOLLOWING);
+        mDetailsFragment.setArguments(b);
+        mDetailsFragment.setOnSlidingFragmentAnimationEnd(this);
+        mDetailsFragment.setClickListener(mClickListener);
+        switchFragments();
+    }
+
+    @Override
+    public void getFollowByType(FollowFragment.TYPE t, RequestListener<Users> cb) {
+        spiceManager.execute(new FollowRequest(Users.class, t), cb);
     }
 }

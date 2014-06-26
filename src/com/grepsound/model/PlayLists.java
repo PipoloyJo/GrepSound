@@ -2,7 +2,6 @@ package com.grepsound.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,7 +110,6 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
 
     public PlayLists(JSONArray result) throws JSONException {
         for (int i = 0; i < result.length(); ++i) {
-            Log.i("Playlists", " : " + result.get(i).toString());
             add(new Playlist((JSONObject) result.get(i)));
         }
     }

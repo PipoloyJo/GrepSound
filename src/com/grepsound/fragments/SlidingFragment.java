@@ -10,14 +10,23 @@ import android.view.ViewGroup;
  * Created by lisional on 2014-06-25.
  */
 public abstract class SlidingFragment extends Fragment {
+
+    View.OnClickListener clickListener;
+    OnSlidingFragmentAnimationEndListener mListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return null;
     }
 
-    public abstract void setClickListener(View.OnClickListener clickListener);
+    public void setClickListener(View.OnClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
 
-    public abstract void setOnSlidingFragmentAnimationEnd(OnSlidingFragmentAnimationEndListener listener);
+    public void setOnSlidingFragmentAnimationEnd(OnSlidingFragmentAnimationEndListener listener)
+    {
+        mListener = listener;
+    }
 
     /**
      * This interface is used to inform the main activity when the entry

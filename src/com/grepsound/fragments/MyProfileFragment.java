@@ -34,11 +34,23 @@ public class MyProfileFragment extends Fragment implements RequestListener<Profi
 
     public interface Callbacks {
         public void getProfile(RequestListener<Profile> cb);
+        public void displayFollowers();
+        public void displayFollowing();
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
         public void getProfile(RequestListener<Profile> cb) {
+        }
+
+        @Override
+        public void displayFollowers() {
+
+        }
+
+        @Override
+        public void displayFollowing() {
+
         }
 
     };
@@ -92,7 +104,19 @@ public class MyProfileFragment extends Fragment implements RequestListener<Profi
 
         mName = (TextView) rootView.findViewById(R.id.user_name);
         mFollowers = (Button) rootView.findViewById(R.id.followers_button);
+        mFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallbacks.displayFollowers();
+            }
+        });
         mFollowing = (Button) rootView.findViewById(R.id.following_button);
+        mFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallbacks.displayFollowing();
+            }
+        });
         mCity = (TextView) rootView.findViewById(R.id.user_city);
 
 
