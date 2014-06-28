@@ -25,10 +25,8 @@ public class LoginRequest extends SpiceRequest<Token> {
 
     @Override
     public Token loadDataFromNetwork() throws Exception {
-
         ApiWrapper wrapper = new ApiWrapper(SpiceUpService.CLIENT_ID, SpiceUpService.CLIENT_SECRET, null, null);
-            return wrapper.login(username, password, Token.SCOPE_NON_EXPIRING);
-            //HttpResponse resp = wrapper.get(Request.to("/me"));
+        return wrapper.login(username, password, Token.SCOPE_NON_EXPIRING);
     }
 
 }

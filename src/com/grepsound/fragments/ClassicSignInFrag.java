@@ -25,7 +25,7 @@ import com.soundcloud.api.Token;
 /**
  * Created by lisional on 2014-04-11.
  */
-public class ClassicSignInFrag extends Fragment implements RequestListener{
+public class ClassicSignInFrag extends Fragment implements RequestListener<Token>{
 
     private static final String TAG = ClassicSignInFrag.class.getSimpleName();
     private LoginRequest request;
@@ -74,29 +74,27 @@ public class ClassicSignInFrag extends Fragment implements RequestListener{
     }
 
     @Override
-    public void onRequestSuccess(Object o) {
+    public void onRequestSuccess(Token o) {
         Log.e(TAG, "Success");
-        if(o instanceof Token) {
-            SharedPreferences.Editor editor = getActivity().getSharedPreferences("sc-token",
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences("sc-token",
                                                                 Context.MODE_PRIVATE).edit();
 
-            Log.i(TAG, "token_access:"+((Token) o).access);
-            Log.i(TAG, "token_scopes:"+((Token) o).scope);
-            Log.i(TAG, "token_refresh:"+((Token) o).refresh);
-            editor.putString("token_access", ((Token) o).access);
-            editor.putString("token_scopes", ((Token) o).scope);
-            editor.putString("token_refresh", ((Token) o).refresh);
-            editor.commit();
+        Log.i(TAG, "token_access:"+ o.access);
+        Log.i(TAG, "token_scopes:"+ o.scope);
+        Log.i(TAG, "token_refresh:"+ o.refresh);
+        editor.putString("token_access", o.access);
+        editor.putString("token_scopes", o.scope);
+        editor.putString("token_refresh", o.refresh);
+        editor.commit();
 
-            // Restore token
-            Token token = new Token(((Token) o).access, ((Token) o).scope, ((Token) o).refresh);
+        // Restore token
+        Token token = new Token(o.access, o.scope, o.refresh);
 
-            // create the API wrapper with the token
-            Api.wrapper = new ApiWrapper(null, null, null, token);
+        // create the API wrapper with the token
+        Api.wrapper = new ApiWrapper(null, null, null, token);
 
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), MainActivity.class);
-            startActivity(intent);
-        }
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), MainActivity.class);
+        startActivity(intent);
     }
 }

@@ -13,6 +13,13 @@
         android:id="@+id/follow_grid"
         android:layout_width="match_parent"
         android:numColumns="2"
-        android:layout_height="match_parent"/>
+        android:stretchMode="columnWidth"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:drawSelectorOnTop="true"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:layout_height="wrap_content"/>
 
 </com.grepsound.views.FractionalLinearLayout>

@@ -38,8 +38,7 @@ public class GridUserAdapter extends BaseAdapter {
         if (v == null) {
             v = mInflater.inflate(R.layout.item_user, null);
             viewholder.cover = (ImageView) v.findViewById(R.id.user_cover);
-            viewholder.num_album = (TextView) v.findViewById(R.id.user_num_albums);
-            viewholder.num_tracks = (TextView) v.findViewById(R.id.user_num_tracks);
+            viewholder.num_followers = (TextView) v.findViewById(R.id.user_followers);
             viewholder.title = (TextView) v.findViewById(R.id.user_name);
             v.setTag(viewholder);
         } else {
@@ -50,9 +49,8 @@ public class GridUserAdapter extends BaseAdapter {
 
         mImageLoader.DisplayImage(toDisplay.getLargeAvatarUrl(), viewholder.cover);
 
-        viewholder.num_album.setText("Alb ");
-        viewholder.num_tracks.setText("Trk ");
-        viewholder.title.setText("COUCOU");
+        viewholder.num_followers.setText(toDisplay.getFollowersCount());
+        viewholder.title.setText(toDisplay.getUsername());
         return v;
     }
 
@@ -91,7 +89,6 @@ public class GridUserAdapter extends BaseAdapter {
     public class UserView {
         ImageView cover;
         TextView title;
-        TextView num_album;
-        TextView num_tracks;
+        TextView num_followers;
     }
 }

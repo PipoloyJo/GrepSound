@@ -4,8 +4,10 @@ import android.accounts.*;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.OperationCanceledException;
@@ -31,15 +33,27 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signin_frag);
 
-        mAccountManager = AccountManager.get(this);
+        Token tr = getStoredToken();
+        if (tr.valid()) {
+            // create the API wrapper with the token
+            Api.wrapper = new ApiWrapper(null, null, null, tr);
 
-        final Account account = getAccount();
-        if (account != null) {
-            new Thread(mGetToken).start();
+            Intent intent = new Intent();
+            intent.setClass(this, MainActivity.class);
+            startActivity(intent);
+            finish();
         } else {
-            addAccount();
+            setContentView(R.layout.signin_frag);
+
+            mAccountManager = AccountManager.get(this);
+
+            final Account account = getAccount();
+            if (account != null) {
+                new Thread(mGetToken).start();
+            } else {
+                addAccount();
+            }
         }
     }
 
@@ -171,7 +185,10 @@ public class LoginActivity extends Activity {
         }
     }
 
-
+    public Token getStoredToken() {
+        SharedPreferences prefs = getSharedPreferences("sc-token", Context.MODE_PRIVATE);
+        return new Token(prefs.getString("token_access", null), prefs.getString("token_scopes", null), prefs.getString("token_refresh", null));
+    }
 
 
 //

@@ -18,5 +18,6 @@
                 android:valueTo="@dimen/slide_up_down_fraction"
                 android:propertyName="yFraction"
                 android:valueType="floatType"
+                android:interpolator="@android:anim/overshoot_interpolator"
                 android:duration="@integer/slide_up_down_duration">
 </objectAnimator>
