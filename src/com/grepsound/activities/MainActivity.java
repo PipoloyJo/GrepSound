@@ -5,12 +5,17 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import com.grepsound.R;
@@ -105,6 +110,13 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.ac_main, menu);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
     @Override
     public void onStop() {
         spiceManager.shouldStop();
@@ -140,6 +152,20 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
+        }
+
+        switch(item.getItemId()){
+            case R.id.ic_settings:
+                SharedPreferences.Editor editor = getSharedPreferences("sc-token", Context.MODE_PRIVATE).edit();
+                editor.remove("token_access");
+                editor.remove("token_scopes");
+                editor.remove("token_refresh");
+                editor.commit();
+                Intent intent = new Intent();
+                intent.setClass(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            break;
         }
         // Handle your other action bar items...
         return super.onOptionsItemSelected(item);

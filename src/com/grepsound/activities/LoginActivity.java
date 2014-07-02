@@ -61,7 +61,10 @@ public class LoginActivity extends Activity {
         @Override
         public void run() {
             final Token token = getToken(getAccount());
-            if (token != null) {
+            Log.i(TAG, "access: "+token.access);
+            Log.i(TAG, "scope: "+ token.scope);
+            Log.i(TAG, "LOL: "+ token.refresh);
+            if (token != null && token.valid()) {
                 success(token);
             } else {
                 notifyUser(R.string.could_not_get_token);
@@ -128,7 +131,11 @@ public class LoginActivity extends Activity {
 
     private Token getToken(Account account) {
         try {
-            String access = mAccountManager.blockingGetAuthToken(account, ACCESS_TOKEN, false);
+            AccountManagerFuture<Bundle> accountManagerFuture = mAccountManager.getAuthToken(account, ACCESS_TOKEN, null, this, null, null);
+            //String access = mAccountManager.getAuthToken(account, ACCESS_TOKEN, false);
+            Bundle authTokenBundle = accountManagerFuture.getResult();
+            String access = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
+
             return new Token(access, null, Token.SCOPE_NON_EXPIRING);
         } catch (OperationCanceledException e) {
             notifyUser(R.string.operation_canceled);
