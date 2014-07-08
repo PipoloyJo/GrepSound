@@ -1,3 +1,0 @@
-[submodule "soundcloudAPI"]
-    path = srcSoundCloudAPI
-    url = https://github.com/soundcloud/java-api-wrapper.git
