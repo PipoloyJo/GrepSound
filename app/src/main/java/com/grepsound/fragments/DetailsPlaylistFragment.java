@@ -43,10 +43,10 @@ public class DetailsPlaylistFragment extends SlidingFragment {
         return rootView;
     }
 
-    @Override
+ /*   @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim)
     {
-        int id = enter ? R.animator.slide_fragment_in : R.animator.slide_fragment_out;
+        int id = enter ? R.animator.slide_fragment_left : R.animator.slide_fragment_right;
         final Animator anim = AnimatorInflater.loadAnimator(getActivity(), id);
         if (enter) {
             anim.addListener(new AnimatorListenerAdapter() {
@@ -58,6 +58,6 @@ public class DetailsPlaylistFragment extends SlidingFragment {
         }
         return anim;
     }
-
+*/
 
 }

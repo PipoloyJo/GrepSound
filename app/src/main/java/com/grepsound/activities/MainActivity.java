@@ -198,8 +198,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
                 @Override
                 public void onAnimationEnd(Animator arg0) {
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.setCustomAnimations(R.animator.slide_fragment_in, 0, 0,
-                            R.animator.slide_fragment_out);
+                    transaction.setCustomAnimations(R.animator.slide_fragment_left, 0, 0,
+                            R.animator.slide_fragment_right);
                     transaction.add(R.id.move_to_back_container, mDetailsFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();

@@ -1,5 +1,8 @@
 package com.grepsound.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -93,5 +96,21 @@ public class FollowFragment extends SlidingFragment implements RequestListener<U
         mAdapter.addAll(users);
         mAdapter.notifyDataSetChanged();
     }
+
+/*    @Override
+    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim)
+    {
+        int id = enter ? R.animator.slide_fragment_left : R.animator.slide_fragment_right;
+        final Animator anim = AnimatorInflater.loadAnimator(getActivity(), id);
+        if (enter) {
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mListener.onAnimationEnd();
+                }
+            });
+        }
+        return anim;
+    }*/
 
 }

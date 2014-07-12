@@ -5,9 +5,7 @@
     xmlns:grepsound="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/slide_fragment_horizontal_margin"
-    android:layout_marginRight="@dimen/slide_fragment_horizontal_margin"
-    grepsound:verticalFraction="true"
+    grepsound:verticalFraction="false"
     android:background="@color/white">
 
     <GridView
