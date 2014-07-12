@@ -39,4 +39,8 @@
     <declare-styleable name="TypefaceTextView">
         <attr name="customTypeface" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="FractionalLinearLayout">
+        <attr name="verticalFraction" format="boolean"/>
+    </declare-styleable>
 </resources>

@@ -17,8 +17,11 @@ package com.grepsound.views;
  */
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.LinearLayout;
+import com.grepsound.R;
 
 /**
  * In order to animate the fragment containing text on/off the screen,
@@ -36,19 +39,32 @@ public class FractionalLinearLayout extends LinearLayout {
     private float mYFraction;
     private int mScreenHeight;
 
+    private float mXFraction;
+    private int mScreenWidth;
+
+    private boolean isVertical;
+
     public FractionalLinearLayout(Context context) {
         super(context);
     }
 
     public FractionalLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FractionalLinearLayout);
+        isVertical = a.getBoolean(R.styleable.FractionalLinearLayout_verticalFraction, true);
+        a.recycle();
     }
 
     @Override
     protected void onSizeChanged (int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mScreenHeight = h;
-        setY(mScreenHeight);
+        if(isVertical){
+            mScreenHeight = h;
+            setY(mScreenHeight);
+        } else {
+            mScreenWidth = w;
+            setX(mScreenWidth);
+        }
     }
 
     public float getYFraction() {
@@ -58,5 +74,14 @@ public class FractionalLinearLayout extends LinearLayout {
     public void setYFraction(float yFraction) {
         mYFraction = yFraction;
         setY((mScreenHeight > 0) ? (mScreenHeight - yFraction * mScreenHeight) : 0);
+    }
+
+    public float getXFraction() {
+        return mXFraction;
+    }
+
+    public void setXFraction(float xFraction) {
+        mXFraction = xFraction;
+        setX((mScreenWidth > 0) ? (mScreenWidth - xFraction * mScreenWidth) : 0);
     }
 }

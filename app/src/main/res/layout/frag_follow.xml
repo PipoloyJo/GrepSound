@@ -2,11 +2,12 @@
 
 <com.grepsound.views.FractionalLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:grepsound="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/slide_fragment_horizontal_margin"
     android:layout_marginRight="@dimen/slide_fragment_horizontal_margin"
-    android:orientation="vertical"
+    grepsound:verticalFraction="true"
     android:background="@color/white">
 
     <GridView
