@@ -7,7 +7,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.grepsound.R;
@@ -15,6 +14,7 @@ import com.grepsound.adapters.SectionsPagerAdapter;
 import com.grepsound.image.ImageLoader;
 import com.grepsound.model.User;
 import com.grepsound.views.PagerSlidingTabStrip;
+import com.grepsound.views.TwoTextCounter;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -27,7 +27,7 @@ public class MyProfileFragment extends Fragment implements RequestListener<User>
     private ViewPager mViewPager;
     private ImageView mUserCover;
     private TextView mName, mCity;
-    private Button mFollowers, mFollowing;
+    private TwoTextCounter mFollowers, mFollowing;
     private ImageLoader mImgLoader;
     private Callbacks mCallbacks;
 
@@ -102,14 +102,14 @@ public class MyProfileFragment extends Fragment implements RequestListener<User>
         mUserCover = (ImageView) rootView.findViewById(R.id.user_cover);
 
         mName = (TextView) rootView.findViewById(R.id.user_name);
-        mFollowers = (Button) rootView.findViewById(R.id.followers_button);
+        mFollowers = (TwoTextCounter) rootView.findViewById(R.id.followers_button);
         mFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCallbacks.displayFollowers();
             }
         });
-        mFollowing = (Button) rootView.findViewById(R.id.following_button);
+        mFollowing = (TwoTextCounter) rootView.findViewById(R.id.following_button);
         mFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +118,8 @@ public class MyProfileFragment extends Fragment implements RequestListener<User>
         });
         mCity = (TextView) rootView.findViewById(R.id.user_city);
 
+        mFollowers.setLabel("followers");
+        mFollowing.setLabel("following");
 
         return rootView;
     }
@@ -132,8 +134,8 @@ public class MyProfileFragment extends Fragment implements RequestListener<User>
 
         mImgLoader.DisplayImage(profile.getLargeAvatarUrl(), mUserCover);
         mName.setText(profile.getUsername());
-        mFollowers.setText(profile.getFollowersCount());
-        mFollowing.setText(profile.getFollowingCount());
+        mFollowers.setCounter(Integer.parseInt(profile.getFollowersCount()));
+        mFollowing.setCounter(Integer.parseInt(profile.getFollowingCount()));
         mCity.setText(profile.getCity());
     }
 

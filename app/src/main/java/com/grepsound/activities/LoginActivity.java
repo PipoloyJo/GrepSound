@@ -48,6 +48,7 @@ public class LoginActivity extends Activity {
 
             mAccountManager = AccountManager.get(this);
 
+
             final Account account = getAccount();
             if (account != null) {
                 new Thread(mGetToken).start();
@@ -64,7 +65,7 @@ public class LoginActivity extends Activity {
             Log.i(TAG, "access: "+token.access);
             Log.i(TAG, "scope: "+ token.scope);
             Log.i(TAG, "LOL: "+ token.refresh);
-            if (token != null && token.valid()) {
+            if (token.valid()) {
                 success(token);
             } else {
                 notifyUser(R.string.could_not_get_token);
@@ -97,19 +98,12 @@ public class LoginActivity extends Activity {
                             throw new RuntimeException(e);
                         } catch (AuthenticatorException e) {
                             // SoundCloud app is not installed
-                            appNotInstalled();
                         } catch (android.accounts.OperationCanceledException e) {
                             notifyUser(R.string.operation_canceled);
                         }
                     }
                 }, null);
     }
-
-
-    private void appNotInstalled() {
-        showDialog(DIALOG_NOT_INSTALLED);
-    }
-
 
     private void success(Token token) {
         // create the API wrapper with the token
@@ -131,11 +125,15 @@ public class LoginActivity extends Activity {
 
     private Token getToken(Account account) {
         try {
+            Log.i(TAG, "GETTING TOKEN");
             AccountManagerFuture<Bundle> accountManagerFuture = mAccountManager.getAuthToken(account, ACCESS_TOKEN, null, this, null, null);
             //String access = mAccountManager.getAuthToken(account, ACCESS_TOKEN, false);
+            Log.i(TAG, "GETTING TOKEN 1.5");
             Bundle authTokenBundle = accountManagerFuture.getResult();
+            Log.i(TAG, "GETTING TOKEN 2");
             String access = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
 
+            Log.i(TAG, "GETTING TOKEN 3");
             return new Token(access, null, Token.SCOPE_NON_EXPIRING);
         } catch (OperationCanceledException e) {
             notifyUser(R.string.operation_canceled);
@@ -164,32 +162,6 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, text, Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id, Bundle data) {
-        if (DIALOG_NOT_INSTALLED == id) {
-            return new AlertDialog.Builder(this)
-                    .setTitle(R.string.sc_app_not_found)
-                    .setMessage(R.string.sc_app_not_found_message)
-                    .setPositiveButton(android.R.string.yes, new Dialog.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                startActivity(new Intent(Intent.ACTION_VIEW, MARKET_URI));
-                            } catch(android.content.ActivityNotFoundException e){
-                                // Just in case google play store is not installed
-                                e.printStackTrace();
-                            }
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    }).create();
-        } else {
-            return null;
-        }
     }
 
     public Token getStoredToken() {
