@@ -51,12 +51,10 @@
             <com.grepsound.views.TwoTextCounter
                 android:id="@+id/followers_button"
                 android:layout_width="80dip"
-                android:background="@color/holo_orange_light"
                 android:layout_height="80dip" />
 
             <com.grepsound.views.TwoTextCounter
                 android:id="@+id/following_button"
-                android:background="@color/holo_orange_light"
                 android:layout_width="80dip"
                 android:layout_height="80dip" />
 

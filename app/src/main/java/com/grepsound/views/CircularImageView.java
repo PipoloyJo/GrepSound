@@ -80,14 +80,12 @@ public class CircularImageView extends ImageView
 
     @SuppressLint("DrawAllocation")
     @Override
-    public void onDraw(Canvas canvas)
-    {
+    public void onDraw(Canvas canvas) {
         // load the bitmap
         loadBitmap();
 
         // init shader
-        if (image != null)
-        {
+        if (image != null) {
             shader = new BitmapShader(Bitmap.createScaledBitmap(image, canvas.getWidth(), canvas.getHeight(), false), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
             paint.setShader(shader);
             int circleCenter = viewWidth / 2;
@@ -101,8 +99,7 @@ public class CircularImageView extends ImageView
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-    {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = measureWidth(widthMeasureSpec);
         int height = measureHeight(heightMeasureSpec, widthMeasureSpec);
 
@@ -112,8 +109,7 @@ public class CircularImageView extends ImageView
         setMeasuredDimension(width, height);
     }
 
-    private int measureWidth(int measureSpec)
-    {
+    private int measureWidth(int measureSpec) {
         int result = 0;
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
@@ -132,8 +128,7 @@ public class CircularImageView extends ImageView
         return result;
     }
 
-    private int measureHeight(int measureSpecHeight, int measureSpecWidth)
-    {
+    private int measureHeight(int measureSpecHeight, int measureSpecWidth) {
         int result = 0;
         int specMode = MeasureSpec.getMode(measureSpecHeight);
         int specSize = MeasureSpec.getSize(measureSpecHeight);
