@@ -63,7 +63,6 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         mDarkHoverView.setAlpha(0);
 
         getFragmentManager().addOnBackStackChangedListener(this);
-        mDarkHoverView.setOnClickListener(mClickListener);
 
         fMenu = new MenuFragment();
         mMainFrag = new MyProfileFragment();

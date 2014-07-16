@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res/com.grepsound"
+                xmlns:grepsound="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -44,20 +44,27 @@
         <LinearLayout
             android:id="@+id/follow_buttons"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true">
 
             <com.grepsound.views.TwoTextCounter
                 android:id="@+id/followers_button"
                 android:layout_width="80dip"
-                android:layout_height="80dip" />
+                android:layout_height="80dip"
+                android:layout_margin="5dp"
+                grepsound:backgroundColor="@color/light"
+                grepsound:counterColor="@color/black"
+                grepsound:labelColor="@color/black"/>
 
             <com.grepsound.views.TwoTextCounter
                 android:id="@+id/following_button"
                 android:layout_width="80dip"
-                android:layout_height="80dip" />
-
+                android:layout_height="80dip"
+                android:layout_margin="5dp"
+                grepsound:backgroundColor="@color/light"
+                grepsound:counterColor="@color/black"
+                grepsound:labelColor="@color/black" />
 
             </LinearLayout>
 
@@ -68,9 +75,9 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:layout_below="@+id/user_infos"
-            app:indicatorColor="@color/holo_orange_light"
-            app:shouldExpand="true"
-            app:underlineColor="@color/holo_orange_light_transparent"/>
+            grepsound:indicatorColor="@color/holo_orange_light"
+            grepsound:shouldExpand="true"
+            grepsound:underlineColor="@color/holo_orange_light_transparent"/>
 
     <android.support.v4.view.ViewPager
             android:id="@+id/pager"

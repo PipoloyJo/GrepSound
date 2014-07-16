@@ -43,4 +43,10 @@
     <declare-styleable name="FractionalLinearLayout">
         <attr name="verticalFraction" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="TwoTextCounter">
+        <attr name="backgroundColor" format="color"/>
+        <attr name="labelColor" format="color"/>
+        <attr name="counterColor" format="color"/>
+    </declare-styleable>
 </resources>

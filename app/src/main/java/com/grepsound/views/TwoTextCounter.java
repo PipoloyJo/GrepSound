@@ -1,10 +1,8 @@
 package com.grepsound.views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Path;
+import android.content.res.TypedArray;
+import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -20,6 +18,10 @@ public class TwoTextCounter extends FrameLayout {
     private int viewWidth;
     private int viewHeight;
 
+    private static int bgColor;
+    private static int counterColor;
+    private static int labelColor;
+
     public TwoTextCounter(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initViews();
@@ -27,6 +29,14 @@ public class TwoTextCounter extends FrameLayout {
 
     public TwoTextCounter(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TwoTextCounter);
+
+
+        bgColor = a.getColor(R.styleable.TwoTextCounter_backgroundColor, Color.WHITE);
+        counterColor = a.getColor(R.styleable.TwoTextCounter_counterColor, Color.BLACK);
+        labelColor = a.getColor(R.styleable.TwoTextCounter_labelColor, Color.BLACK);
+
+        a.recycle();
         initViews();
     }
 
@@ -67,6 +77,7 @@ public class TwoTextCounter extends FrameLayout {
         final Bitmap outputBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
         final Path path = new Path();
+
         path.addCircle(
                 (float)(width / 2)
                 , (float)(height / 2)
@@ -75,7 +86,15 @@ public class TwoTextCounter extends FrameLayout {
 
         final Canvas canvas = new Canvas(outputBitmap);
         canvas.clipPath(path);
-        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        Paint test = new Paint();
+        test.setDither(true);
+        test.setAntiAlias(true);
+        test.setStyle(Paint.Style.STROKE);       // set to STOKE
+        test.setStrokeJoin(Paint.Join.ROUND);    // set the join to round you want
+        test.setStrokeCap(Paint.Cap.ROUND);      // set the paint cap to round too
+        test.setPathEffect(new CornerPathEffect(10) );   // set the path effect when they join.
+        canvas.drawBitmap(bitmap, 0, 0, test);
         return outputBitmap;
     }
 
@@ -85,13 +104,15 @@ public class TwoTextCounter extends FrameLayout {
         int width = measureWidth(widthMeasureSpec);
         int height = measureHeight(heightMeasureSpec, widthMeasureSpec);
 
-        viewWidth = width - (borderWidth * 2);
-        viewHeight = height - (borderWidth * 2);
+        viewWidth = width;
+        viewHeight = height;
 
         setMeasuredDimension(width, height);
 
-        Bitmap b = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_4444);
-        b.eraseColor(Color.BLUE);
+        Bitmap b = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
+        b.eraseColor(bgColor);
+        counter.setTextColor(counterColor);
+        label.setTextColor(labelColor);
         b = getBitmapClippedCircle(b);
         BitmapDrawable dr = new BitmapDrawable(getResources(), b);
         setBackground(dr);
@@ -129,6 +150,6 @@ public class TwoTextCounter extends FrameLayout {
             result = viewHeight;
         }
 
-        return (result + 2);
+        return result;
     }
 }
