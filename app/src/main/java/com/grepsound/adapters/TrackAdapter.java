@@ -14,14 +14,12 @@ import com.grepsound.model.Tracks;
 
 import java.util.ArrayList;
 
-public class TrackAdapter extends BaseAdapter implements SectionIndexer {
+public class TrackAdapter extends BaseAdapter {
 
 	Context mContext;
 	Tracks tracks;
 
 	private boolean isHeadersActivated;
-	private int[] mSectionIndices;
-	private Character[] mSectionLetters;
 	private LayoutInflater mInflater;
     private ImageLoader mImageLoader;
 	private final static String TAG = TrackAdapter.class.getSimpleName();
@@ -32,37 +30,6 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 		tracks = new Tracks();
 		isHeadersActivated = headers;
         mImageLoader = new ImageLoader(c);
-		mSectionIndices = getSectionIndices();
-		mSectionLetters = getSectionLetters();
-	}
-
-	private int[] getSectionIndices() {
-		if (tracks.isEmpty() || !isHeadersActivated)
-			return new int[0];
-		ArrayList<Integer> sectionIndices = new ArrayList<Integer>();
-		char lastFirstChar = tracks.get(0).getTitle().charAt(0);
-		sectionIndices.add(0);
-		for (int i = 1; i < tracks.size(); i++) {
-			if (tracks.get(i).getTitle().charAt(0) != lastFirstChar) {
-				lastFirstChar = tracks.get(i).getTitle().charAt(0);
-				sectionIndices.add(i);
-			}
-		}
-		int[] sections = new int[sectionIndices.size()];
-		for (int i = 0; i < sectionIndices.size(); i++) {
-			sections[i] = sectionIndices.get(i);
-		}
-		return sections;
-	}
-
-	private Character[] getSectionLetters() {
-		if (tracks.isEmpty() || !isHeadersActivated)
-			return new Character[0];
-		Character[] letters = new Character[mSectionIndices.length];
-		for (int i = 0; i < mSectionIndices.length; i++) {
-			letters[i] = tracks.get(mSectionIndices[i]).getTitle().charAt(0);
-		}
-		return letters;
 	}
 
 	@Override
@@ -105,31 +72,6 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
 	}
 
 	@Override
-	public int getPositionForSection(int section) {
-		if (section >= mSectionIndices.length) {
-			section = mSectionIndices.length - 1;
-		} else if (section < 0) {
-			section = 0;
-		}
-		return mSectionIndices[section];
-	}
-
-	@Override
-	public int getSectionForPosition(int position) {
-		for (int i = 0; i < mSectionIndices.length; i++) {
-			if (position < mSectionIndices[i]) {
-				return i - 1;
-			}
-		}
-		return mSectionIndices.length - 1;
-	}
-
-	@Override
-	public Object[] getSections() {
-		return mSectionLetters;
-	}
-
-	@Override
 	public Tracks.Track getItem(int position) {
 		return tracks.get(position);
 	}
@@ -144,8 +86,5 @@ public class TrackAdapter extends BaseAdapter implements SectionIndexer {
             return;
         tracks.clear();
         tracks = tr;
-
-		mSectionIndices = getSectionIndices();
-		mSectionLetters = getSectionLetters();
 	}
 }

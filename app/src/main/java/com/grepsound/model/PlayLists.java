@@ -126,7 +126,7 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
     }
 
 
-    public class Playlist implements Parcelable{
+    public class Playlist implements Parcelable {
 
         private HashMap<String, String> info;
 
@@ -193,6 +193,19 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
             set = (Tracks) in.readSerializable();
         }
 
+        public String getCover() {
+            if(!info.get(fields.ARTWORK_URL).contentEquals("null"))
+                return info.get(fields.ARTWORK_URL);
+
+            for(Tracks.Track t : set){
+                if(t.getImageUrl() != null) {
+                    return t.getImageUrl();
+                }
+            }
+
+            // return an empty string, causing GET request to fail miserably
+            return "";
+        }
     }
 
 }
