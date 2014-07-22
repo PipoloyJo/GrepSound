@@ -33,6 +33,7 @@ public class Tracks extends ArrayList<Tracks.Track> {
         String TITLE = "title";
         String DURATION = "duration";
         String PERMALINK_URL = "permalink_url";
+        String STREAM_URL = "stream_url";
         String ARTWORK_URL = "artwork_url";
     }
 
@@ -82,8 +83,12 @@ public class Tracks extends ArrayList<Tracks.Track> {
          * "user_favorite":true}
          */
 
-        public Object getUrl() {
+        public String getUrl() {
             return get(fields.PERMALINK_URL);
+        }
+
+        public String getStreamUrl() {
+            return get(fields.STREAM_URL);
         }
 
 
