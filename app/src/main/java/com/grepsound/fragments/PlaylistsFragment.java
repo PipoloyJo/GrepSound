@@ -51,7 +51,7 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
             return;
         }
 
-        mListView.setSelection(1);
+        mListView.setSelectionFromTop(1, scrollHeight);
 
     }
 

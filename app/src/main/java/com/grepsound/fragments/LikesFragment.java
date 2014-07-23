@@ -63,7 +63,7 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
             return;
         }
 
-        mListView.setSelection(1);
+        mListView.setSelectionFromTop(1, scrollHeight);
 
     }
 

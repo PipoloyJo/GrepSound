@@ -39,8 +39,6 @@ public class MenuFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String cat[] = getResources().getStringArray(R.array.categories);
-        mAdapter = new MenuAdapter(getActivity(), cat);
     }
 
     @Override
@@ -54,9 +52,6 @@ public class MenuFragment extends Fragment implements OnItemClickListener {
 
         rootView = inflater.inflate(R.layout.frag_menu, null);
 
-        sections = (ListView) rootView.findViewById(R.id.menu_listView);
-        sections.setAdapter(mAdapter);
-        sections.setOnItemClickListener(this);
         return rootView;
     }
 
@@ -95,21 +90,5 @@ public class MenuFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         mCallbacks.onSectionSelected(pos);
-
-        /*view.findViewById(R.id.menu_item).setBackgroundResource(0);
-        ((TextView) view.findViewById(R.id.menu_title_categorie)).setTextColor(getResources().getColor(R.color.transparent_black));
-        ((TextView) view.findViewById(R.id.menu_num_categorie)).setTextColor(getResources().getColor(R.color.transparent_black));
-*/
-        /*if (lastCheckedItem != null && lastCheckedItem != view) {
-
-            if (Compatibility.isCompatible(Build.VERSION_CODES.JELLY_BEAN))
-                lastCheckedItem.findViewById(R.id.menu_item).setBackground(getResources().getDrawable(R.drawable.menu_round_bg));
-            else
-                lastCheckedItem.findViewById(R.id.menu_item).setBackgroundDrawable(getResources().getDrawable(R.drawable.menu_round_bg));
-            ((TextView) lastCheckedItem.findViewById(R.id.menu_title_categorie)).setTextColor(getResources().getColor(R.color.holo_orange_light));
-            ((TextView) lastCheckedItem.findViewById(R.id.menu_num_categorie)).setTextColor(getResources().getColor(R.color.holo_orange_light));
-        }
-
-        lastCheckedItem = view;*/
     }
 }
