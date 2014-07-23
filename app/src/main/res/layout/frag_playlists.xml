@@ -5,7 +5,7 @@
              android:layout_height="match_parent"
              android:id="@+id/move_to_back_container">
 
-    <GridView
+    <ListView
             android:id="@+id/playlists_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

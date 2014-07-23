@@ -1,39 +1,47 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:grepsound="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:grepsound="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <RelativeLayout android:id="@+id/user_infos"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_alignParentTop="true"
-                    android:background="@color/transparent_black"
-                    android:orientation="vertical">
+    <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-        <com.grepsound.views.CircularImageView android:id="@+id/user_cover"
-                   android:layout_width="100dp"
-                   android:layout_centerVertical="true"
-                   android:layout_alignParentLeft="true"
-                   android:layout_marginLeft="20dp"
-                   android:scaleType="centerCrop"
-                   android:layout_height="100dp"/>
+    <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_height"
+            android:background="@color/transparent_black"
+            android:orientation="vertical">
+
+        <com.grepsound.views.CircularImageView
+                android:id="@+id/user_cover"
+                android:layout_width="100dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:scaleType="centerCrop"
+                android:layout_height="100dp"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:orientation="vertical"
-            android:layout_toRightOf="@+id/user_cover"
-            android:layout_toLeftOf="@+id/follow_buttons">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical"
+                android:layout_toRightOf="@+id/user_cover"
+                android:layout_toLeftOf="@+id/follow_buttons">
 
-            <TextView android:id="@+id/user_name"
+            <TextView
+                    android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"/>
 
-            <TextView android:id="@+id/user_city"
+            <TextView
+                    android:id="@+id/user_city"
                     android:layout_width="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/white"
@@ -42,47 +50,43 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/follow_buttons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true">
+                android:id="@+id/follow_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true">
 
             <com.grepsound.views.TwoTextCounter
-                android:id="@+id/followers_button"
-                android:layout_width="80dip"
-                android:layout_height="80dip"
-                android:layout_margin="5dp"
-                grepsound:backgroundColor="@color/light"
-                grepsound:counterColor="@color/black"
-                grepsound:labelColor="@color/black"/>
+                    android:id="@+id/followers_button"
+                    android:layout_width="80dip"
+                    android:layout_height="80dip"
+                    android:layout_margin="5dp"
+                    grepsound:backgroundColor="@color/light"
+                    grepsound:counterColor="@color/black"
+                    grepsound:labelColor="@color/black"/>
 
             <com.grepsound.views.TwoTextCounter
-                android:id="@+id/following_button"
-                android:layout_width="80dip"
-                android:layout_height="80dip"
-                android:layout_margin="5dp"
-                grepsound:backgroundColor="@color/light"
-                grepsound:counterColor="@color/black"
-                grepsound:labelColor="@color/black" />
+                    android:id="@+id/following_button"
+                    android:layout_width="80dip"
+                    android:layout_height="80dip"
+                    android:layout_margin="5dp"
+                    grepsound:backgroundColor="@color/light"
+                    grepsound:counterColor="@color/black"
+                    grepsound:labelColor="@color/black"/>
 
-            </LinearLayout>
+        </LinearLayout>
+
+
+        <com.grepsound.views.PagerSlidingTabStrip
+                android:id="@+id/pts_main"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                grepsound:indicatorColor="@color/holo_orange_light"
+                android:layout_alignParentBottom="true"
+                grepsound:shouldExpand="true"
+                grepsound:indicatorHeight="4dp"
+                grepsound:underlineColor="@color/holo_orange_light_transparent"/>
 
     </RelativeLayout>
 
-    <com.grepsound.views.PagerSlidingTabStrip
-            android:id="@+id/pts_main"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:layout_below="@+id/user_infos"
-            grepsound:indicatorColor="@color/holo_orange_light"
-            grepsound:shouldExpand="true"
-            grepsound:underlineColor="@color/holo_orange_light_transparent"/>
-
-    <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/pts_main"/>
-
-</RelativeLayout>
+</FrameLayout>

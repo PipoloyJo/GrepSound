@@ -36,9 +36,13 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.Log;
+import android.util.SparseArray;
+import android.widget.Switch;
 import com.grepsound.R;
 import com.grepsound.fragments.LikesFragment;
 import com.grepsound.fragments.PlaylistsFragment;
+import com.grepsound.fragments.ScrollTabHolder;
+import com.grepsound.fragments.ScrollTabHolderFragment;
 import com.grepsound.views.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
@@ -48,25 +52,49 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter implements P
 
     private static final String TAG = SectionsPagerAdapter.class.getSimpleName();
     Context mContext;
-    ArrayList<Fragment> fragments;
+    private SparseArray<ScrollTabHolder> mScrollTabHolders;
+    private ScrollTabHolder mListener;
 
     public SectionsPagerAdapter(Context c, FragmentManager fm) {
         super(fm);
         mContext = c;
-        fragments = new ArrayList<Fragment>();
-        fragments.add(new LikesFragment());
-        fragments.add(new PlaylistsFragment());
+        mScrollTabHolders = new SparseArray<ScrollTabHolder>();
+    }
+
+    public SparseArray<ScrollTabHolder> getScrollTabHolders() {
+        return mScrollTabHolders;
+    }
+
+    public void setTabHolderScrollingContent(ScrollTabHolder listener) {
+        mListener = listener;
     }
 
     @Override
     public Fragment getItem(int i) {
 
-        return fragments.get(i);
+        ScrollTabHolderFragment fragment;
+        switch (i) {
+            case 0:
+                fragment = new LikesFragment();
+                break;
+            case 1:
+                fragment = new PlaylistsFragment();
+                break;
+            default:
+                throw new InstantiationError("No other position for this Viewpager");
+        }
+
+        mScrollTabHolders.put(i, fragment);
+        if (mListener != null) {
+            fragment.setScrollTabHolder(mListener);
+        }
+
+        return fragment;
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return 2;
     }
 
     @Override

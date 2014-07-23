@@ -17,8 +17,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-
 public class AudioService extends Service implements OnErrorListener, OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     public static final String INTENT_BASE_NAME = "com.musical.service.AudioService";
 
@@ -86,6 +84,9 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
         if (!wl.isHeld())
             wl.acquire();
 
+        mMediaPlayer.setOnPreparedListener(mediaPreparedListener);
+        mMediaPlayer.prepareAsync();
+        mMediaPlayer.setOnCompletionListener(this);
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         return START_NOT_STICKY;
     }
@@ -169,16 +170,10 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
 
         @Override
         public void onPrepared(MediaPlayer mp) {
-            Log.w(TAG, "executor.getQueue().size()  " + executor.getQueue().size());
-            if (executor.getQueue().size() > 0) {
-                return;
-            }
-
             mMediaPlayer.start();
         }
     };
 
-    ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
     private class AudioPlayerBroadcastReceiver extends BroadcastReceiver {
 

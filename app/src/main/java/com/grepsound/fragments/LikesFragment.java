@@ -1,32 +1,23 @@
 package com.grepsound.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.*;
 import com.grepsound.R;
-import com.grepsound.activities.Api;
 import com.grepsound.adapters.TrackAdapter;
 import com.grepsound.model.Tracks;
-import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by lisional on 2014-04-21.
  */
-public class LikesFragment extends Fragment implements RequestListener<Tracks>, MediaPlayer.OnPreparedListener {
+public class LikesFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, RequestListener<Tracks> {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
@@ -37,7 +28,7 @@ public class LikesFragment extends Fragment implements RequestListener<Tracks>, 
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //mCallbacks.getSong(LikesFragment.this, mAdapter.getItem(position).getUrl().toString());
+            /*//mCallbacks.getSong(LikesFragment.this, mAdapter.getItem(position).getUrl().toString());
             mPlayer = new MediaPlayer();
 
             mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -60,13 +51,31 @@ public class LikesFragment extends Fragment implements RequestListener<Tracks>, 
                 mPlayer.prepareAsync();
             } catch (IllegalStateException e) {
                 Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
-            }
+            }*/
 
         }
     };
+    private ListView mListView;
 
-    public void onPrepared(MediaPlayer player) {
-        mPlayer.start();
+    @Override
+    public void adjustScroll(int scrollHeight) {
+        if (scrollHeight == 0 && mListView.getFirstVisiblePosition() >= 1) {
+            return;
+        }
+
+        mListView.setSelection(1);
+
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (mScrollTabHolder != null)
+            mScrollTabHolder.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, 0);
     }
 
     public interface Callbacks {
@@ -120,10 +129,17 @@ public class LikesFragment extends Fragment implements RequestListener<Tracks>, 
 
         View rootView = inflater.inflate(R.layout.frag_likes, null);
 
-        GridView mGrid = (GridView) rootView.findViewById(R.id.likes_grid);
-        mGrid.setOnItemClickListener(mClickListener);
+        LinearLayout viewHeader = new LinearLayout(getActivity());
+        viewHeader.setOrientation(LinearLayout.HORIZONTAL);
+        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.header_height));
+        viewHeader.setLayoutParams(lp);
 
-        mGrid.setAdapter(mAdapter);
+        mListView = (ListView) rootView.findViewById(R.id.likes_grid);
+        mListView.setOnItemClickListener(mClickListener);
+        mListView.setOnScrollListener(this);
+        mListView.addHeaderView(viewHeader);
+
+        mListView.setAdapter(mAdapter);
 
         return rootView;
     }

@@ -1,14 +1,15 @@
 package com.grepsound.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import com.grepsound.R;
 import com.grepsound.adapters.PlaylistAdapter;
 import com.grepsound.model.PlayLists;
@@ -18,18 +19,41 @@ import com.octo.android.robospice.request.listener.RequestListener;
 /**
  * Created by lisional on 2014-04-21.
  */
-public class PlaylistsFragment extends Fragment implements RequestListener<PlayLists> {
+public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, RequestListener<PlayLists> {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
     private static final String TAG = LikesFragment.class.getSimpleName();
     private PlaylistAdapter mAdapter;
+    private ListView mListView;
+
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             mCallbacks.displayPlaylistDetails(mAdapter.getItem(position));
         }
     };
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (mScrollTabHolder != null)
+            mScrollTabHolder.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, 1);
+    }
+
+    @Override
+    public void adjustScroll(int scrollHeight) {
+        if (scrollHeight == 0 && mListView.getFirstVisiblePosition() >= 1) {
+            return;
+        }
+
+        mListView.setSelection(1);
+
+    }
 
     public interface Callbacks {
         public void getPlaylists(RequestListener<PlayLists> cb);
@@ -83,10 +107,17 @@ public class PlaylistsFragment extends Fragment implements RequestListener<PlayL
 
         View rootView = inflater.inflate(R.layout.frag_playlists, null);
 
-        GridView mGrid = (GridView) rootView.findViewById(R.id.playlists_grid);
-        mGrid.setOnItemClickListener(mItemClickListener);
+        LinearLayout viewHeader = new LinearLayout(getActivity());
+        viewHeader.setOrientation(LinearLayout.HORIZONTAL);
+        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.header_height));
+        viewHeader.setLayoutParams(lp);
 
-        mGrid.setAdapter(mAdapter);
+
+        mListView = (ListView) rootView.findViewById(R.id.playlists_grid);
+        mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(mItemClickListener);
+        mListView.addHeaderView(viewHeader);
+        mListView.setAdapter(mAdapter);
 
         return rootView;
     }
