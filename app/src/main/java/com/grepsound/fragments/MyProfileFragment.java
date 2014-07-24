@@ -170,7 +170,6 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
         public void displayFollowing() {
 
         }
-
     };
 
     @Override
@@ -201,15 +200,10 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
         mPagerAdapter = new SectionsPagerAdapter(getActivity(), getFragmentManager());
         mImgLoader = new ImageLoader(getActivity());
 
-
-
         mMinHeaderHeight = getResources().getDimensionPixelSize(R.dimen.min_header_height);
         mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
         mMinHeaderTranslation = -mMinHeaderHeight + getActionBarHeight();
-
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -271,6 +265,7 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
 
         mImgLoader.DisplayImage(profile.getLargeAvatarUrl(), mUserCover);
         mName.setText(profile.getUsername());
+        mSpannableString = new SpannableString(profile.getUsername());
         mFollowers.setCounter(Integer.parseInt(profile.getFollowersCount()));
         mFollowing.setCounter(Integer.parseInt(profile.getFollowingCount()));
         mCity.setText(profile.getCity());

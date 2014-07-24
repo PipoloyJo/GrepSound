@@ -116,9 +116,9 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter implements P
     public int getPageIconResId(int position) {
         switch (position) {
         case 0:
-            return R.drawable.ic_action_favorite;
+            return R.drawable.ic_action_favorite_white;
         case 1:
-            return R.drawable.ic_action_reveal;
+            return R.drawable.ic_action_playlist;
         default:
             Log.e(TAG, "getPageTitle: unknown tab position " + position);
             break;
