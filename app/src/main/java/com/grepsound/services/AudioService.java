@@ -40,6 +40,7 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
 
     private boolean headsetConnected = false;
     private AudioPlayerBroadcastReceiver broadcastReceiver = new AudioPlayerBroadcastReceiver();
+    private HeadsetStateReceiver checkHeadsetReceiver;
 
     @Override
     public void onAudioFocusChange(int focusChange) {
@@ -79,14 +80,16 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Toast.makeText(getApplicationContext(), "onStartCommand",
         // Toast.LENGTH_LONG).show();
+        Log.v(TAG, "AudioService: onStartCommand");
+
         PowerManager wm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wl = wm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "com.grepsound.lock");
         if (!wl.isHeld())
             wl.acquire();
 
-        mMediaPlayer.setOnPreparedListener(mediaPreparedListener);
-        mMediaPlayer.prepareAsync();
-        mMediaPlayer.setOnCompletionListener(this);
+        //mMediaPlayer.setOnPreparedListener(mediaPreparedListener);
+        //mMediaPlayer.prepareAsync();
+        //mMediaPlayer.setOnCompletionListener(this);
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         return START_NOT_STICKY;
     }
@@ -115,8 +118,6 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
         registerReceiver(checkHeadsetReceiver, receiverFilter);
 
     }
-
-    HeadsetStateReceiver checkHeadsetReceiver;
 
     private class HeadsetStateReceiver extends BroadcastReceiver {
 
@@ -182,6 +183,10 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
             String action = intent.getAction();
 
         }
+    }
+
+    public boolean isPlaying() {
+        return !(mMediaPlayer == null) && mMediaPlayer.isPlaying();
     }
 
 

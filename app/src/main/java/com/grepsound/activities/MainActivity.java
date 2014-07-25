@@ -5,11 +5,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +24,7 @@ import com.grepsound.model.Tracks;
 import com.grepsound.model.User;
 import com.grepsound.model.Users;
 import com.grepsound.requests.*;
+import com.grepsound.services.AudioService;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     private MenuFragment fMenu;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ServiceConnection serviceConnection = new AudioPlayerServiceConnection();
 
     private SpiceManager spiceManager = new SpiceManager(SpiceUpService.class);
 
@@ -109,6 +110,18 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bindService(new Intent(this, AudioService.class), serviceConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unbindService(serviceConnection);
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.ac_main, menu);
@@ -120,6 +133,12 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     public void onStop() {
         spiceManager.shouldStop();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, AudioService.class));
     }
 
     @Override
@@ -300,6 +319,21 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     public void onSectionSelected(int id) {
 
     }
+
+    private final class AudioPlayerServiceConnection implements ServiceConnection {
+        public void onServiceConnected(ComponentName className, IBinder baBinder) {
+            Log.d(TAG, "AudioPlayerServiceConnection: Service connected");
+            startService(new Intent(MainActivity.this, AudioService.class));
+            Intent intent = new Intent(AudioService.UPDATE);
+            sendBroadcast(intent);
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            Log.d(TAG, "AudioPlayerServiceConnection: Service disconnected");
+        }
+    }
+
+    ////////////////  Callbacks    //////////////////////
 
     @Override
     public void getLikes(RequestListener<Tracks> cb) {
