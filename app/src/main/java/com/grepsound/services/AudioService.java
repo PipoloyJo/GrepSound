@@ -8,30 +8,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
-import android.widget.Toast;
 import com.grepsound.model.Track;
 
 import java.io.IOException;
 
-public class AudioService extends Service implements OnErrorListener, OnPreparedListener, OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
+public class AudioService extends Service implements AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener{
     public static final String INTENT_BASE_NAME = "com.grepsound.services.AudioService";
 
     public static final String INFO_TRACK = INTENT_BASE_NAME + ".INFO_TRACK";
     public static final String NOT_PLAYING = INTENT_BASE_NAME + ".INFO_TRACK";
-
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        mMediaPlayer.start();
-    }
-
 
     public interface commands {
         public static final String PLAY_NEXT = INTENT_BASE_NAME + ".PLAY_NEXT";
@@ -52,28 +42,11 @@ public class AudioService extends Service implements OnErrorListener, OnPrepared
     private AudioManager mAudioManager;
     AudioFocus mAudioFocus = AudioFocus.NoFocusNoDuck;
     private final String TAG = AudioService.class.getSimpleName();
-    private MediaPlayer mMediaPlayer;
+    private GrepMediaPlayer mMediaPlayer;
 
     private boolean headsetConnected = false;
     private AudioPlayerBroadcastReceiver broadcastReceiver = new AudioPlayerBroadcastReceiver();
     private HeadsetStateReceiver checkHeadsetReceiver;
-
-    @Override
-    public void onAudioFocusChange(int focusChange) {
-        switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-                onGainedAudioFocus();
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                onLostAudioFocus(false);
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                onLostAudioFocus(true);
-                break;
-            default:
-        }
-    }
 
     public class AudioPlayerBinder extends Binder {
         public AudioService getService() {
@@ -125,6 +98,7 @@ public class AudioService extends Service implements OnErrorListener, OnPrepared
         intentFilter.addAction(commands.SEEK_MOVED);
         registerReceiver(broadcastReceiver, intentFilter);
 
+        mMediaPlayer = new GrepMediaPlayer();
 
         IntentFilter receiverFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         receiverFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
@@ -176,11 +150,6 @@ public class AudioService extends Service implements OnErrorListener, OnPrepared
         unregisterReceiver(checkHeadsetReceiver);
     }
 
-    @Override
-    public void onCompletion(MediaPlayer _mediaPlayer) {
-
-    }
-
     private class AudioPlayerBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -190,9 +159,13 @@ public class AudioService extends Service implements OnErrorListener, OnPrepared
             if (action.contentEquals(commands.PLAY)) {
                 Track tr = intent.getParcelableExtra(fields.SONG);
                 Log.i(TAG, "PLAYING :" + tr.getTitle());
-                playTrack(tr);
+                try {
+                    mMediaPlayer.play(tr);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else if (action.contentEquals(commands.PAUSE)) {
-
+                mMediaPlayer.pause();
             } else if (action.contentEquals(commands.RESUME)) {
 
             } else if (action.contentEquals(commands.UPDATE)) {
@@ -202,28 +175,15 @@ public class AudioService extends Service implements OnErrorListener, OnPrepared
         }
     }
 
-    private void playTrack(Track tr) {
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        Log.i(TAG, "Player finished!");
+    }
 
-        try {
-            Log.i(TAG, "URL IS: "+tr.getStreamUrl());
-            mMediaPlayer.setDataSource(tr.getStreamUrl()+"?client_id="+ SpiceUpService.CLIENT_ID);
-        } catch (IllegalArgumentException e) {
-            Toast.makeText(this, "You might not set the URI correctly! 1", Toast.LENGTH_LONG).show();
-        } catch (SecurityException e) {
-            Toast.makeText(this, "You might not set the URI correctly! 2", Toast.LENGTH_LONG).show();
-        } catch (IllegalStateException e) {
-            Toast.makeText(this, "You might not set the URI correctly! 3", Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            mMediaPlayer.setOnPreparedListener(this);
-            mMediaPlayer.prepareAsync();
-        } catch (IllegalStateException e) {
-            Toast.makeText(this, "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
-        }
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.i(TAG, "Error code: " + what);
+        return true;
     }
 
     // do we have audio focus?
@@ -232,6 +192,23 @@ public class AudioService extends Service implements OnErrorListener, OnPrepared
         NoFocusCanDuck, // we don't have focus, but can play at a low volume
         // ("ducking")
         Focused // we have full audio focus
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                onGainedAudioFocus();
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                onLostAudioFocus(false);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                onLostAudioFocus(true);
+                break;
+            default:
+        }
     }
 
     public void onGainedAudioFocus() {
@@ -256,10 +233,5 @@ public class AudioService extends Service implements OnErrorListener, OnPrepared
             }
         }
 
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        return true;
     }
 }
