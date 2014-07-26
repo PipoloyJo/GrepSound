@@ -103,7 +103,6 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
         intentFilter.addAction(PLAY);
         intentFilter.addAction(PAUSE);
         intentFilter.addAction(RESUME);
-        intentFilter.addAction(PAUSE);
         intentFilter.addAction(UPDATE);
         intentFilter.addAction(SHUFFLE);
         intentFilter.addAction(REPEAT);
@@ -181,14 +180,10 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
         @Override
         public void onReceive(Context context, final Intent intent) {
             String action = intent.getAction();
+            Log.i(TAG, "Received:" + action);
 
         }
     }
-
-    public boolean isPlaying() {
-        return !(mMediaPlayer == null) && mMediaPlayer.isPlaying();
-    }
-
 
     // do we have audio focus?
     enum AudioFocus {

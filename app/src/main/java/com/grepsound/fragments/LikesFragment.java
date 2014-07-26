@@ -1,6 +1,7 @@
 package com.grepsound.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.*;
 import com.grepsound.R;
 import com.grepsound.adapters.TrackAdapter;
 import com.grepsound.model.Tracks;
+import com.grepsound.services.AudioService;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -23,11 +25,15 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
 
     private static final String TAG = LikesFragment.class.getSimpleName();
     private TrackAdapter mAdapter;
-    static MediaPlayer mPlayer;
+
     private AdapterView.OnItemClickListener mClickListener = new AdapterView.OnItemClickListener() {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            Bundle b = new Bundle();
+            b.putParcelable("song", mAdapter.getItem(position));
+            getActivity().sendBroadcast(new Intent(AudioService.PLAY));
             /*//mCallbacks.getSong(LikesFragment.this, mAdapter.getItem(position).getUrl().toString());
             mPlayer = new MediaPlayer();
 

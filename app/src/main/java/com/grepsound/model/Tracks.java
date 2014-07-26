@@ -1,5 +1,7 @@
 package com.grepsound.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,8 +39,9 @@ public class Tracks extends ArrayList<Tracks.Track> {
         String ARTWORK_URL = "artwork_url";
     }
 
-    public class Track extends HashMap<String, String>{
+    public class Track implements Parcelable{
 
+        private HashMap<String, String> info;
         /**
          * {"genre":"Deep House",
          * "track_type":null,
@@ -84,30 +87,29 @@ public class Tracks extends ArrayList<Tracks.Track> {
          */
 
         public String getUrl() {
-            return get(fields.PERMALINK_URL);
+            return info.get(fields.PERMALINK_URL);
         }
 
         public String getStreamUrl() {
-            return get(fields.STREAM_URL);
+            return info.get(fields.STREAM_URL);
         }
 
-
         public Track(JSONObject obj) throws JSONException {
-
+            info = new HashMap<String, String>();
             Iterator ite = obj.keys();
 
             for (int i = 0; i < obj.length(); ++i) {
                 String key = ite.next().toString();
-                put(key, obj.get(key).toString());
+                info.put(key, obj.get(key).toString());
             }
         }
 
         public String getTitle() {
-            return get(fields.TITLE);
+            return info.get(fields.TITLE);
         }
 
         public String getDuration() {
-            String dur = get(fields.DURATION);
+            String dur = info.get(fields.DURATION);
             int milliSeconds = Integer.parseInt(dur);
 
             int seconds = milliSeconds / 1000;
@@ -121,7 +123,31 @@ public class Tracks extends ArrayList<Tracks.Track> {
 
 
         public String getImageUrl() {
-            return get(fields.ARTWORK_URL);
+            return info.get(fields.ARTWORK_URL);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeSerializable(info);
+        }
+
+        public final Parcelable.Creator<Track> CREATOR = new Parcelable.Creator<Track>() {
+            public Track createFromParcel(Parcel in) {
+                return new Track(in);
+            }
+
+            public Track[] newArray(int size) {
+                return new Track[size];
+            }
+        };
+
+        private Track(Parcel in) {
+            info = (HashMap<String, String>) in.readSerializable();
         }
     }
 }
