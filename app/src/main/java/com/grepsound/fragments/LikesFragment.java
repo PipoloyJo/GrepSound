@@ -31,35 +31,9 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            Log.i(TAG, "SONG TITLE: " + mAdapter.getItem(position).getTitle());
             Intent request = new Intent(AudioService.commands.PLAY);
-            request.putExtra("song", mAdapter.getItem(position));
+            request.putExtra(AudioService.fields.SONG, mAdapter.getItem(position));
             getActivity().sendBroadcast(request);
-            /*//mCallbacks.getSong(LikesFragment.this, mAdapter.getItem(position).getUrl().toString());
-            mPlayer = new MediaPlayer();
-
-            mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-
-            try {
-                Log.i(TAG, "URL IS: "+mAdapter.getItem(position).getStreamUrl());
-                mPlayer.setDataSource(mAdapter.getItem(position).getStreamUrl()+"?client_id="+ SpiceUpService.CLIENT_ID);
-            } catch (IllegalArgumentException e) {
-                Toast.makeText(getActivity(), "You might not set the URI correctly! 1", Toast.LENGTH_LONG).show();
-            } catch (SecurityException e) {
-                Toast.makeText(getActivity(), "You might not set the URI correctly! 2", Toast.LENGTH_LONG).show();
-            } catch (IllegalStateException e) {
-                Toast.makeText(getActivity(), "You might not set the URI correctly! 3", Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                mPlayer.setOnPreparedListener(LikesFragment.this);
-                mPlayer.prepareAsync();
-            } catch (IllegalStateException e) {
-                Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
-            }*/
-
         }
     };
     private ListView mListView;

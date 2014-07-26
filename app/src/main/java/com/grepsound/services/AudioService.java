@@ -16,14 +16,21 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
+import android.widget.Toast;
 import com.grepsound.model.Track;
-import com.grepsound.model.Tracks;
 
-public class AudioService extends Service implements OnErrorListener, OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
+import java.io.IOException;
+
+public class AudioService extends Service implements OnErrorListener, OnPreparedListener, OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     public static final String INTENT_BASE_NAME = "com.grepsound.services.AudioService";
 
     public static final String INFO_TRACK = INTENT_BASE_NAME + ".INFO_TRACK";
     public static final String NOT_PLAYING = INTENT_BASE_NAME + ".INFO_TRACK";
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mMediaPlayer.start();
+    }
 
 
     public interface commands {
@@ -36,7 +43,10 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
         public static final String SHUFFLE = INTENT_BASE_NAME + ".SHUFFLE";
         public static final String REPEAT = INTENT_BASE_NAME + ".REPEAT";
         public static final String SEEK_MOVED = INTENT_BASE_NAME + ".SEEK_MOVED";
+    }
 
+    public interface fields {
+        public static final String SONG = INTENT_BASE_NAME + ".SONG";
     }
 
     private AudioManager mAudioManager;
@@ -171,15 +181,6 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
 
     }
 
-    OnPreparedListener mediaPreparedListener = new OnPreparedListener() {
-
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-            mMediaPlayer.start();
-        }
-    };
-
-
     private class AudioPlayerBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -187,8 +188,9 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
             String action = intent.getAction();
 
             if (action.contentEquals(commands.PLAY)) {
-                Track tr = intent.getParcelableExtra("song");
+                Track tr = intent.getParcelableExtra(fields.SONG);
                 Log.i(TAG, "PLAYING :" + tr.getTitle());
+                playTrack(tr);
             } else if (action.contentEquals(commands.PAUSE)) {
 
             } else if (action.contentEquals(commands.RESUME)) {
@@ -197,6 +199,30 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
 
             }
 
+        }
+    }
+
+    private void playTrack(Track tr) {
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        try {
+            Log.i(TAG, "URL IS: "+tr.getStreamUrl());
+            mMediaPlayer.setDataSource(tr.getStreamUrl()+"?client_id="+ SpiceUpService.CLIENT_ID);
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "You might not set the URI correctly! 1", Toast.LENGTH_LONG).show();
+        } catch (SecurityException e) {
+            Toast.makeText(this, "You might not set the URI correctly! 2", Toast.LENGTH_LONG).show();
+        } catch (IllegalStateException e) {
+            Toast.makeText(this, "You might not set the URI correctly! 3", Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            mMediaPlayer.setOnPreparedListener(this);
+            mMediaPlayer.prepareAsync();
+        } catch (IllegalStateException e) {
+            Toast.makeText(this, "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
         }
     }
 
