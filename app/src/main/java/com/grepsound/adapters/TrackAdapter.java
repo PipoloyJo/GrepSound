@@ -10,6 +10,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import com.grepsound.R;
 import com.grepsound.image.ImageLoader;
+import com.grepsound.model.Track;
 import com.grepsound.model.Tracks;
 
 import java.util.ArrayList;
@@ -19,16 +20,14 @@ public class TrackAdapter extends BaseAdapter {
 	Context mContext;
 	Tracks tracks;
 
-	private boolean isHeadersActivated;
 	private LayoutInflater mInflater;
     private ImageLoader mImageLoader;
 	private final static String TAG = TrackAdapter.class.getSimpleName();
 
-	public TrackAdapter(Context c, boolean headers) {
+	public TrackAdapter(Context c) {
 		mContext = c;
 		mInflater = LayoutInflater.from(c);
 		tracks = new Tracks();
-		isHeadersActivated = headers;
         mImageLoader = new ImageLoader(c);
 	}
 
@@ -65,14 +64,8 @@ public class TrackAdapter extends BaseAdapter {
 	public int getCount() {
 		return tracks.size();
 	}
-
 	@Override
-	public int getViewTypeCount() {
-		return isHeadersActivated ? 2 : 1;
-	}
-
-	@Override
-	public Tracks.Track getItem(int position) {
+	public Track getItem(int position) {
 		return tracks.get(position);
 	}
 

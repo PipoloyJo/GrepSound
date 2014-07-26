@@ -33,7 +33,7 @@ public class DetailsPlaylistFragment extends SlidingFragment {
             throw new NullPointerException("DetailsPlaylistFragment must receive a playlist in arguments");
         }
 
-        mAdapter = new TrackAdapter(getActivity(), true);
+        mAdapter = new TrackAdapter(getActivity());
         mAdapter.addAll(mDisplayed.getSet());
 
         GridView mGrid = (GridView) rootView.findViewById(R.id.tracks_grid);

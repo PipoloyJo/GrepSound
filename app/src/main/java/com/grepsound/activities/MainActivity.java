@@ -324,7 +324,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         public void onServiceConnected(ComponentName className, IBinder baBinder) {
             Log.d(TAG, "AudioPlayerServiceConnection: Service connected");
             startService(new Intent(MainActivity.this, AudioService.class));
-            Intent intent = new Intent(AudioService.UPDATE);
+            Intent intent = new Intent(AudioService.commands.UPDATE);
             sendBroadcast(intent);
         }
 

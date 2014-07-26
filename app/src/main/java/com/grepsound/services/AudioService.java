@@ -16,23 +16,29 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
+import com.grepsound.model.Track;
+import com.grepsound.model.Tracks;
 
 public class AudioService extends Service implements OnErrorListener, OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
-    public static final String INTENT_BASE_NAME = "com.musical.service.AudioService";
+    public static final String INTENT_BASE_NAME = "com.grepsound.services.AudioService";
 
     public static final String INFO_TRACK = INTENT_BASE_NAME + ".INFO_TRACK";
     public static final String NOT_PLAYING = INTENT_BASE_NAME + ".INFO_TRACK";
 
-    public static final String PLAY_NEXT = INTENT_BASE_NAME + ".PLAY_NEXT";
-    public static final String PLAY_PREVIOUS = INTENT_BASE_NAME + ".PLAY_PREVIOUS";
-    public static final String PLAY = INTENT_BASE_NAME + ".PLAY";
-    public static final String PAUSE = INTENT_BASE_NAME + ".PAUSE";
-    public static final String RESUME = INTENT_BASE_NAME + ".RESUME";
-    public static final String UPDATE = INTENT_BASE_NAME + ".UPDATE";
-    public static final String SHUFFLE = INTENT_BASE_NAME + ".SHUFFLE";
-    public static final String REPEAT = INTENT_BASE_NAME + ".REPEAT";
-    public static final String SEEK_MOVED = INTENT_BASE_NAME + ".SEEK_MOVED";
-    public static final String CHATHEAD = INTENT_BASE_NAME + ".SEEK_MOVED";
+
+    public interface commands {
+        public static final String PLAY_NEXT = INTENT_BASE_NAME + ".PLAY_NEXT";
+        public static final String PLAY_PREVIOUS = INTENT_BASE_NAME + ".PLAY_PREVIOUS";
+        public static final String PLAY = INTENT_BASE_NAME + ".PLAY";
+        public static final String PAUSE = INTENT_BASE_NAME + ".PAUSE";
+        public static final String RESUME = INTENT_BASE_NAME + ".RESUME";
+        public static final String UPDATE = INTENT_BASE_NAME + ".UPDATE";
+        public static final String SHUFFLE = INTENT_BASE_NAME + ".SHUFFLE";
+        public static final String REPEAT = INTENT_BASE_NAME + ".REPEAT";
+        public static final String SEEK_MOVED = INTENT_BASE_NAME + ".SEEK_MOVED";
+
+    }
+
     private AudioManager mAudioManager;
     AudioFocus mAudioFocus = AudioFocus.NoFocusNoDuck;
     private final String TAG = AudioService.class.getSimpleName();
@@ -98,16 +104,15 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
     public void onCreate() {
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(PLAY_NEXT);
-        intentFilter.addAction(PLAY_PREVIOUS);
-        intentFilter.addAction(PLAY);
-        intentFilter.addAction(PAUSE);
-        intentFilter.addAction(RESUME);
-        intentFilter.addAction(UPDATE);
-        intentFilter.addAction(SHUFFLE);
-        intentFilter.addAction(REPEAT);
-        intentFilter.addAction(SEEK_MOVED);
-        intentFilter.addAction(CHATHEAD);
+        intentFilter.addAction(commands.PLAY_NEXT);
+        intentFilter.addAction(commands.PLAY_PREVIOUS);
+        intentFilter.addAction(commands.PLAY);
+        intentFilter.addAction(commands.PAUSE);
+        intentFilter.addAction(commands.RESUME);
+        intentFilter.addAction(commands.UPDATE);
+        intentFilter.addAction(commands.SHUFFLE);
+        intentFilter.addAction(commands.REPEAT);
+        intentFilter.addAction(commands.SEEK_MOVED);
         registerReceiver(broadcastReceiver, intentFilter);
 
 
@@ -125,20 +130,20 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
             String action = intent.getAction();
             if (action.contentEquals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
                 headsetConnected = false;
-                sendBroadcast(new Intent(AudioService.PAUSE));
+                sendBroadcast(new Intent(AudioService.commands.PAUSE));
             }
 
             if (action.contentEquals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
                 if (state == 0 && headsetConnected) {
                     headsetConnected = false;
-                    sendBroadcast(new Intent(AudioService.PAUSE));
+                    sendBroadcast(new Intent(AudioService.commands.PAUSE));
                 } else if (state == 0 && !headsetConnected) {
                     headsetConnected = true;
                 } else if (headsetConnected && state == 1) {
                     mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                             mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) / 2, 0);
-                    sendBroadcast(new Intent(AudioService.RESUME));
+                    sendBroadcast(new Intent(AudioService.commands.RESUME));
                 } else if (!headsetConnected && state == 1) {
                     headsetConnected = true;
                 }
@@ -180,7 +185,17 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
         @Override
         public void onReceive(Context context, final Intent intent) {
             String action = intent.getAction();
-            Log.i(TAG, "Received:" + action);
+
+            if (action.contentEquals(commands.PLAY)) {
+                Track tr = intent.getParcelableExtra("song");
+                Log.i(TAG, "PLAYING :" + tr.getTitle());
+            } else if (action.contentEquals(commands.PAUSE)) {
+
+            } else if (action.contentEquals(commands.RESUME)) {
+
+            } else if (action.contentEquals(commands.UPDATE)) {
+
+            }
 
         }
     }
@@ -210,7 +225,7 @@ public class AudioService extends Service implements OnErrorListener, OnCompleti
             if (canDuck) {
                 mMediaPlayer.setVolume(0.1f, 0.1f);
             } else {
-                Intent intent = new Intent(AudioService.PAUSE);
+                Intent intent = new Intent(AudioService.commands.PAUSE);
                 sendBroadcast(intent);
             }
         }

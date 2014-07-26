@@ -15,6 +15,7 @@ import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import com.grepsound.R;
+import com.grepsound.model.Track;
 import com.grepsound.model.Tracks;
 import com.grepsound.services.AudioService;
 import com.grepsound.views.CircularImageView;
@@ -38,7 +39,7 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
 	private UpdaterTask updater;
 	RelativeLayout mSliderButton;
 
-    private Tracks.Track trackPlaying;
+    private Track trackPlaying;
     TextView songDuration, currentTime;
 
 
@@ -106,10 +107,10 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
 
 	}
 
-	public void playTrack(ArrayList<Tracks.Track> playList, long album_id, int pos) {
+	public void playTrack(ArrayList<Track> playList, long album_id, int pos) {
 		//audioPlayer.updatePlaylist(playList, album_id);
 
-		Intent intent = new Intent(AudioService.PLAY);
+		Intent intent = new Intent(AudioService.commands.PLAY);
 		intent.putExtra(PlayerFragment.info.POS_PLAYLIST, pos);
 		getActivity().sendBroadcast(intent);
 	}
@@ -163,7 +164,7 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		Log.i(TAG, "onStopTrackingTouch");
 		isTracking = false;
-		Intent intent = new Intent(AudioService.SEEK_MOVED);
+		Intent intent = new Intent(AudioService.commands.SEEK_MOVED);
 		intent.putExtra(info.PROGRESS, seekBar.getProgress());
 		getActivity().sendBroadcast(intent);
 	}

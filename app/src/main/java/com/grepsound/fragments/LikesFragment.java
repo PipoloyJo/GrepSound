@@ -31,9 +31,10 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            Bundle b = new Bundle();
-            b.putParcelable("song", mAdapter.getItem(position));
-            getActivity().sendBroadcast(new Intent(AudioService.PLAY));
+            Log.i(TAG, "SONG TITLE: " + mAdapter.getItem(position).getTitle());
+            Intent request = new Intent(AudioService.commands.PLAY);
+            request.putExtra("song", mAdapter.getItem(position));
+            getActivity().sendBroadcast(request);
             /*//mCallbacks.getSong(LikesFragment.this, mAdapter.getItem(position).getUrl().toString());
             mPlayer = new MediaPlayer();
 
@@ -118,7 +119,7 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new TrackAdapter(getActivity(), true);
+        mAdapter = new TrackAdapter(getActivity());
     }
 
     @Override

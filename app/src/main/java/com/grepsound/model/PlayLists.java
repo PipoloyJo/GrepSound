@@ -197,7 +197,7 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
             if(!info.get(fields.ARTWORK_URL).contentEquals("null"))
                 return info.get(fields.ARTWORK_URL);
 
-            for(Tracks.Track t : set){
+            for(Track t : set){
                 if(t.getImageUrl() != null) {
                     return t.getImageUrl();
                 }
