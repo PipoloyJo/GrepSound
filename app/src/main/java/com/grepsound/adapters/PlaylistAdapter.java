@@ -54,7 +54,7 @@ public class PlaylistAdapter extends BaseAdapter {
 
     @Override
     public PlayLists.Playlist getItem(int position) {
-        return mPlaylists.get(position);
+        return mPlaylists.get(position - 1);
     }
 
     @Override

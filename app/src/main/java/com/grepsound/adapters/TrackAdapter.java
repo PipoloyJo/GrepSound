@@ -66,7 +66,7 @@ public class TrackAdapter extends BaseAdapter {
 	}
 	@Override
 	public Track getItem(int position) {
-		return tracks.get(position);
+		return tracks.get(position - 1);
 	}
 
 	@Override

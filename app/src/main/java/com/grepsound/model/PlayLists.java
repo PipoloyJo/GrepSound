@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -175,7 +176,7 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeSerializable(info);
-            dest.writeSerializable(set);
+            dest.writeParcelableArray(set.toArray(new Track[set.size()]), 0);
         }
 
         public final Parcelable.Creator<Playlist> CREATOR = new Parcelable.Creator<Playlist>() {
@@ -190,7 +191,8 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
 
         private Playlist(Parcel in) {
             info = (HashMap<String, String>) in.readSerializable();
-            set = (Tracks) in.readSerializable();
+            set = new Tracks();
+            set.addAll(Arrays.asList((Track[]) in.readParcelableArray(Track.class.getClassLoader())));
         }
 
         public String getCover() {

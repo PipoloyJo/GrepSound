@@ -3,14 +3,17 @@ package com.grepsound.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import com.grepsound.R;
 import com.grepsound.adapters.TrackAdapter;
 import com.grepsound.model.PlayLists;
+import com.grepsound.services.AudioService;
 
 /**
  * Created by lisional on 2014-06-23.
@@ -38,6 +41,14 @@ public class DetailsPlaylistFragment extends SlidingFragment {
 
         GridView mGrid = (GridView) rootView.findViewById(R.id.tracks_grid);
         mGrid.setAdapter(mAdapter);
+        mGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent request = new Intent(AudioService.commands.PLAY);
+                request.putExtra(AudioService.fields.SONG, mAdapter.getItem(position));
+                getActivity().sendBroadcast(request);
+            }
+        });
 
         rootView.setOnClickListener(clickListener);
         return rootView;

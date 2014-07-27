@@ -30,7 +30,6 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
             Intent request = new Intent(AudioService.commands.PLAY);
             request.putExtra(AudioService.fields.SONG, mAdapter.getItem(position));
             getActivity().sendBroadcast(request);
