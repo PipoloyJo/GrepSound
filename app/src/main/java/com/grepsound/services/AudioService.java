@@ -167,7 +167,7 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
             } else if (action.contentEquals(commands.PAUSE)) {
                 mMediaPlayer.pause();
             } else if (action.contentEquals(commands.RESUME)) {
-
+                mMediaPlayer.resume();
             } else if (action.contentEquals(commands.UPDATE)) {
 
             }

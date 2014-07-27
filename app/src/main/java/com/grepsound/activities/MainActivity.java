@@ -41,7 +41,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
                                                         FragmentManager.OnBackStackChangedListener {
     private static String TAG = MainActivity.class.getSimpleName();
 
-    private MenuFragment fMenu;
+    private PlayerFragment fMenu;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ServiceConnection serviceConnection = new AudioPlayerServiceConnection();
@@ -65,7 +65,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
         getFragmentManager().addOnBackStackChangedListener(this);
 
-        fMenu = new MenuFragment();
+        fMenu = new PlayerFragment();
         mMainFrag = new MyProfileFragment();
         getFragmentManager().beginTransaction().replace(R.id.move_to_back_container, mMainFrag)
                                                 .replace(R.id.left_drawer, fMenu)

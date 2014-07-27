@@ -90,4 +90,8 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
     public void pause() {
         getCurrentMediaPlayer().pause();
     }
+
+    public void resume() {
+        getCurrentMediaPlayer().start();
+    }
 }

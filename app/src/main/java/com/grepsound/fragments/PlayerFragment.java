@@ -1,10 +1,10 @@
 package com.grepsound.fragments;
 
+import android.app.Fragment;
 import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +41,7 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
 
     private Track trackPlaying;
     TextView songDuration, currentTime;
+    Button mResumeButton, mPauseButton;
 
 
     public interface info {
@@ -133,6 +134,24 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
 
 		View rootView = inflater.inflate(R.layout.frag_player, null);
 
+        mPauseButton = (Button) rootView.findViewById(R.id.pause);
+        mResumeButton = (Button) rootView.findViewById(R.id.play);
+
+        mPauseButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent request = new Intent(AudioService.commands.PAUSE);
+                getActivity().sendBroadcast(request);
+            }
+        });
+
+        mResumeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent request = new Intent(AudioService.commands.RESUME);
+                getActivity().sendBroadcast(request);
+            }
+        });
 
 		return rootView;
 	}
