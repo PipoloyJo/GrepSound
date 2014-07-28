@@ -78,6 +78,7 @@
     <orderEntry type="library" exported="" name="httpclient-cache-4.3.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="robospice-spring-android-1.4.11" level="project" />
+    <orderEntry type="library" exported="" name="material-menu-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="httpclient-4.3.2" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.3.2" level="project" />
     <orderEntry type="library" exported="" name="fluent-hc-4.3.2" level="project" />

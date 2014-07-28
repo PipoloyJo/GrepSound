@@ -3,6 +3,7 @@ package com.grepsound.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ public class MenuFragment extends Fragment implements OnItemClickListener {
     private static final String TAG = MenuFragment.class.getSimpleName();
 
     private Callbacks mCallbacks = sDummyCallbacks;
-    private ListView sections;
+    private ListView mSections;
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -27,18 +28,43 @@ public class MenuFragment extends Fragment implements OnItemClickListener {
      * selections.
      */
     public interface Callbacks {
-        public void onSectionSelected(int id);
+        public void logOut();
+        public void showSettings();
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
+
         @Override
-        public void onSectionSelected(int id) {
+        public void logOut() {
+
+        }
+
+        @Override
+        public void showSettings() {
+
         }
     };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[2];
+        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_settings, "Settings");
+        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_action_logout, "Logout");
+
+        mAdapter = new MenuAdapter(getActivity(), drawerItem);
+    }
+
+    public class ObjectDrawerItem {
+
+        public int icon;
+        public String name;
+
+        // Constructor.
+        public ObjectDrawerItem(int icon, String name) {
+            this.icon = icon;
+            this.name = name;
+        }
     }
 
     @Override
@@ -51,6 +77,10 @@ public class MenuFragment extends Fragment implements OnItemClickListener {
         super.onCreateView(inflater, container, savedInstanceState);
 
         rootView = inflater.inflate(R.layout.frag_menu, null);
+
+        mSections = (ListView) rootView.findViewById(R.id.menu_listView);
+        mSections.setAdapter(mAdapter);
+        mSections.setOnItemClickListener(this);
 
         return rootView;
     }
@@ -89,6 +119,14 @@ public class MenuFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
-        mCallbacks.onSectionSelected(pos);
+        switch(pos) {
+            case 0:
+                mCallbacks.showSettings();
+                break;
+            case 1:
+                // LogOut
+                mCallbacks.logOut();
+                break;
+        }
     }
 }

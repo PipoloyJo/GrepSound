@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 import com.grepsound.R;
 import com.grepsound.fragments.*;
 import com.grepsound.model.PlayLists;
@@ -171,20 +172,6 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-        switch(item.getItemId()){
-            case R.id.ic_settings:
-                SharedPreferences.Editor editor = getSharedPreferences("sc-token", Context.MODE_PRIVATE).edit();
-                editor.remove("token_access");
-                editor.remove("token_scopes");
-                editor.remove("token_refresh");
-                editor.commit();
-                Intent intent = new Intent();
-                intent.setClass(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            break;
-        }
         // Handle your other action bar items...
         return super.onOptionsItemSelected(item);
     }
@@ -313,13 +300,6 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         mIsAnimating = false;
     }
 
-
-
-    @Override
-    public void onSectionSelected(int id) {
-
-    }
-
     private final class AudioPlayerServiceConnection implements ServiceConnection {
         public void onServiceConnected(ComponentName className, IBinder baBinder) {
             Log.d(TAG, "AudioPlayerServiceConnection: Service connected");
@@ -392,4 +372,24 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     public void getFollowByType(FollowFragment.TYPE t, RequestListener<Users> cb) {
         spiceManager.execute(new FollowRequest(Users.class, t), cb);
     }
+
+    // ----------- Menu callbacks ----------------------
+    @Override
+    public void logOut() {
+        SharedPreferences.Editor editor = getSharedPreferences("sc-token", Context.MODE_PRIVATE).edit();
+        editor.remove("token_access");
+        editor.remove("token_scopes");
+        editor.remove("token_refresh");
+        editor.commit();
+        Intent intent = new Intent();
+        intent.setClass(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void showSettings() {
+        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+    }
+
 }

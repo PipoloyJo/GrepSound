@@ -5,14 +5,21 @@
                 android:layout_height="wrap_content"
                 android:background="?android:attr/activatedBackgroundIndicator">
 
+    <ImageView
+            android:id="@+id/menu_title_categorie_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp" />
+
     <com.grepsound.views.TypefaceTextView
             android:id="@+id/menu_title_categorie"
             android:layout_width="wrap_content"
             android:layout_height="?android:attr/listPreferredItemHeight"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/menu_title_categorie_icon"
             android:textColor="@color/black"
             android:textSize="30sp"
             musical:customTypeface="fonts/Roboto-Thin.ttf"/>

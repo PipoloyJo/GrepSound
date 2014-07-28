@@ -4,21 +4,16 @@ import android.app.Fragment;
 import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import com.grepsound.R;
 import com.grepsound.model.Track;
-import com.grepsound.model.Tracks;
 import com.grepsound.services.AudioService;
-import com.grepsound.views.CircularImageView;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -41,7 +36,7 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
 
     private Track trackPlaying;
     TextView songDuration, currentTime;
-    Button mResumeButton, mPauseButton;
+    ImageButton mPlayPauseButton;
 
 
     public interface info {
@@ -134,18 +129,9 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
 
 		View rootView = inflater.inflate(R.layout.frag_player, null);
 
-        mPauseButton = (Button) rootView.findViewById(R.id.pause);
-        mResumeButton = (Button) rootView.findViewById(R.id.play);
+        mPlayPauseButton = (ImageButton) rootView.findViewById(R.id.play_pause);
 
-        mPauseButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent request = new Intent(AudioService.commands.PAUSE);
-                getActivity().sendBroadcast(request);
-            }
-        });
-
-        mResumeButton.setOnClickListener(new OnClickListener() {
+        mPlayPauseButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent request = new Intent(AudioService.commands.RESUME);

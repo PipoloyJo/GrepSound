@@ -2,8 +2,4 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:icon="@drawable/ic_action_settings"
-          android:id="@+id/ic_settings"
-          android:showAsAction="always"/>
-
 </menu>

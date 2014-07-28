@@ -5,17 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.grepsound.R;
+import com.grepsound.fragments.MenuFragment;
+import com.grepsound.views.TypefaceTextView;
 
 public class MenuAdapter extends BaseAdapter {
 
     // private static final String TAG = MenuAdapter.class.getSimpleName();
     private Context mContext;
-    String categories[];
-    int counts[] = { 0, 0, 0 };
+    MenuFragment.ObjectDrawerItem categories[];
 
-    public MenuAdapter(Context c, String[] cat) {
+    public MenuAdapter(Context c, MenuFragment.ObjectDrawerItem[] cat) {
         mContext = c;
         categories = cat;
     }
@@ -26,11 +28,12 @@ public class MenuAdapter extends BaseAdapter {
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (v == null) {
-            v = inflater.inflate(R.layout.item_menu, null);
+            v = inflater.inflate(R.layout.item_menu, parent, false);
         }
-        TextView title = (TextView) v.findViewById(R.id.menu_title_categorie);
-
-        title.setText(categories[pos]);
+        TypefaceTextView title = (TypefaceTextView) v.findViewById(R.id.menu_title_categorie);
+        ImageView icon = (ImageView) v.findViewById(R.id.menu_title_categorie_icon);
+        title.setText(categories[pos].name);
+        icon.setImageResource(categories[pos].icon);
 
         return v;
     }
@@ -41,21 +44,13 @@ public class MenuAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int pos) {
+    public MenuFragment.ObjectDrawerItem getItem(int pos) {
         return categories[pos];
     }
 
     @Override
     public long getItemId(int arg0) {
         return 0;
-    }
-
-    public void setCounts(int[] c) {
-        counts = c;
-    }
-
-    public int[] getDataSet() {
-        return counts;
     }
 
 }

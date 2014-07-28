@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -33,6 +34,15 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
         public static final String SHUFFLE = INTENT_BASE_NAME + ".SHUFFLE";
         public static final String REPEAT = INTENT_BASE_NAME + ".REPEAT";
         public static final String SEEK_MOVED = INTENT_BASE_NAME + ".SEEK_MOVED";
+    }
+
+    public interface info {
+        String DURATION = "duration";
+        String CURRENT_PROGRESS = "current";
+        String RUNNING = "running";
+        String COVER_URI = "cover_uri";
+        String ARTIST_COVER_URI = "artist_cover_uri";
+        String TRACK = "track";
     }
 
     public interface fields {
@@ -172,6 +182,23 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
 
             }
 
+        }
+    }
+
+    public void updateInfo() {
+        Intent infoTrack = new Intent(INFO_TRACK);
+        if (mMediaPlayer != null) {
+            //Track toSend = tracks.get(current_song_index);
+            //Uri u = getCoverOf(tracks.get(current_song_index).getArtist());
+            //Uri cover = mr.findAlbumCover(getApplicationContext(), tracks.get(current_song_index).getAlbum());
+            //infoTrack.putExtra(info.DURATION, mMediaPlayer.getDuration());
+            //infoTrack.putExtra(info.CURRENT_PROGRESS, mMediaPlayer.getCurrentPosition());
+            //infoTrack.putExtra(info.RUNNING, isPlaying());
+            //Log.w(TAG, "isPlaying() " + isPlaying());
+            //infoTrack.putExtra(info.COVER_URI, cover);
+            //infoTrack.putExtra(info.ARTIST_COVER_URI, u);
+            //infoTrack.putExtra(info.TRACK, toSend);
+            //sendBroadcast(infoTrack);
         }
     }
 

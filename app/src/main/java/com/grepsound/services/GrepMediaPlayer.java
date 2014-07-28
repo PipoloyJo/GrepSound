@@ -18,6 +18,11 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
     private int index;
     private static int PLAYERS_COUNT = 2;
 
+    public interface GrepSoundMPListener {
+        public void onPlay();
+        public void onStop();
+    }
+
     public GrepMediaPlayer() {
         mPlayers= new LinkedList<MediaPlayer>();
         for(int i = 0 ; i < PLAYERS_COUNT; ++i) {
@@ -26,7 +31,6 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
             player.setOnPreparedListener(this);
             mPlayers.add(player);
         }
-
         index = 1;
     }
 

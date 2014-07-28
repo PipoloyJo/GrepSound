@@ -70,7 +70,4 @@ public class PlaylistAdapter extends BaseAdapter {
         mPlaylists.clear();
         mPlaylists.addAll(tr);
     }
-
-
-
 }
