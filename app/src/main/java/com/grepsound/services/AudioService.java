@@ -34,6 +34,7 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
         public static final String SHUFFLE = INTENT_BASE_NAME + ".SHUFFLE";
         public static final String REPEAT = INTENT_BASE_NAME + ".REPEAT";
         public static final String SEEK_MOVED = INTENT_BASE_NAME + ".SEEK_MOVED";
+        public static final String SHUTDOWN = INTENT_BASE_NAME + ".SHUTDOWN";
     }
 
     public interface info {
@@ -180,6 +181,9 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
                 mMediaPlayer.resume();
             } else if (action.contentEquals(commands.UPDATE)) {
 
+            } else if (action.contentEquals(commands.SHUTDOWN)) {
+                mMediaPlayer.release();
+                stopSelf();
             }
 
         }

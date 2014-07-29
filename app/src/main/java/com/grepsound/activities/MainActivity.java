@@ -101,7 +101,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -162,6 +162,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         if(mDidSlideOut){
             slideForward(null);
             mDidSlideOut = false;
+            getActionBar().setBackgroundDrawable(null);
         }
     }
 
@@ -171,6 +172,12 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
+        }
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
         // Handle your other action bar items...
         return super.onOptionsItemSelected(item);
@@ -221,6 +228,12 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
             Log.i(TAG, "NOT mDidSlideOut");
             slideForward(null);
         }
+        boolean canback = getFragmentManager().getBackStackEntryCount()>0;
+        //getActionBar().setHomeButtonEnabled(!canback);
+        //getActionBar().setDisplayShowHomeEnabled(!canback);
+        mDrawerToggle.setDrawerIndicatorEnabled(!canback);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener () {
@@ -383,6 +396,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         editor.commit();
         Intent intent = new Intent();
         intent.setClass(this, LoginActivity.class);
+        sendBroadcast(new Intent(AudioService.commands.SHUTDOWN));
         startActivity(intent);
         finish();
     }

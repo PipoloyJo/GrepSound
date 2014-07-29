@@ -1,6 +1,7 @@
 package com.grepsound.fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,11 +13,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
 import com.grepsound.R;
@@ -54,6 +57,21 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // Getting status
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+
+        // Showing status
+        if(status==ConnectionResult.SUCCESS)
+            Toast.makeText(getActivity(), "Google Play Services are available", Toast.LENGTH_SHORT);
+        else{
+
+            Toast.makeText(getActivity(), "Google Play Services are available", Toast.LENGTH_SHORT);
+            //tvStatus.setText("");
+            int requestCode = 10;
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, getActivity(), requestCode);
+            dialog.show();
+        }
 
         View rootView = inflater.inflate(R.layout.frag_google_sign_in, null);
         // We pass through this for all three arguments, specifying the:
@@ -117,6 +135,9 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
                 // showing the user an account chooser or similar.
                 startResolution();
             }
+        } else {
+            // Hide the progress dialog if its showing.
+            mConnectionProgressDialog.dismiss();
         }
     }
 

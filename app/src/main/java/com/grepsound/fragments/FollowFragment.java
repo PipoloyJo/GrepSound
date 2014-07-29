@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,6 +71,8 @@ public class FollowFragment extends SlidingFragment implements RequestListener<U
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new GridUserAdapter(getActivity());
+
+        getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
     }
 
     @Override

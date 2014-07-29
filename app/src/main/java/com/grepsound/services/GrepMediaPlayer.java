@@ -18,6 +18,15 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
     private int index;
     private static int PLAYERS_COUNT = 2;
 
+    public void release() {
+        for(MediaPlayer mp : mPlayers) {
+            if(mp.isPlaying()) {
+                mp.pause();
+            }
+            mp.release();
+        }
+    }
+
     public interface GrepSoundMPListener {
         public void onPlay();
         public void onStop();
