@@ -13,10 +13,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.Toast;
 import com.grepsound.R;
 import com.grepsound.fragments.*;
@@ -403,7 +400,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void showSettings() {
-        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+        mDetailsFragment = new SettingsSlidingFragment();mDrawerLayout.closeDrawer(Gravity.LEFT);
+        switchFragments();
     }
 
 }

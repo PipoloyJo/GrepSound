@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+            android:title="Download">
+
+        <CheckBoxPreference
+                android:key="checkbox_preference"
+                android:title="This is fun"
+                android:summary="O yeah" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

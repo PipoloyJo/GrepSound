@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">GrepSound</string>
 
     <!-- Left Drawer -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-
     <string name="title_section0">Stream</string>
     <string name="title_section1">Likes</string>
     <string name="title_section2">Playlists</string>
-
     <string name="sc_app_not_found">SoundCloud App not found!</string>
     <string name="sc_app_not_found_message">Do you want to install it now?</string>
     <string name="no_active_sc_account">No active SoundCloud account found, please login/sign up</string>
@@ -19,4 +18,5 @@
     <string name="could_not_create_account">Could not create account</string>
     <string name="uploading">Uploading…</string>
     <string name="canceled">Canceled upload</string>
+
 </resources>
