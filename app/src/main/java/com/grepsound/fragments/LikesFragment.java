@@ -117,7 +117,7 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
         mListView = (ListView) rootView.findViewById(R.id.likes_grid);
         mListView.setOnItemClickListener(mClickListener);
         mListView.setOnScrollListener(this);
-        mListView.addHeaderView(viewHeader);
+        mListView.addHeaderView(viewHeader, null, false);
 
         mListView.setAdapter(mAdapter);
 

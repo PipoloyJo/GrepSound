@@ -116,7 +116,7 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
         mListView = (ListView) rootView.findViewById(R.id.playlists_grid);
         mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(mItemClickListener);
-        mListView.addHeaderView(viewHeader);
+        mListView.addHeaderView(viewHeader, null, false);
         mListView.setAdapter(mAdapter);
 
         return rootView;
