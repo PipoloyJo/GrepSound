@@ -88,11 +88,11 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
         setUpNavigationDrawer();
         mAccount = CreateSyncAccount(this);
-        //getContentResolver().addPeriodicSync(
-        //        mAccount,
-        //        AUTHORITY,
-        //        null,
-        //        SYNC_INTERVAL);
+        getContentResolver().addPeriodicSync(
+                mAccount,
+                AUTHORITY,
+                new Bundle(),
+                SYNC_INTERVAL);
     }
 
     private void setUpNavigationDrawer() {
@@ -147,7 +147,6 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.ac_main, menu);
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override

@@ -25,7 +25,6 @@ public class SettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.settings);
 
         ActionBar actionBar = getActivity().getActionBar();
-
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
         actionBar.setTitle("Settings");
         getActionBarIconView().setAlpha(1f);
