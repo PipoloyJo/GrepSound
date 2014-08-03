@@ -2,6 +2,17 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
+            android:title="Sync">
+
+        <ListPreference
+                android:entries="@array/sync_interval_strings"
+                android:entryValues="@array/sync_interval"
+                android:defaultValue="0"
+                android:key="sync_interval"
+                android:title="Sync interval"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
             android:title="Downloading">
 
         <CheckBoxPreference
@@ -14,10 +25,20 @@
                 android:title="Download while charging only"
                 android:summary="Reduce battery drain"/>
 
-        <ListPreference android:entries="@array/cache_likes_count_strings"
-                        android:entryValues="@array/cache_likes_count"
-                        android:key="cache_likes_count"
-                        android:title="Keep likes in cash"/>
+        <ListPreference
+                android:entries="@array/cache_likes_count_strings"
+                android:entryValues="@array/cache_likes_count"
+                android:key="cache_likes_count"
+                android:title="Number of likes in cache"/>
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="Cache">
+
+        <Preference
+                android:key="wipe_cache"
+                android:title="Wipe cache"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>

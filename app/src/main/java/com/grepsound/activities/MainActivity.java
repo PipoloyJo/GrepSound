@@ -11,6 +11,7 @@ import android.content.*;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -93,6 +94,12 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
                 AUTHORITY,
                 new Bundle(),
                 SYNC_INTERVAL);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        Log.i(TAG, "wifi only is " + prefs.getBoolean("wifi_only", false));
+
     }
 
     private void setUpNavigationDrawer() {

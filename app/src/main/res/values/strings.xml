@@ -19,10 +19,4 @@
     <string name="uploading">Uploading…</string>
     <string name="canceled">Canceled upload</string>
 
-    <string-array name="cache_likes_count_strings" >
-        <item>5</item>
-        <item>10</item>
-        <item>15</item>
-        <item>20</item>
-    </string-array>
 </resources>
