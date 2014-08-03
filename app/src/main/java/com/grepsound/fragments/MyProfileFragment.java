@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -53,6 +54,7 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
     private TypedValue mTypedValue = new TypedValue();
     private SpannableString mSpannableString;
     private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
+    private User mProfile;
 
 
     @Override
@@ -182,8 +184,6 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
         }
 
         mCallbacks = (Callbacks) activity;
-
-        mCallbacks.getProfile(this);
     }
 
     @Override
@@ -250,9 +250,20 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
 
         mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(0xffffffff);
 
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("PROFILE", "onResume");
         getActionBarIconView().setAlpha(0f);
         getActivity().getActionBar().setBackgroundDrawable(null);
-        return rootView;
+        setTitleAlpha(0f);
+        if(mProfile == null)
+            mCallbacks.getProfile(this);
+        else
+            onRequestSuccess(mProfile);
     }
 
     @Override
@@ -262,7 +273,7 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
 
     @Override
     public void onRequestSuccess(User profile) {
-
+        mProfile = profile;
         mImgLoader.DisplayImage(profile.getLargeAvatarUrl(), mUserCover);
         mName.setText(profile.getUsername());
         mSpannableString = new SpannableString(profile.getUsername());

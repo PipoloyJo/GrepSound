@@ -5,4 +5,11 @@
     <integer name="half_slide_up_down_duration">150</integer>
     <integer name="slide_up_down_final_value">150</integer>
 
+    <integer-array name="cache_likes_count" >
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+    </integer-array>
+
 </resources>

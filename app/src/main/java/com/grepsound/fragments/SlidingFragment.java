@@ -6,10 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by lisional on 2014-06-25.
- */
-public abstract class SlidingFragment extends Fragment {
+ public abstract class SlidingFragment extends Fragment {
 
     View.OnClickListener clickListener;
     OnSlidingFragmentAnimationEndListener mListener;

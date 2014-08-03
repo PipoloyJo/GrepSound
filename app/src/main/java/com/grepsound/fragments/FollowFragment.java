@@ -1,8 +1,6 @@
 package com.grepsound.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,15 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import com.grepsound.R;
 import com.grepsound.adapters.GridUserAdapter;
 import com.grepsound.model.Users;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-/**
- * Created by lisional on 2014-06-24.
- */
 public class FollowFragment extends SlidingFragment implements RequestListener<Users> {
 
     public static enum TYPE {
@@ -72,7 +68,23 @@ public class FollowFragment extends SlidingFragment implements RequestListener<U
         super.onCreate(savedInstanceState);
         mAdapter = new GridUserAdapter(getActivity());
 
-        getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+
+        switch((TYPE) getArguments().getSerializable("type")) {
+            case FOLLOWER:
+                actionBar.setTitle("Followers");
+                break;
+            case FOLLOWING:
+                actionBar.setTitle("Following");
+                break;
+        }
+
+        getActionBarIconView().setAlpha(1f);
+    }
+
+    private ImageView getActionBarIconView() {
+        return (ImageView) getActivity().getWindow().getDecorView().findViewById(android.R.id.home);
     }
 
     @Override

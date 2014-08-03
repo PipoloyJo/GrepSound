@@ -14,7 +14,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.*;
-import android.widget.Toast;
 import com.grepsound.R;
 import com.grepsound.fragments.*;
 import com.grepsound.model.PlayLists;
@@ -27,9 +26,7 @@ import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-/**
- * Created by lisional on 2014-04-21.
- */
+
 public class MainActivity extends Activity implements   MenuFragment.Callbacks,
                                                         LikesFragment.Callbacks,
                                                         PlaylistsFragment.Callbacks,
@@ -142,7 +139,6 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
@@ -229,8 +225,9 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         //getActionBar().setHomeButtonEnabled(!canback);
         //getActionBar().setDisplayShowHomeEnabled(!canback);
         mDrawerToggle.setDrawerIndicatorEnabled(!canback);
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        if(!canback)
+            mMainFrag.onResume();
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener () {

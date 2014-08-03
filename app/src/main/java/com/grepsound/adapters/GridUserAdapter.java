@@ -12,10 +12,7 @@ import com.grepsound.image.ImageLoader;
 import com.grepsound.model.User;
 import com.grepsound.model.Users;
 
-/**
- * Created by lisional on 2014-06-26.
- */
-public class GridUserAdapter extends BaseAdapter {
+ public class GridUserAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
     Users mUsers;

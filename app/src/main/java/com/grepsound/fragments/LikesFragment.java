@@ -16,10 +16,7 @@ import com.grepsound.services.AudioService;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-/**
- * Created by lisional on 2014-04-21.
- */
-public class LikesFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, RequestListener<Tracks> {
+ public class LikesFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, RequestListener<Tracks> {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 

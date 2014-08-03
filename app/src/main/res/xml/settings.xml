@@ -2,12 +2,22 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-            android:title="Download">
+            android:title="Downloading">
 
         <CheckBoxPreference
-                android:key="checkbox_preference"
-                android:title="This is fun"
-                android:summary="O yeah" />
+                android:key="wifi_only"
+                android:title="Download via Wi-Fi only"
+                android:summary="Prevent carriers charges"/>
+
+        <CheckBoxPreference
+                android:key="charging_only"
+                android:title="Download while charging only"
+                android:summary="Reduce battery drain"/>
+
+        <ListPreference android:entries="@array/cache_likes_count_strings"
+                        android:entryValues="@array/cache_likes_count"
+                        android:key="cache_likes_count"
+                        android:title="Keep likes in cash"/>
 
     </PreferenceCategory>
 </PreferenceScreen>
