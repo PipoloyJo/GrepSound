@@ -23,7 +23,7 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
-    private static final String TAG = LikesFragment.class.getSimpleName();
+    private static final String TAG = PlaylistsFragment.class.getSimpleName();
     private PlaylistAdapter mAdapter;
     private ListView mListView;
 
