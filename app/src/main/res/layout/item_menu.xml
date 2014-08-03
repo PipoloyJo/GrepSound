@@ -16,7 +16,7 @@
     <com.grepsound.views.TypefaceTextView
             android:id="@+id/menu_title_categorie"
             android:layout_width="wrap_content"
-            android:layout_height="?android:attr/listPreferredItemHeight"
+            android:layout_height="?android:attr/listPreferredItemHeightSmall"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:layout_toRightOf="@+id/menu_title_categorie_icon"
