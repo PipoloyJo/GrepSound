@@ -9,11 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import com.grepsound.R;
 import com.grepsound.model.Track;
 import com.grepsound.services.AudioService;
+import com.grepsound.views.CircularSeekBar;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -37,6 +41,7 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
     private Track trackPlaying;
     TextView songDuration, currentTime;
     ImageButton mPlayPauseButton;
+    private CircularSeekBar mCircularSeekBar;
 
 
     public interface info {
@@ -130,6 +135,9 @@ public class PlayerFragment extends Fragment implements OnSeekBarChangeListener 
 		View rootView = inflater.inflate(R.layout.frag_player, null);
 
         mPlayPauseButton = (ImageButton) rootView.findViewById(R.id.play_pause);
+        mCircularSeekBar = (CircularSeekBar) rootView.findViewById(R.id.progress);
+
+
 
         mPlayPauseButton.setOnClickListener(new OnClickListener() {
             @Override

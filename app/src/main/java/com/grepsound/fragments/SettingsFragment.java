@@ -11,6 +11,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import com.grepsound.R;
 import com.grepsound.sync.GrepSoundPreferences;
 

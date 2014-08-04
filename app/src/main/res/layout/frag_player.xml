@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:grepsound="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+    <com.grepsound.views.CircularSeekBar
+            android:id="@+id/progress"
+            android:layout_centerHorizontal="true"
+            android:layout_width="200dp"
+            grepsound:circle_color="@color/lighter_gray"
+            grepsound:circle_progress_color="@color/holo_orange_light"
+            grepsound:pointer_color="@color/holo_orange_light"
+            grepsound:pointer_halo_color="@color/holo_orange_light_transparent"
+            grepsound:pointer_halo_color_ontouch="@color/holo_orange_light_transparent"
+            android:layout_height="200dp"/>
 
 
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/progress"
             android:id="@+id/player_controls">
 
         <ImageButton
