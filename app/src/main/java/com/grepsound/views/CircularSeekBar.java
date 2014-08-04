@@ -355,12 +355,12 @@ public class CircularSeekBar extends View {
      * @param attrArray TypedArray containing the attributes.
      */
     private void initAttributes(TypedArray attrArray) {
-        mCircleXRadius = (float) (attrArray.getFloat(R.styleable.CircularSeekBar_circle_x_radius, DEFAULT_CIRCLE_X_RADIUS) * DPTOPX_SCALE);
-        mCircleYRadius = (float) (attrArray.getFloat(R.styleable.CircularSeekBar_circle_y_radius, DEFAULT_CIRCLE_Y_RADIUS) * DPTOPX_SCALE);
-        mPointerRadius = (float) (attrArray.getFloat(R.styleable.CircularSeekBar_pointer_radius, DEFAULT_POINTER_RADIUS) * DPTOPX_SCALE);
-        mPointerHaloWidth = (float) (attrArray.getFloat(R.styleable.CircularSeekBar_pointer_halo_width, DEFAULT_POINTER_HALO_WIDTH) * DPTOPX_SCALE);
-        mPointerHaloBorderWidth = (float) (attrArray.getFloat(R.styleable.CircularSeekBar_pointer_halo_border_width, DEFAULT_POINTER_HALO_BORDER_WIDTH) * DPTOPX_SCALE);
-        mCircleStrokeWidth = (float) (attrArray.getFloat(R.styleable.CircularSeekBar_circle_stroke_width, DEFAULT_CIRCLE_STROKE_WIDTH) * DPTOPX_SCALE);
+        mCircleXRadius = attrArray.getDimension(R.styleable.CircularSeekBar_circle_x_radius, DEFAULT_CIRCLE_X_RADIUS * DPTOPX_SCALE);
+        mCircleYRadius = attrArray.getDimension(R.styleable.CircularSeekBar_circle_y_radius, DEFAULT_CIRCLE_Y_RADIUS * DPTOPX_SCALE);
+        mPointerRadius = attrArray.getDimension(R.styleable.CircularSeekBar_pointer_radius, DEFAULT_POINTER_RADIUS * DPTOPX_SCALE);
+        mPointerHaloWidth = attrArray.getDimension(R.styleable.CircularSeekBar_pointer_halo_width, DEFAULT_POINTER_HALO_WIDTH * DPTOPX_SCALE);
+        mPointerHaloBorderWidth = attrArray.getDimension(R.styleable.CircularSeekBar_pointer_halo_border_width, DEFAULT_POINTER_HALO_BORDER_WIDTH * DPTOPX_SCALE);
+        mCircleStrokeWidth = attrArray.getDimension(R.styleable.CircularSeekBar_circle_stroke_width, DEFAULT_CIRCLE_STROKE_WIDTH * DPTOPX_SCALE);
 
         mPointerColor = attrArray.getColor(R.styleable.CircularSeekBar_pointer_color, DEFAULT_POINTER_COLOR);
         mPointerHaloColor = attrArray.getColor(R.styleable.CircularSeekBar_pointer_halo_color, DEFAULT_POINTER_HALO_COLOR);
@@ -529,8 +529,7 @@ public class CircularSeekBar extends View {
      * @return The progress of the CircularSeekBar.
      */
     public int getProgress() {
-        int progress = Math.round((float) mMax * mProgressDegrees / mTotalCircleDegrees);
-        return progress;
+        return Math.round((float) mMax * mProgressDegrees / mTotalCircleDegrees);
     }
 
     /**
@@ -727,7 +726,7 @@ public class CircularSeekBar extends View {
                     if (lockAtStart && !mIsMovingCW && (ccwDistanceFromStart > 90)) {
                         lockAtStart = false;
                     }
-                    if (lockAtEnd && mIsMovingCW && (cwDistanceFromEnd > 90)) {
+                    if (lockAtEnd && (cwDistanceFromEnd > 90)) {
                         lockAtEnd = false;
                     }
                     // Fix for passing the end of a semi-circle quickly
