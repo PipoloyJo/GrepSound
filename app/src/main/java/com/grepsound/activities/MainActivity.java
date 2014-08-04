@@ -19,10 +19,7 @@ import android.util.Log;
 import android.view.*;
 import com.grepsound.R;
 import com.grepsound.fragments.*;
-import com.grepsound.model.PlayLists;
-import com.grepsound.model.Tracks;
-import com.grepsound.model.User;
-import com.grepsound.model.Users;
+import com.grepsound.model.*;
 import com.grepsound.requests.*;
 import com.grepsound.services.AudioService;
 import com.grepsound.services.SpiceUpService;
@@ -375,13 +372,13 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     }
 
     @Override
-    public void getPlaylists(RequestListener<PlayLists> cb) {
+    public void getPlaylists(RequestListener<Playlists> cb) {
         PlaylistsRequest req = new PlaylistsRequest("me");
         spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
     }
 
     @Override
-    public void displayPlaylistDetails(PlayLists.Playlist selected) {
+    public void displayPlaylistDetails(Playlist selected) {
         mDetailsFragment = new DetailsPlaylistFragment();
         Bundle b = new Bundle();
         b.putParcelable("DetailsPlaylistFragment", selected);

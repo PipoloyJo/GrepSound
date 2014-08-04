@@ -13,7 +13,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import com.grepsound.R;
 import com.grepsound.adapters.TrackAdapter;
-import com.grepsound.model.PlayLists;
+import com.grepsound.model.Playlist;
 import com.grepsound.services.AudioService;
 
 /**
@@ -27,7 +27,7 @@ import com.grepsound.services.AudioService;
  public class DetailsPlaylistFragment extends SlidingFragment {
 
 
-    PlayLists.Playlist mDisplayed;
+    Playlist mDisplayed;
     TrackAdapter mAdapter;
 
     @Override

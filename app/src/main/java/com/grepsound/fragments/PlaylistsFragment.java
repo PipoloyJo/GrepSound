@@ -12,14 +12,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.grepsound.R;
 import com.grepsound.adapters.PlaylistAdapter;
-import com.grepsound.model.PlayLists;
+import com.grepsound.model.Playlists;
+import com.grepsound.model.Playlist;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
- * Created by lisional on 2014-04-21.
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return
+ *
+ * Alexandre Lision on 2014-04-21.
  */
-public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, RequestListener<PlayLists> {
+
+public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, RequestListener<Playlists> {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
@@ -56,19 +63,19 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
     }
 
     public interface Callbacks {
-        public void getPlaylists(RequestListener<PlayLists> cb);
+        public void getPlaylists(RequestListener<Playlists> cb);
 
-        public void displayPlaylistDetails(PlayLists.Playlist selected);
+        public void displayPlaylistDetails(Playlist selected);
 
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void getPlaylists(RequestListener<PlayLists> cb) {
+        public void getPlaylists(RequestListener<Playlists> cb) {
         }
 
         @Override
-        public void displayPlaylistDetails(PlayLists.Playlist selected) {
+        public void displayPlaylistDetails(Playlist selected) {
 
         }
 
@@ -128,7 +135,7 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
     }
 
     @Override
-    public void onRequestSuccess(PlayLists tr) {
+    public void onRequestSuccess(Playlists tr) {
         Log.e(TAG, "Success");
         mAdapter.addAll(tr);
         mAdapter.notifyDataSetChanged();

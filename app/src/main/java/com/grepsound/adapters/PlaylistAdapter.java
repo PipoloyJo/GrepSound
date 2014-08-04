@@ -6,21 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 import com.grepsound.R;
 import com.grepsound.image.ImageLoader;
-import com.grepsound.model.PlayLists;
-
-import java.util.ArrayList;
+import com.grepsound.model.Playlists;
+import com.grepsound.model.Playlist;
 
 /**
- * Created by lisional on 2014-04-22.
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return
+ *
+ * Alexandre Lision on 2014-04-22.
  */
+
 public class PlaylistAdapter extends BaseAdapter {
 
     Context mContext;
-    PlayLists mPlaylists;
+    Playlists mPlaylists;
     private LayoutInflater mInflater;
     private final ImageLoader mImageLoader;
     private final static String TAG = TrackAdapter.class.getSimpleName();
@@ -28,7 +32,7 @@ public class PlaylistAdapter extends BaseAdapter {
     public PlaylistAdapter(Context c, boolean headers) {
         mContext = c;
         mInflater = LayoutInflater.from(c);
-        mPlaylists = new PlayLists();
+        mPlaylists = new Playlists();
         mImageLoader = new ImageLoader(c);
     }
     @Override
@@ -53,7 +57,7 @@ public class PlaylistAdapter extends BaseAdapter {
     }
 
     @Override
-    public PlayLists.Playlist getItem(int position) {
+    public Playlist getItem(int position) {
         return mPlaylists.get(position - 1);
     }
 
@@ -66,7 +70,7 @@ public class PlaylistAdapter extends BaseAdapter {
         mPlaylists.clear();
     }
 
-    public void addAll(PlayLists tr) {
+    public void addAll(Playlists tr) {
         mPlaylists.clear();
         mPlaylists.addAll(tr);
     }

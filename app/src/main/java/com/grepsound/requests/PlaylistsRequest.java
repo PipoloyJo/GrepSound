@@ -1,8 +1,7 @@
 package com.grepsound.requests;
 
 import com.grepsound.activities.Api;
-import com.grepsound.model.PlayLists;
-import com.octo.android.robospice.request.SpiceRequest;
+import com.grepsound.model.Playlists;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 import com.soundcloud.api.Http;
 import com.soundcloud.api.Request;
@@ -18,20 +17,20 @@ import org.json.JSONArray;
  * Alexandre Lision on 2014-04-22.
  */
 
-public class PlaylistsRequest extends SpringAndroidSpiceRequest<PlayLists> {
+public class PlaylistsRequest extends SpringAndroidSpiceRequest<Playlists> {
 
     private final String userId;
 
     public PlaylistsRequest(String user) {
-        super(PlayLists.class);
+        super(Playlists.class);
         userId = user;
     }
 
     @Override
-    public PlayLists loadDataFromNetwork() throws Exception {
+    public Playlists loadDataFromNetwork() throws Exception {
         HttpResponse resp = Api.wrapper.get(Request.to("/me/playlists"));
         JSONArray result = new JSONArray(Http.getString(resp));
-        return new PlayLists(result);
+        return new Playlists(result);
     }
 
     /**
