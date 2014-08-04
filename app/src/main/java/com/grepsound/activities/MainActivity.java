@@ -27,8 +27,17 @@ import com.grepsound.requests.*;
 import com.grepsound.services.AudioService;
 import com.grepsound.services.SpiceUpService;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return
+ *
+ * Alexandre Lision on 2014-04-22.
+ */
 
 public class MainActivity extends Activity implements   MenuFragment.Callbacks,
                                                         LikesFragment.Callbacks,
@@ -356,7 +365,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void getLikes(RequestListener<Tracks> cb) {
-        spiceManager.execute(new LikesRequest(Tracks.class), cb);
+        LikesRequest req = new LikesRequest("me");
+        spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
     }
 
     @Override
@@ -366,7 +376,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void getPlaylists(RequestListener<PlayLists> cb) {
-        spiceManager.execute(new PlaylistsRequest(PlayLists.class), cb);
+        PlaylistsRequest req = new PlaylistsRequest("me");
+        spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
     }
 
     @Override
@@ -382,7 +393,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void getProfile(RequestListener<User> cb) {
-        spiceManager.execute(new MeProfileRequest(User.class), cb);
+        ProfileRequest req = new ProfileRequest("me");
+        spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
     }
 
     @Override

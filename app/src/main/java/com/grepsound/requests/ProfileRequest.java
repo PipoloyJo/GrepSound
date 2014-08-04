@@ -1,13 +1,14 @@
 package com.grepsound.requests;
 
 import com.grepsound.activities.Api;
-import com.grepsound.model.PlayLists;
+import com.grepsound.model.User;
 import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 import com.soundcloud.api.Http;
 import com.soundcloud.api.Request;
 import org.apache.http.HttpResponse;
-import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 /**
  * "THE BEER-WARE LICENSE" (Revision 42):
@@ -15,23 +16,24 @@ import org.json.JSONArray;
  * can do whatever you want with this stuff. If we meet some day, and you think
  * this stuff is worth it, you can buy me a beer in return
  *
- * Alexandre Lision on 2014-04-22.
+ * Alexandre Lision on 2014-04-18.
  */
 
-public class PlaylistsRequest extends SpringAndroidSpiceRequest<PlayLists> {
+public class ProfileRequest extends SpringAndroidSpiceRequest<User> {
+
 
     private final String userId;
 
-    public PlaylistsRequest(String user) {
-        super(PlayLists.class);
+    public ProfileRequest(String user) {
+        super(User.class);
         userId = user;
     }
 
     @Override
-    public PlayLists loadDataFromNetwork() throws Exception {
-        HttpResponse resp = Api.wrapper.get(Request.to("/me/playlists"));
-        JSONArray result = new JSONArray(Http.getString(resp));
-        return new PlayLists(result);
+    public User loadDataFromNetwork() throws Exception {
+        HttpResponse resp = Api.wrapper.get(Request.to("/me"));
+        JSONObject result = Http.getJSON(resp);
+        return new User(result);
     }
 
     /**
@@ -41,6 +43,6 @@ public class PlaylistsRequest extends SpringAndroidSpiceRequest<PlayLists> {
      * @return unique string cache key
      */
     public String createCacheKey() {
-        return "Playlists." + userId;
+        return "Profile." + userId;
     }
 }

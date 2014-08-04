@@ -2,6 +2,8 @@ package com.grepsound.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +14,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Created by lisional on 2014-04-22.
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return
+ *
+ * Alexandre Lision on 2014-04-22.
  */
 
 /**
@@ -103,10 +110,11 @@ import java.util.Iterator;
  *      ]
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlayLists extends ArrayList<PlayLists.Playlist> {
 
     public PlayLists(){
-
+        // Necessary for jackson caching
     }
 
     public PlayLists(JSONArray result) {
@@ -126,12 +134,28 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
         String ARTWORK_URL = "artwork_url";
     }
 
-
+    @JsonSerialize
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class Playlist implements Parcelable {
 
         private HashMap<String, String> info;
-
         private Tracks set;
+
+        public Playlist(){
+            // Necessary for jackson caching
+        }
+
+        public HashMap<String, String> getInfo() {
+            return info;
+        }
+
+        public void setInfo(HashMap<String, String> info) {
+            this.info = info;
+        }
+
+        public void setSet(Tracks set) {
+            this.set = set;
+        }
 
         public CharSequence getTitle() {
             return info.get(fields.TITLE);
@@ -151,7 +175,7 @@ public class PlayLists extends ArrayList<PlayLists.Playlist> {
         }
 
         public Playlist(JSONObject obj) throws JSONException {
-            info = new HashMap<String, String>();
+            info = new HashMap<>();
 
             Iterator ite = obj.keys();
             for (int i = 0; i < obj.length(); ++i) {

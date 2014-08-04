@@ -2,6 +2,7 @@ package com.grepsound.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,10 +10,28 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Created by alision on 26/07/14.
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return
+ *
+ * Alexandre Lision on 26/07/14.
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Track implements Parcelable {
+
+    public Track(){
+        // Necessary for jackson caching
+    }
+
+    public HashMap<String, String> getInfo() {
+        return info;
+    }
+
+    public void setInfo(HashMap<String, String> info) {
+        this.info = info;
+    }
 
     private HashMap<String, String> info;
 
@@ -88,6 +107,7 @@ public class Track implements Parcelable {
     public String getTitle() {
         return info.get(fields.TITLE);
     }
+
 
     public String getDuration() {
         String dur = info.get(fields.DURATION);
