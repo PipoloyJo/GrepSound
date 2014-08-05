@@ -91,12 +91,10 @@ public class FollowFragment extends SlidingFragment implements RequestListener<U
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.frag_follow, container, false);
 
-        mCallbacks.getFollowByType((TYPE) getArguments().getSerializable("type"), this);
-
         GridView mGrid = (GridView) rootView.findViewById(R.id.follow_grid);
         mGrid.setOnItemClickListener(mItemClickListener);
-
         mGrid.setAdapter(mAdapter);
+        mCallbacks.getFollowByType((TYPE) getArguments().getSerializable("type"), this);
 
         return rootView;
     }

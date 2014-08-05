@@ -418,7 +418,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void getFollowByType(FollowFragment.TYPE t, RequestListener<Users> cb) {
-        spiceManager.execute(new FollowRequest(Users.class, t), cb);
+        FollowRequest req = new FollowRequest("me", t);
+        spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
     }
 
     // ----------- Menu callbacks ----------------------
