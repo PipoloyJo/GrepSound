@@ -26,7 +26,6 @@ import com.grepsound.services.AudioService;
  */
  public class DetailsPlaylistFragment extends SlidingFragment {
 
-
     Playlist mDisplayed;
     TrackAdapter mAdapter;
 

@@ -1,22 +1,67 @@
 package com.grepsound.services;
 
+import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 import com.grepsound.model.Track;
+import com.grepsound.utils.Utilities;
 
 import java.io.IOException;
 import java.util.LinkedList;
 
 /**
- * Created by alision on 26/07/14.
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return
+ *
+ * Alexandre Lision on 26/07/14.
  */
-public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
+
+public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener {
 
     private final String TAG = GrepMediaPlayer.class.getSimpleName();
+    private final Context mContext;
     private LinkedList<MediaPlayer> mPlayers;
     private int index;
     private static int PLAYERS_COUNT = 2;
+    public static final String INFO_TRACK = AudioService.INTENT_BASE_NAME + ".INFO_TRACK";
+    public static final String NOT_PLAYING = AudioService.INTENT_BASE_NAME + ".NOT_PLAYING";
+
+    private Track mTrackPlaying;
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.i(TAG, "onError:"+what);
+        return false;
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        Log.i(TAG, "onInfo:"+what);
+        return false;
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        if(percent < 100)
+            Log.i(TAG, "Buffer percent is:"+percent);
+    }
+
+    public void seekTo(int progress) {
+        Log.i(TAG, "seeking to:"+progress);
+        getCurrentMediaPlayer().seekTo(Utilities.progressToTimer(progress, getCurrentMediaPlayer().getDuration()));
+        broadcastStatus();
+    }
+
+    public interface info {
+        String DURATION = "duration";
+        String CURRENT_PROGRESS = "current";
+        String RUNNING = "running";
+        String TRACK = "track";
+    }
 
     public void release() {
         for(MediaPlayer mp : mPlayers) {
@@ -27,17 +72,16 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
         }
     }
 
-    public interface GrepSoundMPListener {
-        public void onPlay();
-        public void onStop();
-    }
-
-    public GrepMediaPlayer() {
-        mPlayers= new LinkedList<MediaPlayer>();
+    public GrepMediaPlayer(Context c) {
+        mContext = c;
+        mPlayers= new LinkedList<>();
         for(int i = 0 ; i < PLAYERS_COUNT; ++i) {
             MediaPlayer player = new MediaPlayer();
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             player.setOnPreparedListener(this);
+            player.setOnErrorListener(this);
+            player.setOnInfoListener(this);
+            player.setOnBufferingUpdateListener(this);
             mPlayers.add(player);
         }
         index = 1;
@@ -70,6 +114,7 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
         MediaPlayer p = getNextMediaPlayer();
         p.setDataSource(tr.getStreamUrl()+"?client_id="+ SpiceUpService.CLIENT_ID);
         p.prepareAsync();
+        mTrackPlaying = tr;
     }
 
     @Override
@@ -82,6 +127,7 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
         }
         increaseIndex();
         getCurrentMediaPlayer().start();
+        broadcastStatus();
     }
 
     private void increaseIndex() {
@@ -102,9 +148,29 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener {
 
     public void pause() {
         getCurrentMediaPlayer().pause();
+        broadcastStatus();
     }
 
     public void resume() {
-        getCurrentMediaPlayer().start();
+        if(getCurrentMediaPlayer().isPlaying())
+            getCurrentMediaPlayer().pause();
+        else
+            getCurrentMediaPlayer().start();
+
+        broadcastStatus();
+    }
+
+    public void broadcastStatus() {
+        if(mTrackPlaying == null) {
+            Intent infoTrack = new Intent(NOT_PLAYING);
+            mContext.sendBroadcast(infoTrack);
+        } else {
+            Intent infoTrack = new Intent(INFO_TRACK);
+            infoTrack.putExtra(info.DURATION, getCurrentMediaPlayer().getDuration());
+            infoTrack.putExtra(info.CURRENT_PROGRESS, getCurrentMediaPlayer().getCurrentPosition());
+            infoTrack.putExtra(info.RUNNING, isPlaying());
+            infoTrack.putExtra(info.TRACK, mTrackPlaying);
+            mContext.sendBroadcast(infoTrack);
+        }
     }
 }

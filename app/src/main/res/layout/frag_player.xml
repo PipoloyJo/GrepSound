@@ -15,11 +15,45 @@
             grepsound:pointer_halo_color_ontouch="@color/holo_orange_light_transparent"
             android:layout_height="200dp"/>
 
+    <LinearLayout
+            android:id="@+id/time_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progress"
+            android:weightSum="2"
+            >
+
+        <com.grepsound.views.TypefaceTextView
+                android:id="@+id/current_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:gravity="center"
+                grepsound:customTypeface="fonts/Roboto-Thin.ttf"/>
+
+        <com.grepsound.views.TypefaceTextView
+                android:id="@+id/total_duration"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:textSize="15sp"
+                grepsound:customTypeface="fonts/Roboto-Thin.ttf"/>
+
+    </LinearLayout>
+
 
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/progress"
+            android:layout_below="@+id/time_frame"
             android:id="@+id/player_controls">
 
         <ImageButton
