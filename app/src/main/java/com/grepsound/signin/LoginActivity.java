@@ -1,11 +1,8 @@
-package com.grepsound.activities;
+package com.grepsound.signin;
 
 import android.accounts.*;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -14,6 +11,8 @@ import android.os.OperationCanceledException;
 import android.util.Log;
 import android.widget.Toast;
 import com.grepsound.R;
+import com.grepsound.activities.Api;
+import com.grepsound.activities.MainActivity;
 import com.soundcloud.api.ApiWrapper;
 import com.soundcloud.api.Token;
 

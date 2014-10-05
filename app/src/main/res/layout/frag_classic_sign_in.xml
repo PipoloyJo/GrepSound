@@ -23,9 +23,10 @@
                 android:hint="Username"
                 android:id="@+id/username_input"
                 android:maxWidth="@dimen/max_edittext_width"
+                android:singleLine="true"
                 android:minWidth="@dimen/max_edittext_width"
                 android:layout_gravity="center"
-                android:layout_centerHorizontal="true"/>
+                android:imeOptions="actionNext"/>
 
         <com.grepsound.views.PasswordEditText
                 android:layout_width="wrap_content"
@@ -33,7 +34,8 @@
                 android:maxWidth="@dimen/max_edittext_width"
                 android:minWidth="@dimen/max_edittext_width"
                 android:layout_gravity="center"
-                android:id="@+id/password_input"/>
+                android:id="@+id/password_input"
+                android:imeOptions="actionSend"/>
 
     </LinearLayout>
     <Button

@@ -64,9 +64,11 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     }
 
     public void release() {
+        Log.i(TAG, "Releasing players");
         for(MediaPlayer mp : mPlayers) {
             if(mp.isPlaying()) {
                 mp.pause();
+                mp.stop();
             }
             mp.release();
         }

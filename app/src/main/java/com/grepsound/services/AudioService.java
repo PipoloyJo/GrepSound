@@ -87,6 +87,7 @@ public class AudioService extends Service implements AudioManager.OnAudioFocusCh
         intentFilter.addAction(commands.SHUFFLE);
         intentFilter.addAction(commands.REPEAT);
         intentFilter.addAction(commands.SEEK_MOVED);
+        intentFilter.addAction(commands.SHUTDOWN);
         registerReceiver(broadcastReceiver, intentFilter);
 
         // Don't like passing a context here but it enables the player to broadcast its status on its own

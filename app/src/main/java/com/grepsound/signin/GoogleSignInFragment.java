@@ -1,4 +1,4 @@
-package com.grepsound.fragments;
+package com.grepsound.signin;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -27,8 +26,14 @@ import com.grepsound.R;
 import java.io.IOException;
 
 /**
- * Created by lisional on 2014-04-11.
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return
+ *
+ * Alexandre Lision on 2014-04-11.
  */
+
 public class GoogleSignInFragment extends Fragment implements   GooglePlayServicesClient.ConnectionCallbacks,
                                                                 GooglePlayServicesClient.OnConnectionFailedListener,
                                                                 View.OnClickListener,
@@ -66,7 +71,7 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
             Toast.makeText(getActivity(), "Google Play Services are available", Toast.LENGTH_SHORT);
         else{
 
-            Toast.makeText(getActivity(), "Google Play Services are available", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "Google Play Services are not available", Toast.LENGTH_SHORT);
             //tvStatus.setText("");
             int requestCode = 10;
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, getActivity(), requestCode);
@@ -128,6 +133,7 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
         // mConnectionResult property ready for to be used
         // when the user clicks the sign-in button.
         if (result.hasResolution()) {
+            Log.v(TAG, "hasResolution!");
             mConnectionResult = result;
             if (mResolveOnFail) {
                 // This is a local helper function that starts
@@ -136,6 +142,7 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
                 startResolution();
             }
         } else {
+            Log.v(TAG, "NO RESO!");
             // Hide the progress dialog if its showing.
             mConnectionProgressDialog.dismiss();
         }
@@ -172,13 +179,9 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
                             mPlusClient.getAccountName(), scope);
 
                     Log.i(TAG, token);
-                } catch (UserRecoverableAuthException e) {
+                } catch (IOException | GoogleAuthException e) {
                     // This error is recoverable, so we could fix this
                     // by displaying the intent to the user.
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (GoogleAuthException e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -205,7 +208,7 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
             // there are any more errors to resolve we'll get our
             // onConnectionFailed, but if not, we'll get onConnected.
             mPlusClient.connect();
-        } else if (requestCode == OUR_REQUEST_CODE && responseCode != Activity.RESULT_OK) {
+        } else if (requestCode == OUR_REQUEST_CODE) {
             // If we've got an error we can't resolve, we're no
             // longer in the midst of signing in, so we can stop
             // the progress spinner.
@@ -304,10 +307,12 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
             // and pass it an integer tag we can use to track. This means
             // that when we get the onActivityResult callback we'll know
             // its from being started here.
+            Log.v(TAG, "startResolutionForResult!");
             mConnectionResult.startResolutionForResult(getActivity(), OUR_REQUEST_CODE);
         } catch (IntentSender.SendIntentException e) {
             // Any problems, just try to connect() again so we get a new
             // ConnectionResult.
+            e.printStackTrace();
             mPlusClient.connect();
         }
     }

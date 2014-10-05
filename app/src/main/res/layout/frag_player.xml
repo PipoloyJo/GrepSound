@@ -4,6 +4,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:grepsound="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="200dp"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/circle"
+                    android:layout_height="200dp">
     <com.grepsound.views.CircularSeekBar
             android:id="@+id/progress"
             android:layout_centerHorizontal="true"
@@ -15,11 +21,23 @@
             grepsound:pointer_halo_color_ontouch="@color/holo_orange_light_transparent"
             android:layout_height="200dp"/>
 
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/play_pause"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@null"
+            android:src="@drawable/ic_action_play"/>
+
+    </RelativeLayout>
+
     <LinearLayout
             android:id="@+id/time_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/progress"
+            android:layout_below="@+id/circle"
             android:weightSum="2"
             >
 
@@ -49,40 +67,6 @@
 
     </LinearLayout>
 
-
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/time_frame"
-            android:id="@+id/player_controls">
-
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/play_pause"
-                android:id="@+id/previous"
-                android:background="@null"
-                android:src="@drawable/ic_action_previous"/>
-
-
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:id="@+id/play_pause"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@null"
-                android:src="@drawable/ic_action_play"/>
-
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/play_pause"
-                android:id="@+id/next"
-                android:background="@null"
-                android:src="@drawable/ic_action_next"/>
-    </RelativeLayout>
 
     <fragment
             android:name="com.grepsound.fragments.MenuFragment"
