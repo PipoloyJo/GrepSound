@@ -103,7 +103,7 @@ public class ClassicSignInFrag extends Fragment implements RequestListener<Token
         editor.putString("token_access", o.access);
         editor.putString("token_scopes", o.scope);
         editor.putString("token_refresh", o.refresh);
-        editor.commit();
+        editor.apply();
 
         // Restore token
         Token token = new Token(o.access, o.scope, o.refresh);

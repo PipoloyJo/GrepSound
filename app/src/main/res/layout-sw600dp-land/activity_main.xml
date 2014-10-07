@@ -8,6 +8,10 @@
             android:id="@+id/move_to_back_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingLeft="@dimen/drawer_width"
+            android:paddingStart="@dimen/drawer_width"
+            android:paddingRight="0dp"
+            android:paddingEnd="0dp"
             android:background="@color/black"
             android:orientation="vertical">
 

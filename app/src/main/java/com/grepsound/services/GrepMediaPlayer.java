@@ -6,7 +6,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 import com.grepsound.model.Track;
-import com.grepsound.utils.Utilities;
+import com.grepsound.utils.TimerUtilities;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -52,7 +52,7 @@ public class GrepMediaPlayer implements MediaPlayer.OnPreparedListener, MediaPla
 
     public void seekTo(int progress) {
         Log.i(TAG, "seeking to:"+progress);
-        getCurrentMediaPlayer().seekTo(Utilities.progressToTimer(progress, getCurrentMediaPlayer().getDuration()));
+        getCurrentMediaPlayer().seekTo(TimerUtilities.progressToTimer(progress, getCurrentMediaPlayer().getDuration()));
         broadcastStatus();
     }
 

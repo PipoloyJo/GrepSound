@@ -93,10 +93,19 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         getFragmentManager().beginTransaction().replace(R.id.move_to_back_container, mMainFrag)
                                                 .replace(R.id.left_drawer, fMenu)
                                                 .commit();
+        int layoutSizeMask = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 
-        setUpNavigationDrawer();
+        if ((layoutSizeMask == Configuration.SCREENLAYOUT_SIZE_LARGE ||
+                layoutSizeMask == Configuration.SCREENLAYOUT_SIZE_XLARGE) &&
+                getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // setup drawer only if
+            setUpNavigationDrawer(true);
+        } else {
+            setUpNavigationDrawer(false);
+        }
+
         mAccount = CreateSyncAccount(this);
-        getContentResolver().addPeriodicSync(
+        ContentResolver.addPeriodicSync(
                 mAccount,
                 AUTHORITY,
                 new Bundle(),
@@ -109,9 +118,8 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     }
 
-    private void setUpNavigationDrawer() {
+    private void setUpNavigationDrawer(boolean locked) {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
                 mDrawerLayout, /* DrawerLayout object */
@@ -130,12 +138,14 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
         };
 
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        getActionBar().setHomeButtonEnabled(true);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        if(locked){
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+        } else {
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            getActionBar().setHomeButtonEnabled(true);
+        }
     }
 
     @Override
@@ -327,8 +337,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
         ObjectAnimator movingFragmentRotator = ObjectAnimator.
                 ofFloat(movingFragmentView, "rotationX", 0);
-        movingFragmentRotator.setStartDelay(
-                getResources().getInteger(R.integer.half_slide_up_down_duration));
+        movingFragmentRotator.setStartDelay(getResources().getInteger(R.integer.half_slide_up_down_duration));
 
         AnimatorSet s = new AnimatorSet();
         s.playTogether(movingFragmentAnimator, movingFragmentRotator, darkHoverViewAnimator);

@@ -83,7 +83,8 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
         SparseArray<ScrollTabHolder> scrollTabHolders = mPagerAdapter.getScrollTabHolders();
         ScrollTabHolder currentHolder = scrollTabHolders.valueAt(position);
 
-        currentHolder.adjustScroll((int) (mHeader.getHeight() + mHeader.getTranslationY()));
+        if(mHeader != null)
+            currentHolder.adjustScroll((int) (mHeader.getHeight() + mHeader.getTranslationY()));
     }
 
     @Override

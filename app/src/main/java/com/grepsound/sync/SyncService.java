@@ -12,6 +12,8 @@ package com.grepsound.sync;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import com.grepsound.services.SpiceUpService;
+import com.octo.android.robospice.SpiceManager;
 
 /**
  * Define a Service that returns an IBinder for the
@@ -23,6 +25,8 @@ public class SyncService extends Service {
     private static SyncAdapter sSyncAdapter = null;
     // Object to use as a thread-safe lock
     private static final Object sSyncAdapterLock = new Object();
+    private SpiceManager spiceManager = new SpiceManager(SpiceUpService.class);
+
     /*
      * Instantiate the sync adapter object.
      */
@@ -35,10 +39,17 @@ public class SyncService extends Service {
          */
         synchronized (sSyncAdapterLock) {
             if (sSyncAdapter == null) {
-                sSyncAdapter = new SyncAdapter(getApplicationContext(), true);
+                sSyncAdapter = new SyncAdapter(getApplicationContext(), true, spiceManager);
             }
         }
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        spiceManager.start(getApplicationContext());
+        return super.onStartCommand(intent, flags, startId);
+    }
+
     /**
      * Return an object that allows the system to invoke
      * the sync adapter.

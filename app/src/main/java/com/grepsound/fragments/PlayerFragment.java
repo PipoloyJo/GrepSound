@@ -11,18 +11,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import com.grepsound.R;
 import com.grepsound.model.Track;
 import com.grepsound.services.AudioService;
 import com.grepsound.services.GrepMediaPlayer;
-import com.grepsound.utils.Utilities;
+import com.grepsound.utils.TimerUtilities;
 import com.grepsound.views.CircularSeekBar;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -79,9 +75,9 @@ public class PlayerFragment extends Fragment implements CircularSeekBar.OnCircul
 				return;
 			}
 
-            final int progress = Utilities.getProgressPercentage(current, duration);
-            final String current_time = Utilities.milliSecondsToTimer(current);
-            final String remaining = "-" + Utilities.milliSecondsToTimer(duration - current);
+            final int progress = TimerUtilities.getProgressPercentage(current, duration);
+            final String current_time = TimerUtilities.milliSecondsToTimer(current);
+            final String remaining = "-" + TimerUtilities.milliSecondsToTimer(duration - current);
             current += 1000;
 
 			callback.post(new Runnable() {
@@ -130,6 +126,7 @@ public class PlayerFragment extends Fragment implements CircularSeekBar.OnCircul
 		super.onCreateView(inflater, container, savedInstanceState);
 
 		View rootView = inflater.inflate(R.layout.frag_player, null);
+        getFragmentManager().beginTransaction().replace(R.id.menu_frame, new MenuFragment()).commit();
 
         mPlayPauseButton = (ImageButton) rootView.findViewById(R.id.play_pause);
         mCircularSeekBar = (CircularSeekBar) rootView.findViewById(R.id.progress);
