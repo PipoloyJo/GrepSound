@@ -11,3 +11,4 @@ Build environment:
 ------------------
 Fedora 20
 IntellijIDEA 13.1.5
+JDK 7

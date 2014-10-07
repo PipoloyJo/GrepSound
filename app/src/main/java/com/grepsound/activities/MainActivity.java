@@ -9,6 +9,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.*;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -33,17 +34,17 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
  * this stuff is worth it, you can buy me a beer in return
- *
+ * <p/>
  * Alexandre Lision on 2014-04-22.
  */
 
-public class MainActivity extends Activity implements   MenuFragment.Callbacks,
-                                                        LikesFragment.Callbacks,
-                                                        PlaylistsFragment.Callbacks,
-                                                        MyProfileFragment.Callbacks,
-                                                        FollowFragment.Callbacks,
-                                                        SlidingFragment.OnSlidingFragmentAnimationEndListener,
-                                                        FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends Activity implements MenuFragment.Callbacks,
+        LikesFragment.Callbacks,
+        PlaylistsFragment.Callbacks,
+        MyProfileFragment.Callbacks,
+        FollowFragment.Callbacks,
+        SlidingFragment.OnSlidingFragmentAnimationEndListener,
+        FragmentManager.OnBackStackChangedListener {
     private static String TAG = MainActivity.class.getSimpleName();
 
     private PlayerFragment fMenu;
@@ -76,6 +77,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
             SYNC_INTERVAL_IN_MINUTES *
                     SECONDS_PER_MINUTE *
                     MILLISECONDS_PER_SECOND;
+    private boolean mDrawerIsLocked;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,19 +93,19 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         fMenu = new PlayerFragment();
         mMainFrag = new MyProfileFragment();
         getFragmentManager().beginTransaction().replace(R.id.move_to_back_container, mMainFrag)
-                                                .replace(R.id.left_drawer, fMenu)
-                                                .commit();
+                .replace(R.id.left_drawer, fMenu)
+                .commit();
         int layoutSizeMask = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 
         if ((layoutSizeMask == Configuration.SCREENLAYOUT_SIZE_LARGE ||
                 layoutSizeMask == Configuration.SCREENLAYOUT_SIZE_XLARGE) &&
                 getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // setup drawer only if
-            setUpNavigationDrawer(true);
+            mDrawerIsLocked = true;
         } else {
-            setUpNavigationDrawer(false);
+            mDrawerIsLocked = false;
         }
 
+        setUpNavigationDrawer(mDrawerIsLocked);
         mAccount = CreateSyncAccount(this);
         ContentResolver.addPeriodicSync(
                 mAccount,
@@ -138,14 +140,17 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
         };
 
-        if(locked){
+        if (locked) {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+            mDrawerLayout.setScrimColor(Color.TRANSPARENT);
         } else {
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
             mDrawerLayout.setDrawerListener(mDrawerToggle);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-            getActionBar().setHomeButtonEnabled(true);
         }
+
+        mDrawerToggle.setDrawerIndicatorEnabled(!locked);
+        getActionBar().setHomeButtonEnabled(!locked);
     }
 
     @Override
@@ -168,7 +173,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater=getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.ac_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -201,7 +206,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
     public void onBackPressed() {
         super.onBackPressed();
         Log.i(TAG, "onBackPressed");
-        if(mDidSlideOut){
+        if (mDidSlideOut) {
             slideForward(null);
             mDidSlideOut = false;
             getActionBar().setBackgroundDrawable(null);
@@ -270,16 +275,14 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
             Log.i(TAG, "NOT mDidSlideOut");
             slideForward(null);
         }
-        boolean canback = getFragmentManager().getBackStackEntryCount()>0;
-        //getActionBar().setHomeButtonEnabled(!canback);
-        //getActionBar().setDisplayShowHomeEnabled(!canback);
+        boolean canback = getFragmentManager().getBackStackEntryCount() > 0;
         mDrawerToggle.setDrawerIndicatorEnabled(!canback);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        if(!canback)
+        if (!canback)
             mMainFrag.onResume();
     }
 
-    View.OnClickListener mClickListener = new View.OnClickListener () {
+    View.OnClickListener mClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switchFragments();
@@ -291,13 +294,12 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
      * scaling and rotating the fragment's view, as well as adding a
      * translucent dark hover view to inform the user that it is inactive.
      */
-    public void slideBack(Animator.AnimatorListener listener)
-    {
+    public void slideBack(Animator.AnimatorListener listener) {
         View movingFragmentView = mMainFrag.getView();
 
-        PropertyValuesHolder rotateX =  PropertyValuesHolder.ofFloat("rotationX", 40f);
-        PropertyValuesHolder scaleX =  PropertyValuesHolder.ofFloat("scaleX", 0.8f);
-        PropertyValuesHolder scaleY =  PropertyValuesHolder.ofFloat("scaleY", 0.8f);
+        PropertyValuesHolder rotateX = PropertyValuesHolder.ofFloat("rotationX", 40f);
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat("scaleX", 0.8f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat("scaleY", 0.8f);
         ObjectAnimator movingFragmentAnimator = ObjectAnimator.
                 ofPropertyValuesHolder(movingFragmentView, rotateX, scaleX, scaleY);
 
@@ -322,13 +324,12 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
      * this animation, the image fragment regains focus since this method is
      * called from the onBackStackChanged method.
      */
-    public void slideForward(Animator.AnimatorListener listener)
-    {
+    public void slideForward(Animator.AnimatorListener listener) {
         View movingFragmentView = mMainFrag.getView();
 
-        PropertyValuesHolder rotateX =  PropertyValuesHolder.ofFloat("rotationX", 40f);
-        PropertyValuesHolder scaleX =  PropertyValuesHolder.ofFloat("scaleX", 1.0f);
-        PropertyValuesHolder scaleY =  PropertyValuesHolder.ofFloat("scaleY", 1.0f);
+        PropertyValuesHolder rotateX = PropertyValuesHolder.ofFloat("rotationX", 40f);
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat("scaleX", 1.0f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat("scaleY", 1.0f);
         ObjectAnimator movingFragmentAnimator = ObjectAnimator.
                 ofPropertyValuesHolder(movingFragmentView, rotateX, scaleX, scaleY);
 
@@ -439,7 +440,7 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
         editor.remove("token_access");
         editor.remove("token_scopes");
         editor.remove("token_refresh");
-        editor.commit();
+        editor.apply();
         Intent intent = new Intent();
         intent.setClass(this, LoginActivity.class);
         sendBroadcast(new Intent(AudioService.commands.SHUTDOWN));
@@ -449,7 +450,13 @@ public class MainActivity extends Activity implements   MenuFragment.Callbacks,
 
     @Override
     public void showSettings() {
-        mDetailsFragment = new SettingsSlidingFragment();mDrawerLayout.closeDrawer(Gravity.LEFT);
+        if (!mDrawerIsLocked)
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        mDetailsFragment = new SettingsSlidingFragment();
         switchFragments();
     }
 
