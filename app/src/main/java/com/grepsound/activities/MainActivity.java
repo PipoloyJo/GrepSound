@@ -370,11 +370,10 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
     @Override
     public void getLikes(RequestListener<Tracks> cb, boolean force) {
         LikesRequest req = new LikesRequest("me");
-        if(force)
-            spiceManager.removeDataFromCache(Tracks.class, req.createCacheKey());
-
-        spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
-
+        if (force)
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(req, req.createCacheKey(), DurationInMillis.ALWAYS_EXPIRED, cb);
+        else
+            spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
     }
 
     @Override
@@ -385,10 +384,11 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
     @Override
     public void getPlaylists(RequestListener<Playlists> cb, boolean force) {
         PlaylistsRequest req = new PlaylistsRequest("me");
-        if(force)
-            spiceManager.removeDataFromCache(Playlists.class, req.createCacheKey());
 
-        spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
+        if (force)
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(req, req.createCacheKey(), DurationInMillis.ALWAYS_EXPIRED, cb);
+        else
+            spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
     }
 
     @Override
