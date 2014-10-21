@@ -97,13 +97,9 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
                 .commit();
         int layoutSizeMask = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 
-        if ((layoutSizeMask == Configuration.SCREENLAYOUT_SIZE_LARGE ||
+        mDrawerIsLocked = (layoutSizeMask == Configuration.SCREENLAYOUT_SIZE_LARGE ||
                 layoutSizeMask == Configuration.SCREENLAYOUT_SIZE_XLARGE) &&
-                getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mDrawerIsLocked = true;
-        } else {
-            mDrawerIsLocked = false;
-        }
+                getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         setUpNavigationDrawer(mDrawerIsLocked);
         mAccount = CreateSyncAccount(this);
@@ -372,9 +368,13 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
     ////////////////  Callbacks    //////////////////////
 
     @Override
-    public void getLikes(RequestListener<Tracks> cb) {
+    public void getLikes(RequestListener<Tracks> cb, boolean force) {
         LikesRequest req = new LikesRequest("me");
+        if(force)
+            spiceManager.removeDataFromCache(Tracks.class, req.createCacheKey());
+
         spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
+
     }
 
     @Override
@@ -383,8 +383,11 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
     }
 
     @Override
-    public void getPlaylists(RequestListener<Playlists> cb) {
+    public void getPlaylists(RequestListener<Playlists> cb, boolean force) {
         PlaylistsRequest req = new PlaylistsRequest("me");
+        if(force)
+            spiceManager.removeDataFromCache(Playlists.class, req.createCacheKey());
+
         spiceManager.execute(req, req.createCacheKey(), DurationInMillis.ONE_DAY, cb);
     }
 

@@ -39,4 +39,12 @@
     
     <!-- A light Holo shade of orange -->
     <color name="holo_orange_light_transparent">#88ffbb33</color>
+
+    <integer-array name="pb_colors">
+        <item>@color/holo_orange_light</item>
+        <item>@color/holo_orange_dark</item>
+        <item>@color/holo_orange_light</item>
+        <item>@color/holo_orange_dark</item>
+    </integer-array>
+
 </resources>

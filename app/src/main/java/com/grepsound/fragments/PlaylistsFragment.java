@@ -16,6 +16,10 @@ import com.grepsound.model.Playlists;
 import com.grepsound.model.Playlist;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * "THE BEER-WARE LICENSE" (Revision 42):
@@ -26,7 +30,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * Alexandre Lision on 2014-04-21.
  */
 
-public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, RequestListener<Playlists> {
+public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, OnRefreshListener, RequestListener<Playlists> {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
@@ -40,6 +44,7 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
             mCallbacks.displayPlaylistDetails(mAdapter.getItem(position));
         }
     };
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -50,6 +55,10 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (mScrollTabHolder != null)
             mScrollTabHolder.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, 1);
+
+        if(mPullToRefreshLayout != null) {
+            mPullToRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -62,8 +71,14 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
 
     }
 
+    @Override
+    public void onRefreshStarted(View view) {
+        Log.i(TAG, "onRefreshStarted");
+        mCallbacks.getPlaylists(this, true);
+    }
+
     public interface Callbacks {
-        public void getPlaylists(RequestListener<Playlists> cb);
+        public void getPlaylists(RequestListener<Playlists> cb, boolean force);
 
         public void displayPlaylistDetails(Playlist selected);
 
@@ -71,7 +86,7 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void getPlaylists(RequestListener<Playlists> cb) {
+        public void getPlaylists(RequestListener<Playlists> cb, boolean force) {
         }
 
         @Override
@@ -91,7 +106,7 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
         }
 
         mCallbacks = (Callbacks) activity;
-        mCallbacks.getPlaylists(this);
+        mCallbacks.getPlaylists(this, false);
     }
 
     @Override
@@ -126,12 +141,31 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
         mListView.addHeaderView(viewHeader, null, false);
         mListView.setAdapter(mAdapter);
 
+        // Now find the PullToRefreshLayout to setup
+        mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.ptr_layout);
+
+        // Now setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(getActivity())
+                .options(Options.create()
+                        // Here we make the refresh scroll distance to 75% of the refreshable view's height
+                        .scrollDistance(.25f)
+                                // Here we define a custom header transformer which will alter the header
+                                // based on the current pull-to-refresh state
+                        .build())
+                        // Mark All Children as pullable
+                .allChildrenArePullable()
+                        // Set a OnRefreshListener
+                .listener(this)
+                        // Finally commit the setup to our PullToRefreshLayout
+                .setup(mPullToRefreshLayout);
+
         return rootView;
     }
 
     @Override
     public void onRequestFailure(SpiceException e) {
         Log.e(TAG, "Failure");
+        mPullToRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -139,5 +173,6 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
         Log.e(TAG, "Success");
         mAdapter.addAll(tr);
         mAdapter.notifyDataSetChanged();
+        mPullToRefreshLayout.setRefreshing(false);
     }
 }

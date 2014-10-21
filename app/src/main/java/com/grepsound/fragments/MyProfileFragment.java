@@ -62,7 +62,6 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
     private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
     private User mProfile;
 
-
     @Override
     public void onPageScrolled(int i, float v, int i2) {
 
@@ -97,6 +96,7 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
             setTitleAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
         }
     }
+
     public int getScrollY(AbsListView view) {
         View c = view.getChildAt(0);
         if (c == null) {

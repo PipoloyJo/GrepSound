@@ -11,6 +11,8 @@ package com.grepsound.sync;
 
 import android.accounts.Account;
 import android.content.*;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.os.Bundle;
 import com.google.gson.Gson;
 import com.grepsound.activities.Api;

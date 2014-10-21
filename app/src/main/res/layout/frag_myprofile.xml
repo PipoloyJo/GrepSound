@@ -77,7 +77,6 @@
 
         </LinearLayout>
 
-
         <com.grepsound.views.PagerSlidingTabStrip
                 android:id="@+id/pts_main"
                 android:layout_width="match_parent"

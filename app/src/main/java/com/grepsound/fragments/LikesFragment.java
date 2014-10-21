@@ -2,7 +2,6 @@ package com.grepsound.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +14,14 @@ import com.grepsound.model.Tracks;
 import com.grepsound.services.AudioService;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
- public class LikesFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, RequestListener<Tracks> {
+public class LikesFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener,
+        OnRefreshListener,
+        RequestListener<Tracks> {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
@@ -33,15 +38,14 @@ import com.octo.android.robospice.request.listener.RequestListener;
         }
     };
     private ListView mListView;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public void adjustScroll(int scrollHeight) {
         if (scrollHeight == 0 && mListView.getFirstVisiblePosition() >= 1) {
             return;
         }
-
         mListView.setSelectionFromTop(1, scrollHeight);
-
     }
 
     @Override
@@ -53,17 +57,27 @@ import com.octo.android.robospice.request.listener.RequestListener;
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (mScrollTabHolder != null)
             mScrollTabHolder.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, 0);
+
+        if(mPullToRefreshLayout != null) {
+            mPullToRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        Log.i(TAG, "onRefreshStarted");
+        mCallbacks.getLikes(this, true);
     }
 
     public interface Callbacks {
-        public void getLikes(RequestListener<Tracks> cb);
+        public void getLikes(RequestListener<Tracks> cb, boolean force);
 
         void getSong(RequestListener cb, String url);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void getLikes(RequestListener<Tracks> cb) {
+        public void getLikes(RequestListener<Tracks> cb, boolean force) {
         }
 
         @Override
@@ -83,7 +97,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
         mCallbacks = (Callbacks) activity;
 
-        mCallbacks.getLikes(this);
+        mCallbacks.getLikes(this, false);
     }
 
     @Override
@@ -118,12 +132,31 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
         mListView.setAdapter(mAdapter);
 
+        // Now find the PullToRefreshLayout to setup
+        mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.ptr_layout);
+
+        // Now setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(getActivity())
+                .options(Options.create()
+                        // Here we make the refresh scroll distance to 75% of the refreshable view's height
+                        .scrollDistance(.25f)
+                                // Here we define a custom header transformer which will alter the header
+                                // based on the current pull-to-refresh state
+                        .build())
+                // Mark All Children as pullable
+                .allChildrenArePullable()
+                        // Set a OnRefreshListener
+                .listener(this)
+                        // Finally commit the setup to our PullToRefreshLayout
+                .setup(mPullToRefreshLayout);
+
         return rootView;
     }
 
     @Override
     public void onRequestFailure(SpiceException e) {
         Log.e(TAG, "Failure");
+        mPullToRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -131,5 +164,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
         Log.e(TAG, "Success");
         mAdapter.addAll(tr);
         mAdapter.notifyDataSetChanged();
+        mPullToRefreshLayout.setRefreshing(false);
     }
 }
