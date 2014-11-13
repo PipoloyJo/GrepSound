@@ -63,7 +63,7 @@ import com.grepsound.services.AudioService;
 
 
 
-        mAdapter = new TrackAdapter(getActivity(), this);
+        mAdapter = new TrackAdapter(getActivity(), this, false);
         mAdapter.addAll(mDisplayed.getSet());
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.tracks_grid);

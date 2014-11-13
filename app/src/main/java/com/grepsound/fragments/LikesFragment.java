@@ -92,7 +92,7 @@ public class LikesFragment extends ScrollTabHolderFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new TrackAdapter(getActivity(), this);
+        mAdapter = new TrackAdapter(getActivity(), this, true);
     }
 
     @Override

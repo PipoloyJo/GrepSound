@@ -20,17 +20,19 @@ public class TrackAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Tracks mTracks;
     private ImageLoader mImageLoader;
     private final static String TAG = TrackAdapter.class.getSimpleName();
-    TrackViewHolder.ITrackClick mListener;
+    private TrackViewHolder.ITrackClick mListener;
+    private boolean isHeaderActivated;
 
     private interface TYPES {
         int HEADER = 0;
         int TRACK = 1;
     }
 
-    public TrackAdapter(Context c, TrackViewHolder.ITrackClick list) {
+    public TrackAdapter(Context c, TrackViewHolder.ITrackClick list, boolean header) {
         mListener = list;
         mTracks = new Tracks();
         mImageLoader = new ImageLoader(c);
+        isHeaderActivated = header;
     }
 
     // Create new views (invoked by the layout manager)
@@ -63,7 +65,7 @@ public class TrackAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        if (position != TYPES.HEADER) {
+        if (position != TYPES.HEADER || !isHeaderActivated) {
             ((TrackViewHolder)holder).name.setText(mTracks.get(position).getTitle());
             ((TrackViewHolder)holder).duration.setText(mTracks.get(position).getDuration());
             mImageLoader.DisplayImage(mTracks.getImageUrlOf(position), ((TrackViewHolder) holder).cover);
@@ -79,7 +81,7 @@ public class TrackAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        if(position == TYPES.HEADER)
+        if(position == TYPES.HEADER && isHeaderActivated)
             return TYPES.HEADER;
         else
            return TYPES.TRACK;
