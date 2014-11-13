@@ -2,18 +2,16 @@ package com.grepsound.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import com.grepsound.R;
 import com.grepsound.adapters.PlaylistAdapter;
-import com.grepsound.model.Playlists;
 import com.grepsound.model.Playlist;
+import com.grepsound.model.Playlists;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -30,44 +28,23 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * Alexandre Lision on 2014-04-21.
  */
 
-public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener, OnRefreshListener, RequestListener<Playlists> {
+public class PlaylistsFragment extends ScrollTabHolderFragment implements OnRefreshListener, RequestListener<Playlists>, PlaylistAdapter.PlaylistViewHolder.IPlaylistClick {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
     private static final String TAG = PlaylistsFragment.class.getSimpleName();
     private PlaylistAdapter mAdapter;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
 
-    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mCallbacks.displayPlaylistDetails(mAdapter.getItem(position));
-        }
-    };
     private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (mScrollTabHolder != null)
-            mScrollTabHolder.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, 1);
-
-        if(mPullToRefreshLayout != null) {
-            mPullToRefreshLayout.setRefreshing(false);
-        }
-    }
-
-    @Override
     public void adjustScroll(int scrollHeight) {
-        if (scrollHeight == 0 && mListView.getFirstVisiblePosition() >= 1) {
+        if (scrollHeight == 0 && mLayoutManager.findFirstVisibleItemPosition() >= 1) {
             return;
         }
-
-        mListView.setSelectionFromTop(1, scrollHeight);
+        mLayoutManager.scrollToPositionWithOffset(1, scrollHeight);
 
     }
 
@@ -75,6 +52,11 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
     public void onRefreshStarted(View view) {
         Log.i(TAG, "onRefreshStarted");
         mCallbacks.getPlaylists(this, true);
+    }
+
+    @Override
+    public void onPlaylistClicked(Playlist pl) {
+        mCallbacks.displayPlaylistDetails(pl);
     }
 
     public interface Callbacks {
@@ -112,7 +94,7 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new PlaylistAdapter(getActivity(), true);
+        mAdapter = new PlaylistAdapter(getActivity(), this);
     }
 
     @Override
@@ -129,17 +111,29 @@ public class PlaylistsFragment extends ScrollTabHolderFragment implements AbsLis
 
         View rootView = inflater.inflate(R.layout.frag_playlists, null);
 
-        LinearLayout viewHeader = new LinearLayout(getActivity());
-        viewHeader.setOrientation(LinearLayout.HORIZONTAL);
-        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.header_height));
-        viewHeader.setLayoutParams(lp);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.playlists_grid);
 
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
-        mListView = (ListView) rootView.findViewById(R.id.playlists_grid);
-        mListView.setOnScrollListener(this);
-        mListView.setOnItemClickListener(mItemClickListener);
-        mListView.addHeaderView(viewHeader, null, false);
-        mListView.setAdapter(mAdapter);
+            @Override
+            public void onScrolled(RecyclerView view, int dx, int dy) {
+                super.onScrolled(view, dx, dy);
+                if (mScrollTabHolder != null)
+                    mScrollTabHolder.onScroll(view, mLayoutManager.findFirstVisibleItemPosition(), 1);
+
+                if (mPullToRefreshLayout != null) {
+                    mPullToRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
         // Now find the PullToRefreshLayout to setup
         mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.ptr_layout);

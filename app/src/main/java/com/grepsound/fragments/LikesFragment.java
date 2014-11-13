@@ -3,13 +3,15 @@ package com.grepsound.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
 import com.grepsound.R;
 import com.grepsound.adapters.TrackAdapter;
+import com.grepsound.model.Track;
 import com.grepsound.model.Tracks;
 import com.grepsound.services.AudioService;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -19,54 +21,41 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class LikesFragment extends ScrollTabHolderFragment implements AbsListView.OnScrollListener,
+public class LikesFragment extends ScrollTabHolderFragment implements
         OnRefreshListener,
-        RequestListener<Tracks> {
+        RequestListener<Tracks>,
+        TrackAdapter.TrackViewHolder.ITrackClick {
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
     private static final String TAG = LikesFragment.class.getSimpleName();
     private TrackAdapter mAdapter;
 
-    private AdapterView.OnItemClickListener mClickListener = new AdapterView.OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent request = new Intent(AudioService.commands.PLAY);
-            request.putExtra(AudioService.fields.SONG, mAdapter.getItem(position));
-            getActivity().sendBroadcast(request);
-        }
-    };
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private PullToRefreshLayout mPullToRefreshLayout;
+    private LinearLayoutManager mLayoutManager;
 
     @Override
     public void adjustScroll(int scrollHeight) {
-        if (scrollHeight == 0 && mListView.getFirstVisiblePosition() >= 1) {
+        Log.i(TAG, "adjust: " +scrollHeight);
+        if (scrollHeight == 0 && mLayoutManager.findFirstVisibleItemPosition() >= 1) {
             return;
         }
-        mListView.setSelectionFromTop(1, scrollHeight);
+        mLayoutManager.scrollToPositionWithOffset(1, scrollHeight);
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (mScrollTabHolder != null)
-            mScrollTabHolder.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, 0);
-
-        if(mPullToRefreshLayout != null) {
-            mPullToRefreshLayout.setRefreshing(false);
-        }
-    }
 
     @Override
     public void onRefreshStarted(View view) {
         Log.i(TAG, "onRefreshStarted");
         mCallbacks.getLikes(this, true);
+    }
+
+    @Override
+    public void onTrackClicked(Track tr) {
+        Intent request = new Intent(AudioService.commands.PLAY);
+        request.putExtra(AudioService.fields.SONG, tr);
+        getActivity().sendBroadcast(request);
     }
 
     public interface Callbacks {
@@ -103,7 +92,7 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new TrackAdapter(getActivity());
+        mAdapter = new TrackAdapter(getActivity(), this);
     }
 
     @Override
@@ -120,17 +109,35 @@ public class LikesFragment extends ScrollTabHolderFragment implements AbsListVie
 
         View rootView = inflater.inflate(R.layout.frag_likes, null);
 
-        LinearLayout viewHeader = new LinearLayout(getActivity());
-        viewHeader.setOrientation(LinearLayout.HORIZONTAL);
-        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.header_height));
-        viewHeader.setLayoutParams(lp);
 
-        mListView = (ListView) rootView.findViewById(R.id.likes_grid);
-        mListView.setOnItemClickListener(mClickListener);
-        mListView.setOnScrollListener(this);
-        mListView.addHeaderView(viewHeader, null, false);
 
-        mListView.setAdapter(mAdapter);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.likes_grid);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (mScrollTabHolder != null)
+                    mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0);
+
+                if(mPullToRefreshLayout != null)
+                    mPullToRefreshLayout.setRefreshing(false);
+                }
+        });
 
         // Now find the PullToRefreshLayout to setup
         mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.ptr_layout);

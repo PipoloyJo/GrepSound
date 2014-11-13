@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -87,9 +88,9 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount, int pagePosition) {
+    public void onScroll(RecyclerView view, int firstVisiblePos, int pagePosition) {
         if (mViewPager.getCurrentItem() == pagePosition) {
-            int scrollY = getScrollY(view);
+            int scrollY = getScrollY(view, firstVisiblePos);
             mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
             float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
             interpolate(mUserCover, getActionBarIconView(), sSmoothInterpolator.getInterpolation(ratio));
@@ -97,13 +98,12 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
         }
     }
 
-    public int getScrollY(AbsListView view) {
+    public int getScrollY(RecyclerView view, int firstVisiblePosition) {
         View c = view.getChildAt(0);
         if (c == null) {
             return 0;
         }
 
-        int firstVisiblePosition = view.getFirstVisiblePosition();
         int top = c.getTop();
 
         int headerHeight = 0;

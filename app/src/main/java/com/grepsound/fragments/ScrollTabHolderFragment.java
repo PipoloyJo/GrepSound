@@ -1,6 +1,7 @@
 package com.grepsound.fragments;
 
 import android.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.widget.AbsListView;
 
 public abstract class ScrollTabHolderFragment extends Fragment implements ScrollTabHolder {
@@ -12,7 +13,7 @@ public abstract class ScrollTabHolderFragment extends Fragment implements Scroll
 	}
 
 	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount, int pagePosition) {
+	public void onScroll(RecyclerView view, int firstVisiblePos, int pagePosition) {
 		// nothing
 	}
 

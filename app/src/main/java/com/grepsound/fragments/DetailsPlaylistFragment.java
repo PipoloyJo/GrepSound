@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import com.grepsound.R;
 import com.grepsound.adapters.TrackAdapter;
 import com.grepsound.model.Playlist;
+import com.grepsound.model.Track;
 import com.grepsound.services.AudioService;
 
 /**
@@ -24,10 +27,12 @@ import com.grepsound.services.AudioService;
  *
  * Alexandre Lision on 2014-06-23.
  */
- public class DetailsPlaylistFragment extends SlidingFragment {
+ public class DetailsPlaylistFragment extends SlidingFragment implements TrackAdapter.TrackViewHolder.ITrackClick {
 
     Playlist mDisplayed;
     TrackAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,39 +63,24 @@ import com.grepsound.services.AudioService;
 
 
 
-        mAdapter = new TrackAdapter(getActivity());
+        mAdapter = new TrackAdapter(getActivity(), this);
         mAdapter.addAll(mDisplayed.getSet());
 
-        GridView mGrid = (GridView) rootView.findViewById(R.id.tracks_grid);
-        mGrid.setAdapter(mAdapter);
-        mGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent request = new Intent(AudioService.commands.PLAY);
-                request.putExtra(AudioService.fields.SONG, mAdapter.getItem(position));
-                getActivity().sendBroadcast(request);
-            }
-        });
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.tracks_grid);
+        mRecyclerView.setAdapter(mAdapter);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
         rootView.setOnClickListener(clickListener);
         return rootView;
     }
 
- /*   @Override
-    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim)
-    {
-        int id = enter ? R.animator.slide_fragment_left : R.animator.slide_fragment_right;
-        final Animator anim = AnimatorInflater.loadAnimator(getActivity(), id);
-        if (enter) {
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mListener.onAnimationEnd();
-                }
-            });
-        }
-        return anim;
+    @Override
+    public void onTrackClicked(Track tr) {
+        Intent request = new Intent(AudioService.commands.PLAY);
+        request.putExtra(AudioService.fields.SONG, tr);
+        getActivity().sendBroadcast(request);
     }
-*/
-
 }
