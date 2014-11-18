@@ -17,7 +17,7 @@
         android:layout_marginRight="10dp"
         android:gravity="center"
         android:drawSelectorOnTop="true"
-        android:paddingTop="?android:actionBarSize"
+        android:paddingTop="?attr/actionBarSize"
         android:horizontalSpacing="10dp"
         android:verticalSpacing="10dp"
         android:layout_height="wrap_content"/>

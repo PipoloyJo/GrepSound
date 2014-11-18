@@ -80,7 +80,7 @@
         <com.grepsound.views.PagerSlidingTabStrip
                 android:id="@+id/pts_main"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 grepsound:indicatorColor="@color/holo_orange_light"
                 android:layout_alignParentBottom="true"
                 grepsound:shouldExpand="true"

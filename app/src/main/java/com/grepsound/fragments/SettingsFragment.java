@@ -1,23 +1,15 @@
 package com.grepsound.fragments;
 
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import com.grepsound.R;
 import com.grepsound.sync.GrepSoundPreferences;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private  static String TAG = SettingsFragment.class.getSimpleName();
@@ -31,24 +23,15 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
-
-
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
         actionBar.setTitle("Settings");
-        getActionBarIconView().setAlpha(1f);
 
         injectSummaries();
-
     }
 
     private void injectSummaries() {
         findPreference("sync_interval").setSummary(""+GrepSoundPreferences.getSyncInterval(getActivity()));
         findPreference("cache_likes_count").setSummary(""+GrepSoundPreferences.getCacheLikesCount(getActivity()));
-    }
-
-    private ImageView getActionBarIconView() {
-        return (ImageView) getActivity().getWindow().getDecorView().findViewById(android.R.id.home);
     }
 
     public void onResume() {

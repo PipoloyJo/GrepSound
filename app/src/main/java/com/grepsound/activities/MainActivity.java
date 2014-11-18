@@ -3,19 +3,21 @@ package com.grepsound.activities;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.animation.*;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.*;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
 import com.grepsound.R;
@@ -38,7 +40,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * Alexandre Lision on 2014-04-22.
  */
 
-public class MainActivity extends Activity implements MenuFragment.Callbacks,
+public class MainActivity extends ActionBarActivity implements MenuFragment.Callbacks,
         LikesFragment.Callbacks,
         PlaylistsFragment.Callbacks,
         MyProfileFragment.Callbacks,
@@ -78,12 +80,14 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
                     SECONDS_PER_MINUTE *
                     MILLISECONDS_PER_SECOND;
     private boolean mDrawerIsLocked;
+    private Toolbar mToolbar;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //SharedPreferences prefs = getSharedPreferences("sc-token", Context.MODE_PRIVATE);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         mDarkHoverView = findViewById(R.id.dark_hover_view);
         mDarkHoverView.setAlpha(0);
@@ -101,7 +105,7 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
                 layoutSizeMask == Configuration.SCREENLAYOUT_SIZE_XLARGE) &&
                 getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        setUpNavigationDrawer(mDrawerIsLocked);
+        setupNavigationDrawer(mDrawerIsLocked);
         mAccount = CreateSyncAccount(this);
         ContentResolver.addPeriodicSync(
                 mAccount,
@@ -116,25 +120,61 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
 
     }
 
-    private void setUpNavigationDrawer(boolean locked) {
+    private void setupNavigationDrawer(boolean locked) {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
 
         mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
                 mDrawerLayout, /* DrawerLayout object */
-                R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+                mToolbar, /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open, /* "open drawer" description for accessibility */
                 R.string.drawer_close /* "close drawer" description for accessibility */) {
+
+            public ColorDrawable toolbarDrawable;
+            public int toolbarColor = getResources().getColor(R.color.holo_orange_light);
+
             public void onDrawerClosed(View view) {
                 invalidateOptionsMenu(); // creates call to
                 // onPrepareOptionsMenu()
+                Log.i(TAG, "CLOSED");
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                int ratioRed = Math.round(Color.red(toolbarColor) - Color.red(toolbarColor) * slideOffset);
+                int ratioGreen = Math.round(Color.green(toolbarColor) - Color.green(toolbarColor) * slideOffset);
+                int ratioBlue = Math.round(Color.blue(toolbarColor) - Color.blue(toolbarColor) * slideOffset);
+
+                toolbarDrawable = new ColorDrawable(Math.round(0xFFFFFFFF * slideOffset));
+                toolbarDrawable.setColor(Color.argb(255, ratioRed, ratioGreen, ratioBlue));
+
+                getSupportActionBar().setBackgroundDrawable(toolbarDrawable);
             }
 
             public void onDrawerOpened(View drawerView) {
                 invalidateOptionsMenu(); // creates call to
+                Log.i(TAG, "OPEN");
                 // onPrepareOptionsMenu()
             }
 
         };
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "GOOD");
+                if(getFragmentManager().getBackStackEntryCount() > 0)
+                    getFragmentManager().popBackStack();
+                else {
+                    if(mDrawerLayout.isDrawerOpen(GravityCompat.START))
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
+                    else
+                        mDrawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
 
         if (locked) {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
@@ -146,14 +186,13 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
         }
 
         mDrawerToggle.setDrawerIndicatorEnabled(!locked);
-        getActionBar().setHomeButtonEnabled(!locked);
+        getSupportActionBar().setHomeButtonEnabled(!locked);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         spiceManager.start(this);
-
     }
 
     @Override
@@ -200,30 +239,11 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         Log.i(TAG, "onBackPressed");
-        if (mDidSlideOut) {
-            slideForward(null);
-            mDidSlideOut = false;
-            getActionBar().setBackgroundDrawable(null);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        // Handle your other action bar items...
-        return super.onOptionsItemSelected(item);
+        if(getFragmentManager().getBackStackEntryCount() > 0)
+            getFragmentManager().popBackStack();
+        else
+            super.onBackPressed();
     }
 
     /**
@@ -240,10 +260,12 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
      */
     private void switchFragments() {
         if (mIsAnimating) {
+            Log.i(TAG, "IS animating!");
             return;
         }
         mIsAnimating = true;
         if (mDidSlideOut) {
+            Log.i(TAG, "Did Slide Out!");
             mDidSlideOut = false;
             getFragmentManager().popBackStack();
         } else {
@@ -258,6 +280,7 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
                     transaction.add(R.id.move_to_back_container, mDetailsFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
+                    mDidSlideOut = false;
                 }
             };
             slideBack(listener);
@@ -266,21 +289,28 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
 
     @Override
     public void onBackStackChanged() {
-        Log.i(TAG, "onBackStackChanged");
-        if (!mDidSlideOut) {
-            Log.i(TAG, "NOT mDidSlideOut");
-            slideForward(null);
-        }
+        Log.i(TAG, "onBackStackChanged: "+getFragmentManager().getBackStackEntryCount());
         boolean canback = getFragmentManager().getBackStackEntryCount() > 0;
-        mDrawerToggle.setDrawerIndicatorEnabled(!canback);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        if (!canback)
+        //mDrawerToggle.setDrawerIndicatorEnabled(!canback);
+
+        if(canback) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            mDrawerToggle.syncState();
+        }
+
+        if (!canback) {
+            slideForward(null);
             mMainFrag.onResume();
+        }
     }
 
     View.OnClickListener mClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            Log.i(TAG, "CLICKING");
             switchFragments();
         }
     };
@@ -291,6 +321,10 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
      * translucent dark hover view to inform the user that it is inactive.
      */
     public void slideBack(Animator.AnimatorListener listener) {
+
+        // Make sure Toolbar is visible
+        mToolbar.setTranslationY(0);
+
         View movingFragmentView = mMainFrag.getView();
 
         PropertyValuesHolder rotateX = PropertyValuesHolder.ofFloat("rotationX", 40f);
@@ -410,6 +444,7 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
 
     @Override
     public void displayFollowers() {
+        Log.i(TAG, "displayFollowers");
         mDetailsFragment = new FollowFragment();
         Bundle b = new Bundle();
         b.putSerializable("type", FollowFragment.TYPE.FOLLOWER);
@@ -428,6 +463,11 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
         mDetailsFragment.setOnSlidingFragmentAnimationEnd(this);
         mDetailsFragment.setClickListener(mClickListener);
         switchFragments();
+    }
+
+    @Override
+    public Toolbar getToolbar() {
+        return mToolbar;
     }
 
     @Override
@@ -457,7 +497,7 @@ public class MainActivity extends Activity implements MenuFragment.Callbacks,
             mDrawerLayout.closeDrawer(Gravity.LEFT);
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         mDetailsFragment = new SettingsSlidingFragment();
         switchFragments();

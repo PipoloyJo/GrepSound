@@ -1,17 +1,14 @@
 package com.grepsound.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import com.grepsound.R;
 import com.grepsound.adapters.GridUserAdapter;
 import com.grepsound.model.Users;
@@ -68,8 +65,8 @@ public class FollowFragment extends SlidingFragment implements RequestListener<U
         super.onCreate(savedInstanceState);
         mAdapter = new GridUserAdapter(getActivity());
 
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+        //actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 
         switch((TYPE) getArguments().getSerializable("type")) {
             case FOLLOWER:
@@ -80,12 +77,12 @@ public class FollowFragment extends SlidingFragment implements RequestListener<U
                 break;
         }
 
-        getActionBarIconView().setAlpha(1f);
+        //getActionBarIconView().setAlpha(1f);
     }
 
-    private ImageView getActionBarIconView() {
+/*    private ImageView getActionBarIconView() {
         return (ImageView) getActivity().getWindow().getDecorView().findViewById(android.R.id.home);
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -37,7 +37,6 @@ import android.content.Context;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.Log;
 import android.util.SparseArray;
-import android.widget.Switch;
 import com.grepsound.R;
 import com.grepsound.fragments.LikesFragment;
 import com.grepsound.fragments.PlaylistsFragment;
@@ -45,7 +44,6 @@ import com.grepsound.fragments.ScrollTabHolder;
 import com.grepsound.fragments.ScrollTabHolderFragment;
 import com.grepsound.views.PagerSlidingTabStrip;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter implements PagerSlidingTabStrip.IconTabProvider {

@@ -9,7 +9,7 @@
     <dimen name="text_horizontal_margin">10dp</dimen>
 
     <dimen name="header_height">250dp</dimen>
-    <dimen name="min_header_height">214dp</dimen>
+    <dimen name="min_header_height">250dp</dimen>
     <dimen name="header_logo_size">100dp</dimen>
 
     <item name="slide_up_down_fraction" type="dimen" format="float">1</item>

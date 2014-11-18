@@ -27,8 +27,6 @@ public class PlayerFragment extends Fragment implements CircularSeekBar.OnCircul
 	private static final String TAG = PlayerFragment.class.getSimpleName();
 
 	private BroadcastReceiver audioPlayerBroadcastReceiver = new AudioPlayerBroadCastReceiver();
-	private AudioService audioPlayer;
-	private Intent audioPlayerIntent;
 	SharedPreferences prefs;
 	private boolean isTracking;
 

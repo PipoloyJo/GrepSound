@@ -3,10 +3,12 @@ package com.grepsound.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.SparseArray;
@@ -15,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.grepsound.R;
@@ -47,18 +48,18 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
     private ImageLoader mImgLoader;
     private Callbacks mCallbacks;
 
-
+    private static final String TAG = MyProfileFragment.class.getSimpleName();
     private static AccelerateDecelerateInterpolator sSmoothInterpolator = new AccelerateDecelerateInterpolator();
     private View mHeader;
     private int mActionBarHeight;
     private int mMinHeaderHeight;
     private int mHeaderHeight;
     private int mMinHeaderTranslation;
+    private int lastScrollY, deltaY;
 
     private RectF mRect1 = new RectF();
     private RectF mRect2 = new RectF();
 
-    private TypedValue mTypedValue = new TypedValue();
     private SpannableString mSpannableString;
     private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
     private User mProfile;
@@ -91,10 +92,34 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
     public void onScroll(RecyclerView view, int firstVisiblePos, int pagePosition) {
         if (mViewPager.getCurrentItem() == pagePosition) {
             int scrollY = getScrollY(view, firstVisiblePos);
+
+            deltaY += lastScrollY - scrollY;
+
+            if(deltaY > mCallbacks.getToolbar().getHeight()) {
+                deltaY = mCallbacks.getToolbar().getHeight();
+            }
+
+            if(deltaY < -mCallbacks.getToolbar().getHeight()) {
+                deltaY = -mCallbacks.getToolbar().getHeight();
+            }
+
+
+            if(scrollY > lastScrollY) {
+                // We are scrolling down
+                mCallbacks.getToolbar().setTranslationY(Math.min(deltaY, 0));
+            } else {
+                // We are scrolling up
+                mCallbacks.getToolbar().setTranslationY(Math.min(deltaY, 0));
+            }
             mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
-            float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
-            interpolate(mUserCover, getActionBarIconView(), sSmoothInterpolator.getInterpolation(ratio));
-            setTitleAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
+
+            //Log.i(TAG, "scrollY:"+scrollY);
+
+
+            //TODO: hide/show toolbar
+            //ToolBar should appear when scrolling up no matter how far in the list
+
+            lastScrollY = scrollY;
         }
     }
 
@@ -143,26 +168,18 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
             return mActionBarHeight;
         }
 
+        TypedValue mTypedValue = new TypedValue();
         getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, mTypedValue, true);
         mActionBarHeight = TypedValue.complexToDimensionPixelSize(mTypedValue.data, getResources().getDisplayMetrics());
+
         return mActionBarHeight;
     }
-
-    private void setTitleAlpha(float alpha) {
-        mAlphaForegroundColorSpan.setAlpha(alpha);
-        mSpannableString.setSpan(mAlphaForegroundColorSpan, 0, mSpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        getActivity().getActionBar().setTitle(mSpannableString);
-    }
-
-    private ImageView getActionBarIconView() {
-        return (ImageView) getActivity().getWindow().getDecorView().findViewById(android.R.id.home);
-    }
-
 
     public interface Callbacks {
         public void getProfile(RequestListener<User> cb);
         public void displayFollowers();
         public void displayFollowing();
+        Toolbar getToolbar();
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
@@ -178,6 +195,11 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
         @Override
         public void displayFollowing() {
 
+        }
+
+        @Override
+        public Toolbar getToolbar() {
+            return null;
         }
     };
 
@@ -263,9 +285,8 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
     public void onResume() {
         super.onResume();
         Log.i("PROFILE", "onResume");
-        getActionBarIconView().setAlpha(0f);
-        getActivity().getActionBar().setBackgroundDrawable(null);
-        setTitleAlpha(0f);
+        ((ActionBarActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.holo_orange_light)));
+        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("Lisional");
         if(mProfile == null)
             mCallbacks.getProfile(this);
         else

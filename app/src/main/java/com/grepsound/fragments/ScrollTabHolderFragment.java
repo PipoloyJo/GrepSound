@@ -2,7 +2,6 @@ package com.grepsound.fragments;
 
 import android.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.widget.AbsListView;
 
 public abstract class ScrollTabHolderFragment extends Fragment implements ScrollTabHolder {
 

@@ -1,18 +1,15 @@
 package com.grepsound.fragments;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
 import com.grepsound.R;
 import com.grepsound.adapters.TrackAdapter;
 import com.grepsound.model.Playlist;
@@ -37,7 +34,7 @@ import com.grepsound.services.AudioService;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getActivity().getActionBar();
+        android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
 
         try {
             mDisplayed = getArguments().getParcelable("DetailsPlaylistFragment");
@@ -45,23 +42,13 @@ import com.grepsound.services.AudioService;
             throw new NullPointerException("DetailsPlaylistFragment must receive a playlist in arguments");
         }
 
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
         actionBar.setTitle(mDisplayed.getTitle());
-        getActionBarIconView().setAlpha(1f);
     }
-
-    private ImageView getActionBarIconView() {
-        return (ImageView) getActivity().getWindow().getDecorView().findViewById(android.R.id.home);
-    }
-
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View rootView = inflater.inflate(R.layout.frag_details_playlist, container, false);
-
-
 
         mAdapter = new TrackAdapter(getActivity(), this, false);
         mAdapter.addAll(mDisplayed.getSet());
