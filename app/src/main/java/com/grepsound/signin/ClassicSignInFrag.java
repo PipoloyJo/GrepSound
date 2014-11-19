@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.dd.processbutton.iml.ActionProcessButton;
 import com.grepsound.R;
 import com.grepsound.activities.Api;
 import com.grepsound.activities.MainActivity;
@@ -26,23 +27,28 @@ import com.soundcloud.api.ApiWrapper;
 import com.soundcloud.api.Token;
 
 /**
- * Created by lisional on 2014-04-11.
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <phk@FreeBSD.ORG> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy me a beer in return
+ *
+ * Alexandre Lision on 2014-04-11.
  */
+
 public class ClassicSignInFrag extends Fragment implements RequestListener<Token>{
 
     private static final String TAG = ClassicSignInFrag.class.getSimpleName();
-    private LoginRequest request;
     private SpiceManager spiceManager = new SpiceManager(SpiceUpService.class);
-    EditText user;
-    PasswordEditText pass;
-
+    EditText mUserField;
+    PasswordEditText mPasswordField;
+    private ActionProcessButton mBtnSignIn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.frag_classic_sign_in, container, false);
 
-        user = (EditText) rootView.findViewById(R.id.username_input);
-        pass = (PasswordEditText) rootView.findViewById(R.id.password_input);
+        mUserField = (EditText) rootView.findViewById(R.id.username_input);
+        mPasswordField = (PasswordEditText) rootView.findViewById(R.id.password_input);
 
         rootView.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +57,21 @@ public class ClassicSignInFrag extends Fragment implements RequestListener<Token
             }
         });
 
-        pass.getEdit_text().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mBtnSignIn = (ActionProcessButton) rootView.findViewById(R.id.login_button);
+
+        mBtnSignIn.setMode(ActionProcessButton.Mode.ENDLESS);
+        mBtnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBtnSignIn.setEnabled(false);
+                mUserField.setEnabled(false);
+                mPasswordField.setEnabled(false);
+                mBtnSignIn.setProgress(10);
+                login();
+            }
+        });
+
+        mPasswordField.getEdit_text().setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 Log.i(TAG, "actionID "+actionId);
@@ -73,10 +93,10 @@ public class ClassicSignInFrag extends Fragment implements RequestListener<Token
 
     private void login() {
         Bundle b = new Bundle();
-        b.putString("username", user.getText().toString());
-        b.putString("password", pass.getText().toString());
+        b.putString("username", mUserField.getText().toString());
+        b.putString("password", mPasswordField.getText().toString());
 
-        request = new LoginRequest(b);
+        LoginRequest request = new LoginRequest(b);
         spiceManager.execute(request, ClassicSignInFrag.this);
     }
 
@@ -89,11 +109,16 @@ public class ClassicSignInFrag extends Fragment implements RequestListener<Token
     @Override
     public void onRequestFailure(SpiceException e) {
         Log.e(TAG, "Failure");
+        mUserField.setEnabled(true);
+        mPasswordField.setEnabled(true);
+        mBtnSignIn.setEnabled(true);
+        mBtnSignIn.setProgress(0);
     }
 
     @Override
     public void onRequestSuccess(Token o) {
         Log.e(TAG, "Success");
+
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("sc-token",
                                                                 Context.MODE_PRIVATE).edit();
 
@@ -113,6 +138,9 @@ public class ClassicSignInFrag extends Fragment implements RequestListener<Token
 
         Intent intent = new Intent();
         intent.setClass(getActivity(), MainActivity.class);
+
+        mBtnSignIn.setProgress(0);
+
         startActivity(intent);
         getActivity().finish();
     }

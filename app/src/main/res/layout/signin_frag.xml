@@ -2,10 +2,18 @@
 
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:grepsound="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:weightSum="2"
-        android:paddingTop="?android:attr/actionBarSize"
         android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            grepsound:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:background="?attr/colorPrimary"/>
 
     <fragment
             android:id="@+id/classic_frag"
@@ -20,6 +28,5 @@
               android:layout_height="0dp"
               android:layout_weight="1"
               android:name="com.grepsound.signin.GoogleSignInFragment"/>
-
 
 </LinearLayout>

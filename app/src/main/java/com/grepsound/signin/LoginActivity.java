@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.OperationCanceledException;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 import com.grepsound.R;
@@ -18,7 +20,7 @@ import com.soundcloud.api.Token;
 
 import java.io.IOException;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends ActionBarActivity {
 
     private static String TAG = "GrepSound";
     public static final String SC_ACCOUNT_TYPE = "com.soundcloud.android.account";
@@ -28,6 +30,7 @@ public class LoginActivity extends Activity {
     private static final int DIALOG_NOT_INSTALLED = 0;
 
     private AccountManager mAccountManager;
+    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,9 +47,11 @@ public class LoginActivity extends Activity {
             finish();
         } else {
             setContentView(R.layout.signin_frag);
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setTitle("GrepSound");
 
             mAccountManager = AccountManager.get(this);
-
 
             final Account account = getAccount();
             if (account != null) {

@@ -123,8 +123,6 @@ public class MainActivity extends ActionBarActivity implements MenuFragment.Call
     private void setupNavigationDrawer(boolean locked) {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-
-
         mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
                 mDrawerLayout, /* DrawerLayout object */
                 mToolbar, /* nav drawer image to replace 'Up' caret */
@@ -291,7 +289,6 @@ public class MainActivity extends ActionBarActivity implements MenuFragment.Call
     public void onBackStackChanged() {
         Log.i(TAG, "onBackStackChanged: "+getFragmentManager().getBackStackEntryCount());
         boolean canback = getFragmentManager().getBackStackEntryCount() > 0;
-        //mDrawerToggle.setDrawerIndicatorEnabled(!canback);
 
         if(canback) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -324,6 +321,7 @@ public class MainActivity extends ActionBarActivity implements MenuFragment.Call
 
         // Make sure Toolbar is visible
         mToolbar.setTranslationY(0);
+
 
         View movingFragmentView = mMainFrag.getView();
 

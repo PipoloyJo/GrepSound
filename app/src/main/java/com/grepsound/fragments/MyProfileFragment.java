@@ -287,6 +287,7 @@ public class MyProfileFragment extends Fragment implements ScrollTabHolder, View
         Log.i("PROFILE", "onResume");
         ((ActionBarActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.holo_orange_light)));
         ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("Lisional");
+        deltaY = mCallbacks.getToolbar().getHeight();
         if(mProfile == null)
             mCallbacks.getProfile(this);
         else
