@@ -292,11 +292,16 @@ public class MainActivity extends ActionBarActivity implements MenuFragment.Call
 
         if(canback) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } else {
+        } else if(!mDrawerIsLocked) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            mDrawerToggle.syncState();
+        } else {
+            Log.i(TAG, "FAAALSE");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
         }
+
+        mDrawerToggle.syncState();
 
         if (!canback) {
             slideForward(null);

@@ -1,5 +1,6 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:grepsound="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -36,4 +37,12 @@
                 android:background="@color/black"/>
 
     </FrameLayout>
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            grepsound:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:background="?attr/colorPrimary"/>
 </FrameLayout>

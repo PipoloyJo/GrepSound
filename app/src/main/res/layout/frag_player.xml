@@ -8,18 +8,20 @@
                     xmlns:grepsound="http://schemas.android.com/apk/res-auto"
                     android:layout_width="200dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:id="@+id/circle"
                     android:layout_height="200dp">
+
     <com.grepsound.views.CircularSeekBar
             android:id="@+id/progress"
-            android:layout_centerHorizontal="true"
             android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
             grepsound:circle_color="@color/lighter_gray"
             grepsound:circle_progress_color="@color/holo_orange_light"
             grepsound:pointer_color="@color/holo_orange_light"
             grepsound:pointer_halo_color="@color/holo_orange_light_transparent"
-            grepsound:pointer_halo_color_ontouch="@color/holo_orange_light_transparent"
-            android:layout_height="200dp"/>
+            grepsound:pointer_halo_color_ontouch="@color/holo_orange_light_transparent"/>
 
     <ImageButton
             android:layout_width="wrap_content"
@@ -38,8 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/circle"
-            android:weightSum="2"
-            >
+            android:weightSum="2">
 
         <com.grepsound.views.TypefaceTextView
                 android:id="@+id/current_time"
