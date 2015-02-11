@@ -17,10 +17,11 @@ import android.widget.Toast;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
-import com.google.android.gms.plus.PlusClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 import com.grepsound.R;
 
 import java.io.IOException;
@@ -34,31 +35,34 @@ import java.io.IOException;
  * Alexandre Lision on 2014-04-11.
  */
 
-public class GoogleSignInFragment extends Fragment implements   GooglePlayServicesClient.ConnectionCallbacks,
-                                                                GooglePlayServicesClient.OnConnectionFailedListener,
-                                                                View.OnClickListener,
-                                                                PlusClient.OnAccessRevokedListener {
+public class GoogleSignInFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+                                                                View.OnClickListener {
 
     private static final String TAG = GoogleSignInFragment.class.getSimpleName();
 
     // The core Google+ client.
-    private PlusClient mPlusClient;
+    private GoogleApiClient mPlusClient;
 
     // A flag to stop multiple dialogues appearing for the user.
-    private boolean mResolveOnFail;
+    private boolean mResolvingError = false;
+    private static final String STATE_RESOLVING_ERROR = "resolving_error";
 
-    // We can store the connection result from a failed connect()
-    // attempt in order to make the application feel a bit more
-    // responsive for the user.
-    private ConnectionResult mConnectionResult;
+    // Unique tag for the error dialog fragment
+    private static final String DIALOG_ERROR = "dialog_error";
 
     // A magic number we will use to know that our sign-in error
     // resolution activity has completed.
-    private static final int OUR_REQUEST_CODE = 49404;
+    private static final int REQUEST_RESOLVE_ERROR = 49404;
 
     // A progress dialog to display when the user is connecting in
     // case there is a delay in any of the dialogs being ready.
     private ProgressDialog mConnectionProgressDialog;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,16 +83,14 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
         }
 
         View rootView = inflater.inflate(R.layout.frag_google_sign_in, null);
-        // We pass through this for all three arguments, specifying the:
-        // 1. Context
-        // 2. Object to call onConnected and onDisconnected on
-        // 3. Object to call onConnectionFailed on
-        mPlusClient = new PlusClient.Builder(getActivity(), this, this).build();
-
-
-        // We use mResolveOnFail as a flag to say whether we should trigger
-        // the resolution of a connectionFailed ConnectionResult.
-        mResolveOnFail = false;
+        mPlusClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Plus.API)
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mResolvingError = savedInstanceState != null
+                && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 
         // Connect our sign in, sign out and disconnect buttons.
         rootView.findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -109,9 +111,6 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
     public void onStart() {
         super.onStart();
         Log.v(TAG, "Start");
-        // Every time we start we want to try to connect. If it
-        // succeeds we'll get an onConnected() callback. If it
-        // fails we'll get onConnectionFailed(), with a result!
         mPlusClient.connect();
     }
 
@@ -119,33 +118,38 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
     public void onStop() {
         super.onStop();
         Log.v(TAG, "Stop");
-        // It can be a little costly to keep the connection open
-        // to Google Play Services, so each time our activity is
-        // stopped we should disconnect.
         mPlusClient.disconnect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.v(TAG, "ConnectionFailed");
-        // Most of the time, the connection will fail with a
-        // user resolvable result. We can store that in our
-        // mConnectionResult property ready for to be used
-        // when the user clicks the sign-in button.
-        if (result.hasResolution()) {
-            Log.v(TAG, "hasResolution!");
-            mConnectionResult = result;
-            if (mResolveOnFail) {
-                // This is a local helper function that starts
-                // the resolution of the problem, which may be
-                // showing the user an account chooser or similar.
-                startResolution();
+        if (!mResolvingError) {
+            if (result.hasResolution()) {
+                try {
+                    mResolvingError = true;
+                    result.startResolutionForResult(getActivity(), REQUEST_RESOLVE_ERROR);
+                } catch (IntentSender.SendIntentException e) {
+                    // There was an error with the resolution intent. Try again.
+                    mPlusClient.connect();
+                }
+            } else {
+                // Show dialog using GooglePlayServicesUtil.getErrorDialog()
+                mConnectionProgressDialog.dismiss();
+                showErrorDialog(result.getErrorCode());
+                mResolvingError = true;
             }
-        } else {
-            Log.v(TAG, "NO RESO!");
-            // Hide the progress dialog if its showing.
-            mConnectionProgressDialog.dismiss();
         }
+    }
+
+    /* Creates a dialog for an error message */
+    private void showErrorDialog(int errorCode) {
+        // Create a fragment for the error dialog
+        ErrorDialogFragment dialogFragment = new ErrorDialogFragment();
+        // Pass the error that should be displayed
+        Bundle args = new Bundle();
+        args.putInt(DIALOG_ERROR, errorCode);
+        dialogFragment.setArguments(args);
+        dialogFragment.show(getFragmentManager(), "errordialog");
     }
 
     @Override
@@ -155,7 +159,7 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
 
         // Turn off the flag, so if the user signs out they'll have to
         // tap to sign in again.
-        mResolveOnFail = false;
+        mResolvingError = false;
 
         // Hide the progress dialog if its showing.
         mConnectionProgressDialog.dismiss();
@@ -171,19 +175,21 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
             @Override
             protected Object doInBackground(Object... params) {
                 String scope = "oauth2:" + Scopes.PLUS_LOGIN;
-                try {
+
                     // We can retrieve the token to check via
                     // tokeninfo or to pass to a service-side
                     // application.
+                try {
                     String token = GoogleAuthUtil.getToken(context,
-                            mPlusClient.getAccountName(), scope);
-
+                            Plus.AccountApi.getAccountName(mPlusClient), scope);
                     Log.i(TAG, token);
-                } catch (IOException | GoogleAuthException e) {
-                    // This error is recoverable, so we could fix this
-                    // by displaying the intent to the user.
+                    Log.i(TAG, "Hello " + Plus.AccountApi.getAccountName(mPlusClient));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (GoogleAuthException e) {
                     e.printStackTrace();
                 }
+
                 return null;
             }
         };
@@ -191,28 +197,28 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
     }
 
     @Override
-    public void onDisconnected() {
-        // Bye!
-        Log.v(TAG, "Disconnected. Bye!");
+    public void onConnectionSuspended(int i) {
+        mPlusClient.connect();
+
+        // Hide the sign out buttons, show the sign in button.
+        getView().findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.sign_out_button).setVisibility(View.INVISIBLE);
+        getView().findViewById(R.id.revoke_access_button).setVisibility(View.INVISIBLE);
+
     }
 
-    public void onActivityResult(int requestCode, int responseCode,
+    public void onActivityResult(int requestCode, int resultCode,
                                  Intent intent) {
         Log.v(TAG, "ActivityResult: " + requestCode);
-        if (requestCode == OUR_REQUEST_CODE && responseCode == Activity.RESULT_OK) {
-            // If we have a successful result, we will want to be able to
-            // resolve any further errors, so turn on resolution with our
-            // flag.
-            mResolveOnFail = true;
-            // If we have a successful result, lets call connect() again. If
-            // there are any more errors to resolve we'll get our
-            // onConnectionFailed, but if not, we'll get onConnected.
-            mPlusClient.connect();
-        } else if (requestCode == OUR_REQUEST_CODE) {
-            // If we've got an error we can't resolve, we're no
-            // longer in the midst of signing in, so we can stop
-            // the progress spinner.
-            mConnectionProgressDialog.dismiss();
+        if (requestCode == REQUEST_RESOLVE_ERROR) {
+            mResolvingError = false;
+            if (resultCode == Activity.RESULT_OK) {
+                // Make sure the app is not already connected or attempting to connect
+                if (!mPlusClient.isConnecting() &&
+                        !mPlusClient.isConnected()) {
+                    mPlusClient.connect();
+                }
+            }
         }
     }
 
@@ -221,22 +227,16 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
         switch (view.getId()) {
             case R.id.sign_in_button:
                 Log.v(TAG, "Tapped sign in");
-                if (!mPlusClient.isConnected()) {
+                if (!mPlusClient.isConnected() && !mResolvingError) {
                     // Show the dialog as we are now signing in.
                     mConnectionProgressDialog.show();
                     // Make sure that we will start the resolution (e.g. fire the
                     // intent and pop up a dialog for the user) for any errors
                     // that come in.
-                    mResolveOnFail = true;
+                    mResolvingError = true;
                     // We should always have a connection result ready to resolve,
                     // so we can start that process.
-                    if (mConnectionResult != null) {
-                        startResolution();
-                    } else {
-                        // If we don't have one though, we can start connect in
-                        // order to retrieve one.
-                        mPlusClient.connect();
-                    }
+                    mPlusClient.connect();
                 }
                 break;
             case R.id.sign_out_button:
@@ -246,7 +246,7 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
                     // Clear the default account in order to allow the user
                     // to potentially choose a different account from the
                     // account chooser.
-                    mPlusClient.clearDefaultAccount();
+                    //mPlusClient.clearDefaultAccount();
 
                     // Disconnect from Google Play Services, then reconnect in
                     // order to restart the process from scratch.
@@ -265,55 +265,17 @@ public class GoogleSignInFragment extends Fragment implements   GooglePlayServic
                 Log.v(TAG, "Tapped disconnect");
                 if (mPlusClient.isConnected()) {
                     // Clear the default account as in the Sign Out.
-                    mPlusClient.clearDefaultAccount();
+                    //mPlusClient.clearDefaultAccount();
 
                     // Go away and revoke access to this entire application.
                     // This will call back to onAccessRevoked when it is
                     // complete as it needs to go away to the Google
                     // authentication servers to revoke all token.
-                    mPlusClient.revokeAccessAndDisconnect(this);
+                    //mPlusClient.revokeAccessAndDisconnect(this);
                 }
                 break;
             default:
                 // Unknown id.
-        }
-    }
-
-    @Override
-    public void onAccessRevoked(ConnectionResult status) {
-        // mPlusClient is now disconnected and access has been revoked.
-        // We should now delete any data we need to comply with the
-        // developer properties. To reset ourselves to the original state,
-        // we should now connect again. We don't have to disconnect as that
-        // happens as part of the call.
-        mPlusClient.connect();
-
-        // Hide the sign out buttons, show the sign in button.
-        getView().findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-        getView().findViewById(R.id.sign_out_button).setVisibility(View.INVISIBLE);
-        getView().findViewById(R.id.revoke_access_button).setVisibility(View.INVISIBLE);
-    }
-
-    /**
-     * A helper method to flip the mResolveOnFail flag and start the resolution
-     * of the ConnenctionResult from the failed connect() call.
-     */
-    private void startResolution() {
-        try {
-            // Don't start another resolution now until we have a
-            // result from the activity we're about to start.
-            mResolveOnFail = false;
-            // If we can resolve the error, then call start resolution
-            // and pass it an integer tag we can use to track. This means
-            // that when we get the onActivityResult callback we'll know
-            // its from being started here.
-            Log.v(TAG, "startResolutionForResult!");
-            mConnectionResult.startResolutionForResult(getActivity(), OUR_REQUEST_CODE);
-        } catch (IntentSender.SendIntentException e) {
-            // Any problems, just try to connect() again so we get a new
-            // ConnectionResult.
-            e.printStackTrace();
-            mPlusClient.connect();
         }
     }
 }

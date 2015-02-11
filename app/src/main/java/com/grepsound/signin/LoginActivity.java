@@ -30,7 +30,6 @@ public class LoginActivity extends ActionBarActivity {
     private static final int DIALOG_NOT_INSTALLED = 0;
 
     private AccountManager mAccountManager;
-    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,18 +46,18 @@ public class LoginActivity extends ActionBarActivity {
             finish();
         } else {
             setContentView(R.layout.signin_frag);
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mToolbar);
             getSupportActionBar().setTitle("GrepSound");
 
             mAccountManager = AccountManager.get(this);
 
-            final Account account = getAccount();
+            /*final Account account = getAccount();
             if (account != null) {
                 new Thread(mGetToken).start();
             } else {
                 addAccount();
-            }
+            }*/
         }
     }
 
